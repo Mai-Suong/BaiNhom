@@ -1,0 +1,20 @@
+# Ảnh người dùng tải lên (logo đội, ảnh cầu thủ...) - không đưa lên GitHub
+uploads/*
+!uploads/.gitkeep
+
+# File cấu hình riêng của từng máy (nếu máy nào đặt mật khẩu MySQL khác mặc định)
+config/db.local.php
+
+# File tạm dùng để tạo mật khẩu băm - xóa sau khi dùng
+tao_hash.php
+
+# File export database tự sinh từ phpMyAdmin (chỉ dùng database/qlbongro.sql)
+*.sql.zip
+database/*_export.sql
+
+# File rác của hệ điều hành và trình soạn thảo
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+*.log

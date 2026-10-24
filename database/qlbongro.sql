@@ -1,3 +1,17 @@
+-- =====================================================================
+--  ĐỒ ÁN: QUẢN LÝ GIẢI BÓNG RỔ NHÀ NGHỀ MỸ (NBA)
+--  File: database/qlbongro.sql - tạo database, 19 bảng, dữ liệu danh mục, 2 VIEW
+--  Chạy trên: XAMPP (MariaDB 10.4) - đã import thử thành công
+--  Cách dùng: phpMyAdmin -> tab Import -> chọn file này -> Import
+--             (không cần tạo database trước, file tự tạo)
+--  Nếu muốn làm lại từ đầu: xóa database qlbongro rồi import lại.
+-- =====================================================================
+
+CREATE DATABASE IF NOT EXISTS qlbongro
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+USE qlbongro;
+
 --  CẤP 1: Các bảng KHÔNG phụ thuộc bảng nào 
 -- 1. Hội nghị (Conference): Eastern / Western
 CREATE TABLE hoi_nghi (
@@ -161,7 +175,7 @@ CREATE TABLE loat_playoff (
     CONSTRAINT fk_loat_muagiai FOREIGN KEY (ma_mua_giai)
         REFERENCES mua_giai (ma_mua_giai)
         ON UPDATE CASCADE ON DELETE CASCADE,
-    -- Cột có CHECK dùng RESTRICT (MySQL 8 không cho CHECK + CASCADE trên cùng cột)
+    -- 2 khóa ngoại dưới dùng RESTRICT: không cho xóa / đổi mã đội đã có loạt playoff
     CONSTRAINT fk_loat_doi1 FOREIGN KEY (ma_doi_1)
         REFERENCES doi_bong (ma_doi)
         ON UPDATE RESTRICT ON DELETE RESTRICT,
@@ -389,12 +403,12 @@ INSERT INTO giai_thuong (ten_viet_tat, ten_giai, doi_tuong) VALUES
  
 -- Tài khoản admin mặc định: admin / admin123  (nhớ đổi mật khẩu khi demo xong)
 -- Chuỗi bên dưới là kết quả password_hash('admin123', PASSWORD_DEFAULT).
--- Nếu đăng nhập không được, TV1 tạo lại bằng: <?php echo password_hash('admin123', PASSWORD_DEFAULT);
+-- Muốn đổi mật khẩu: tạo chuỗi mới bằng PHP: password_hash('matkhaumoi', PASSWORD_DEFAULT)
 INSERT INTO tai_khoan (ten_dang_nhap, mat_khau, vai_tro) VALUES
     ('admin', '$2y$10$MNoWc9mSrMio1xpemtHVLuuSgpPkd5kjuLmjTIr7IaqnfYCZZC94u', 'admin');
  
 --  VIEW: các bảng "ảo" tính sẵn số liệu, PHP chỉ cần SELECT
- 
+
 -- V1. Chỉ số trung bình mỗi trận của cầu thủ theo mùa (giống bảng Per Game)
 --     Dùng cho: hồ sơ cầu thủ, trang Top cầu thủ (Leaders)
 CREATE VIEW v_chi_so_trung_binh AS
