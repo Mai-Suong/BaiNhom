@@ -2,7 +2,7 @@
 /** Admin - Thêm / sửa huấn luyện viên (form.php = thêm, form.php?id=5 = sửa) - TV2 */
 require_once __DIR__ . '/../../includes/init.php';
 yeuCauAdmin();
-require_once __DIR__ . '/../../includes/ham_doi_bong.php';
+require_once __DIR__ . '/../../includes/ham_huan_luyen_vien.php';
 
 $id = (int) ($_GET['id'] ?? 0);
 $cu = $id ? hlvLay($id) : null;
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$dsDoi = dbLayDanhSach();
+$dsDoi = hlvLayDoiLuaChon();
 
 /** Ô nhập có nhãn + thông báo lỗi (Bootstrap) */
 function oNhapHlv(string $ten, string $nhan, array $d, array $loi, string $kieu = 'text', string $them = ''): void

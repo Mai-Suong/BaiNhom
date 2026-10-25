@@ -2,12 +2,12 @@
 /** Admin - Danh sách huấn luyện viên (TV2) */
 require_once __DIR__ . '/../../includes/init.php';
 yeuCauAdmin();
-require_once __DIR__ . '/../../includes/ham_doi_bong.php';
+require_once __DIR__ . '/../../includes/ham_huan_luyen_vien.php';
 
 $tuKhoa = trim((string) ($_GET['q'] ?? ''));
 $locDoi = (string) ($_GET['doi'] ?? '');
 $dsHlv  = hlvLayDanhSach($tuKhoa, $locDoi);
-$dsDoi  = dbLayDanhSach();
+$dsDoi  = hlvLayDoiLuaChon();
 
 $tieuDe = 'Quản lý huấn luyện viên';
 $menu   = 'hlv';

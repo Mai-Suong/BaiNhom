@@ -2,7 +2,7 @@
 /** Admin - Danh sách sân thi đấu (TV2) */
 require_once __DIR__ . '/../../includes/init.php';
 yeuCauAdmin();
-require_once __DIR__ . '/../../includes/ham_doi_bong.php';
+require_once __DIR__ . '/../../includes/ham_san_thi_dau.php';
 
 $tuKhoa = trim((string) ($_GET['q'] ?? ''));
 $dsSan  = sanLayDanhSach($tuKhoa);

@@ -1,12 +1,12 @@
 <?php
 /** Trang Khách - Danh sách đội bóng, lọc Miền Đông / Miền Tây (TV2) */
 require_once __DIR__ . '/../includes/init.php';
-require_once __DIR__ . '/../includes/ham_doi_bong.php';
+require_once __DIR__ . '/../includes/ham_trang_khach.php';
 
 $mua      = tv2LayMuaHienTai();
 $maMua    = $mua ? (int) $mua['ma_mua_giai'] : null;
-$coPhanBang = $maMua !== null && tv2DemPhanBang($maMua) > 0;
-$dsHoiNghi  = tv2LayHoiNghi();
+$coPhanBang = $maMua !== null && tkDemPhanBang($maMua) > 0;
+$dsHoiNghi  = tkLayHoiNghi();
 
 // ?mien=1 hoặc 2 (mã hội nghị). Chỉ lọc được khi mùa hiện tại đã phân bảng.
 $mien = ctype_digit((string) ($_GET['mien'] ?? '')) ? (int) $_GET['mien'] : null;
@@ -14,7 +14,7 @@ if (!$coPhanBang || !in_array($mien, array_map('intval', array_column($dsHoiNghi
     $mien = null;
 }
 
-$dsDoi = dbLayDanhSachKhach($maMua, $mien);
+$dsDoi = tkLayDanhSachDoi($maMua, $mien);
 
 // Gom theo khu vực để hiển thị từng nhóm (khi chưa phân bảng: 1 nhóm "Tất cả đội")
 $theoKhuVuc = [];

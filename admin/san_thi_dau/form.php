@@ -2,7 +2,7 @@
 /** Admin - Thêm / sửa sân thi đấu (form.php = thêm, form.php?id=5 = sửa) - TV2 */
 require_once __DIR__ . '/../../includes/init.php';
 yeuCauAdmin();
-require_once __DIR__ . '/../../includes/ham_doi_bong.php';
+require_once __DIR__ . '/../../includes/ham_san_thi_dau.php';
 
 $id = (int) ($_GET['id'] ?? 0);
 $cu = $id ? sanLay($id) : null;

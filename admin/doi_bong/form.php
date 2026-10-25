@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$dsSan = sanLayDanhSach();
+$dsSan = dbLaySanLuaChon();
 
 /** Ô nhập có nhãn + thông báo lỗi (Bootstrap) */
 function oNhapDoi(string $ten, string $nhan, array $d, array $loi, string $kieu = 'text', string $them = ''): void

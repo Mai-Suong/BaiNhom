@@ -2,7 +2,7 @@
 /** Admin - Danh sách trọng tài (TV2) */
 require_once __DIR__ . '/../../includes/init.php';
 yeuCauAdmin();
-require_once __DIR__ . '/../../includes/ham_doi_bong.php';
+require_once __DIR__ . '/../../includes/ham_trong_tai.php';
 
 $tuKhoa = trim((string) ($_GET['q'] ?? ''));
 $dsTt   = ttLayDanhSach($tuKhoa);

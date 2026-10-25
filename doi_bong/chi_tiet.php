@@ -1,12 +1,12 @@
 <?php
 /** Trang Khách - Chi tiết đội: thông tin, sân nhà, ban huấn luyện, đội hình, lịch & kết quả (TV2) */
 require_once __DIR__ . '/../includes/init.php';
-require_once __DIR__ . '/../includes/ham_doi_bong.php';
+require_once __DIR__ . '/../includes/ham_trang_khach.php';
 require_once __DIR__ . '/../includes/ham_trao_giai.php'; // (TV3) layDanhHieuHLV, layLichThiDauDoi, layKetQuaGanDayDoi
 
 $mua   = tv2LayMuaHienTai();
 $id    = (int) ($_GET['id'] ?? 0);
-$doi   = dbLayChiTiet($id, $mua ? (int) $mua['ma_mua_giai'] : null);
+$doi   = tkLayChiTietDoi($id, $mua ? (int) $mua['ma_mua_giai'] : null);
 
 $tieuDe = $doi ? $doi['ten_doi'] : 'Không tìm thấy đội';
 $menu   = 'doi_bong';
@@ -19,8 +19,8 @@ if (!$doi) {
     exit;
 }
 
-$dsHlv    = hlvLayDanhSach('', (string) $id);
-$doiHinh  = dbLayDoiHinh($id);
+$dsHlv    = tkLayBanHuanLuyen($id);
+$doiHinh  = tkLayDoiHinh($id);
 $lich     = layLichThiDauDoi($id, 5);
 $ketQua   = layKetQuaGanDayDoi($id, 5);
 $fmtNgay  = fn($s) => $s ? date('d/m/Y H:i', strtotime($s)) : '';
