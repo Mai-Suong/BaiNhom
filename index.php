@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/includes/init.php';
-require_once __DIR__ . '/includes/ham_doi_bong.php'; // TV2: dữ liệu 3 khung bên dưới
+require_once __DIR__ . '/includes/ham_trang_chu.php'; // TV2: dữ liệu 3 khung bên dưới
 
 $mua        = tv2LayMuaHienTai();
 $tranSapToi = tcTranSapToi(5);
