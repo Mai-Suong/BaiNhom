@@ -1,6 +1,7 @@
 <?php
 /** Trang Khách - Hồ sơ cầu thủ: thông tin, chỉ số trung bình mùa, chấn thương, chuyển nhượng */
 require_once __DIR__ . '/../includes/giao_dien.php';
+require_once __DIR__ . '/../includes/ham_trao_giai.php';
 
 $id = (int) ($_GET['id'] ?? 0);
 $ct = layCauThu($id);
@@ -15,6 +16,7 @@ if (!$ct) {
 $chiSo     = layChiSoTrungBinh($id);
 $chanThuong = layDanhSachChanThuong($id, true);
 $lichSu    = layLichSuChuyenNhuong($id);
+$danhHieu  = layDanhHieuCauThu($id);
 $fmt = fn($v) => $v === null ? '—' : number_format((float) $v, 1);
 
 dauTrang($ct['ho_ten']);
@@ -52,6 +54,9 @@ dauTrang($ct['ho_ten']);
     <?php endforeach; ?>
 </div>
 <?php endif; ?>
+
+<h2>Danh hiệu</h2>
+<?= hienThiDanhHieu($danhHieu) ?>
 
 <h2>Chỉ số trung bình mỗi trận</h2>
 <?php if (!$chiSo): ?>

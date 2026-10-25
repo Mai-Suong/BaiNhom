@@ -1,6 +1,7 @@
 <?php
 /** Trang "Của tôi" - cầu thủ đăng nhập xem thông tin, lịch đội mình, đổi ảnh đại diện */
 require_once __DIR__ . '/../includes/giao_dien.php';
+require_once __DIR__ . '/../includes/ham_trao_giai.php';
 
 // Lấy mã cầu thủ từ SESSION (không lấy từ URL) để không xem/sửa được của người khác
 $maCauThu = yeuCauCauThu();
@@ -55,6 +56,9 @@ dauTrang('Trang của tôi');
         <div><small>Kinh nghiệm</small><?= kinhNghiem($ct['nam_ra_mat_nba']) ?></div>
     </div>
 </div>
+
+<h2>Danh hiệu của tôi</h2>
+<?= hienThiDanhHieu(layDanhHieuCauThu($maCauThu)) ?>
 
 <?php if (!$ct['ma_doi']): ?>
     <h2>Lịch thi đấu</h2>

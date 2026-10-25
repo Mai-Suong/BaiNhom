@@ -20,7 +20,9 @@
 | `admin/cau_thu/xoa.php` | Xóa (chặn nếu đã có thống kê trận hoặc giải thưởng) |
 | `admin/cau_thu/chuyen_nhuong.php` | Chuyển nhượng (đổi đội + lưu lịch sử) |
 | `admin/cau_thu/chan_thuong.php` | Quản lý chấn thương |
-| `cau_thu/ho_so.php?id=` | Trang hồ sơ cầu thủ cho Khách |
+| `includes/ham_trao_giai.php` | Hàm trao giải, lấy danh hiệu cầu thủ (`layDanhHieuCauThu`) và HLV (`layDanhHieuHLV`, TV2 dùng được) |
+| `admin/trao_giai/index.php` | Trao giải cuối mùa (MVP, ROY… cho cầu thủ, COY cho HLV), thay hoặc hủy người nhận |
+| `cau_thu/ho_so.php?id=` | Trang hồ sơ cầu thủ cho Khách (có mục Danh hiệu) |
 | `cau_thu/cua_toi.php` | Trang "Của tôi" khi cầu thủ đăng nhập |
 
 ## Cần thống nhất với nhóm
@@ -52,3 +54,8 @@
 - [ ] Xóa cầu thủ đã có box score → bị chặn kèm thông báo
 - [ ] Cầu thủ chưa đá trận nào → hồ sơ hiện "Chưa có dữ liệu thi đấu"
 - [ ] Đăng nhập cầu thủ A, sửa URL không xem/sửa được cầu thủ B
+- [ ] Trao MVP cho cầu thủ → hiện trong bảng kết quả và mục Danh hiệu ở hồ sơ
+- [ ] Trao MVP lần 2 cho người khác cùng mùa → thay người nhận, không báo lỗi trùng
+- [ ] Chọn giải COY → ô chọn đổi sang danh sách HLV
+- [ ] Hủy trao giải → mất khỏi bảng và hồ sơ
+- [ ] Cầu thủ đã nhận giải → không xóa được

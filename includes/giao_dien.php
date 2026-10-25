@@ -60,6 +60,10 @@ function dauTrang(string $tieuDe): void
     .thong-tin { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px 20px; flex: 1; }
     .thong-tin div small { display: block; color: #7b8794; font-size: 12px; }
     .mo { color: #7b8794; }
+    .ds-danh-hieu { display: flex; flex-wrap: wrap; gap: 10px; }
+    .danh-hieu { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 8px 12px; }
+    .danh-hieu strong { color: #9a3412; display: block; font-size: 15px; }
+    .danh-hieu small { color: #7b8794; font-size: 12px; }
     form.inline { display: inline; }
 </style>
 </head>
@@ -90,6 +94,21 @@ function anhCauThu(array $ct, int $co = 44): string
 function nhanTrangThai(string $tt): string
 {
     return '<span class="nhan ' . e($tt) . '">' . e(TRANG_THAI_CT[$tt] ?? $tt) . '</span>';
+}
+
+/** Danh sách danh hiệu dạng thẻ, VD: "MVP · 2025-26" */
+function hienThiDanhHieu(array $ds): string
+{
+    if (!$ds) {
+        return '<div class="the mo">Chưa có danh hiệu nào.</div>';
+    }
+    $html = '<div class="ds-danh-hieu">';
+    foreach ($ds as $dh) {
+        $html .= '<div class="danh-hieu" title="' . e($dh['ten_giai']) . '"><strong>'
+               . e($dh['ten_viet_tat']) . ' · ' . e($dh['ten_mua_giai']) . '</strong><small>'
+               . e($dh['ten_giai']) . '</small></div>';
+    }
+    return $html . '</div>';
 }
 
 function chon($a, $b): string

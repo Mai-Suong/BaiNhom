@@ -18,7 +18,10 @@ dauTrang('Quản lý cầu thủ');
 ?>
 <div class="dau">
     <h1>Quản lý cầu thủ</h1>
-    <a class="nut" href="form.php">+ Thêm cầu thủ</a>
+    <div>
+        <a class="nut phu" href="<?= BASE_URL ?>/admin/trao_giai/index.php">Trao giải</a>
+        <a class="nut" href="form.php">+ Thêm cầu thủ</a>
+    </div>
 </div>
 
 <form class="bo-loc" method="get">
