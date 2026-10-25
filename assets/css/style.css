@@ -1,0 +1,32 @@
+/* CSS dùng chung cho cả website. Màu chủ đạo lấy theo NBA. */
+:root {
+    --nba-xanh: #17408b;
+    --nba-do: #c9082a;
+}
+
+.bg-nba { background-color: var(--nba-xanh); }
+
+.btn-nba {
+    background-color: var(--nba-do);
+    border-color: var(--nba-do);
+    color: #fff;
+}
+.btn-nba:hover { background-color: #a50622; border-color: #a50622; color: #fff; }
+
+.hero {
+    background: linear-gradient(120deg, var(--nba-xanh), #0d2a5c 60%, var(--nba-do));
+    color: #fff;
+}
+
+/* Sidebar trang quản trị */
+.sidebar-admin { background: #f8f9fa; border-right: 1px solid #dee2e6; }
+@media (min-width: 992px) {
+    .sidebar-admin { min-height: calc(100vh - 56px); position: sticky; top: 56px; }
+}
+.sidebar-nhom {
+    font-size: .75rem; text-transform: uppercase; letter-spacing: .04em;
+    color: #6c757d; padding: 1rem 1rem .25rem;
+}
+.sidebar-admin .nav-link { color: #212529; padding: .4rem 1rem; }
+.sidebar-admin .nav-link:hover { background: #e9ecef; }
+.sidebar-admin .nav-link.active { background: var(--nba-xanh); color: #fff; }

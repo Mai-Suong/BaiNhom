@@ -43,9 +43,11 @@ const ANH_TOI_DA  = 2 * 1024 * 1024;      // 2MB
  * TIỆN ÍCH
  * ===================================================================== */
 
-function e($s): string
-{
-    return htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8');
+if (!function_exists('e')) { // includes/ham_chung.php cũng có hàm này, tránh khai báo trùng
+    function e($s): string
+    {
+        return htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8');
+    }
 }
 
 function ngayHopLe(?string $s): bool
