@@ -38,7 +38,7 @@
 **Tài khoản admin mặc định:** `admin` / `admin123`
 
 **Kết nối database** (mặc định của XAMPP): host `localhost`, user `root`, mật khẩu để trống, database `qlbongro`.
-Máy nào đặt mật khẩu MySQL khác thì tạo file `config/db.local.php` (đã được bỏ qua trong `.gitignore`).
+Máy nào đặt mật khẩu MySQL khác thì tạo file `config/db.local.php` chứa `<?php define('DB_PASS', 'matkhau');` (file này không đưa lên GitHub).
 
 ## Thứ tự import database
 
@@ -46,6 +46,74 @@ Máy nào đặt mật khẩu MySQL khác thì tạo file `config/db.local.php` 
 2. Các file dữ liệu mẫu theo đúng số thứ tự: `02_du_lieu_doi_bong.sql` → `03_du_lieu_cau_thu.sql` → `04_du_lieu_tran_dau.sql` → `05_du_lieu_thong_ke.sql`
 
 Khi có người sửa cấu trúc bảng: xóa database `qlbongro` rồi import lại tất cả theo đúng thứ tự trên.
+
+## Cấu trúc thư mục
+
+Mỗi chức năng là **một thư mục riêng**: trang quản trị nằm trong `admin/ten_module/`, trang cho Khách nằm trong `ten_module/` ở thư mục gốc.
+
+```
+BaiNhom/
+├── config/db.php              Kết nối database: hàm ketNoi(), hằng BASE_URL
+├── includes/
+│   ├── init.php               File khởi tạo chung: trang mới require file này đầu tiên
+│   ├── kiem_tra_quyen.php     Session, yeuCauAdmin(), yeuCauCauThu(), CSRF, thông báo, chuyenTrang()
+│   ├── ham_chung.php          e(), url(), daDangNhap(), laAdmin(), laCauThu(), tenDangNhap()
+│   ├── header.php / footer.php              Giao diện chung trang Khách (menu trên)
+│   ├── admin_header.php / admin_footer.php  Giao diện chung trang Quản trị (menu trái)
+│   └── ham_<module>.php       Hàm SQL riêng của từng module (VD: ham_cau_thu.php của TV3)
+├── admin/
+│   ├── index.php              Dashboard
+│   └── <module>/index.php     Trang quản trị từng module (VD: admin/cau_thu/, admin/doi_bong/)
+├── <module>/                  Trang cho Khách (VD: cau_thu/ho_so.php, doi_bong/index.php)
+├── khu_vuc/index.php          TRANG MẪU dùng giao diện chung: xem để làm theo
+├── assets/css/style.css       CSS chung (màu NBA)
+├── assets/js/main.js          JS chung (nút có class "btn-xoa" tự hỏi xác nhận)
+├── uploads/                   Ảnh tải lên (không đưa lên GitHub)
+├── database/qlbongro.sql
+├── index.php                  Trang chủ
+└── dang_nhap.php / dang_xuat.php
+```
+
+Menu đã có sẵn link tới trang của từng người. Tạo đúng file là link chạy:
+
+| Thành viên | Trang Khách | Trang Quản trị |
+|---|---|---|
+| TV2 Duy | `doi_bong/index.php` | `admin/doi_bong/`, `admin/san_thi_dau/`, `admin/huan_luyen_vien/`, `admin/trong_tai/` |
+| TV3 Nguyên | `cau_thu/index.php`, `cau_thu/ho_so.php`, `cau_thu/cua_toi.php` | `admin/cau_thu/`, `admin/trao_giai/` |
+| TV4 Huy | `lich_thi_dau/index.php`, `ket_qua/index.php` | `admin/mua_giai/`, `admin/phan_bang/`, `admin/lich_thi_dau/`, `admin/ket_qua/` |
+| TV5 Đạt | `bang_xep_hang/index.php`, `thong_ke/index.php` | `admin/box_score/`, `admin/playoff/` |
+| TV1 Sương | | `admin/tai_khoan/` |
+
+## Cách tạo một trang mới
+
+**Trang cho Khách** (VD: `doi_bong/index.php`):
+```php
+<?php
+require_once __DIR__ . '/../includes/init.php';
+
+$ds = $pdo->query('SELECT * FROM doi_bong ORDER BY ten_doi')->fetchAll();
+
+$tieuDe = 'Danh sách đội bóng';
+$menu   = 'doi_bong';
+require __DIR__ . '/../includes/header.php';
+?>
+<h1 class="h3">Danh sách đội bóng</h1>
+<?php foreach ($ds as $doi): ?>
+    <p><?= e($doi['ten_doi']) ?></p>
+<?php endforeach; ?>
+<?php require __DIR__ . '/../includes/footer.php'; ?>
+```
+
+**Trang Quản trị** (VD: `admin/doi_bong/index.php`): require `__DIR__ . '/../../includes/init.php'`, gọi `yeuCauAdmin();` ngay sau đó,
+và dùng `admin_header.php` / `admin_footer.php` thay cho `header.php` / `footer.php`.
+
+**Quy tắc bắt buộc:**
+- In dữ liệu ra HTML luôn dùng `e(...)` (chống XSS).
+- SQL có dữ liệu người dùng nhập luôn dùng `prepare` + dấu `?` (chống SQL Injection).
+- Form POST luôn có `<?= oCsrf() ?>` trong form và gọi `kiemTraCsrf();` khi xử lý.
+- Lưu xong thì `datThongBao('ok', 'Đã lưu');` (lỗi thì `'loi'`) rồi `chuyenTrang(url('/admin/doi_bong/index.php'));`. Thông báo tự hiện ở trang kế tiếp.
+- Link nội bộ luôn dùng `url('/...')`, không ghi cứng `/BaiNhom/...`.
+- Session khi đăng nhập: `$_SESSION['ma_tai_khoan']`, `['ten_dang_nhap']`, `['vai_tro']` (`admin` | `cau_thu`), `['ma_cau_thu']`.
 
 ## Quy ước làm việc nhóm
 
