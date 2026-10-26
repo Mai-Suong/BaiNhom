@@ -1,8 +1,9 @@
 <?php
-/** Admin - Trao giải thưởng cuối mùa (MVP, ROY, COY...) cho cầu thủ và HLV */
+/** Admin - Trao giải thưởng cuối mùa (MVP, ROY, COY...) cho cầu thủ và HLV (TV3) */
+require_once __DIR__ . '/../../includes/init.php';
+yeuCauAdmin();
 require_once __DIR__ . '/../../includes/giao_dien.php';
 require_once __DIR__ . '/../../includes/ham_trao_giai.php';
-yeuCauAdmin();
 
 $dsMua = layDanhSachMuaGiai();
 $maMua = (int) ($_GET['mua'] ?? 0);
@@ -30,129 +31,142 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $maMua) {
             traoGiai($maMua, $daChonGiai, $nguoiNhan);
             datThongBao('ok', 'Đã lưu kết quả trao giải.');
         }
-        chuyenTrang('index.php?mua=' . $maMua);
+        chuyenTrang(url('/admin/trao_giai/index.php?mua=' . $maMua));
     } catch (RuntimeException $ex) {
         $loi = $ex->getMessage();
     }
 }
 
-$ketQua  =$maMua ? layKetQuaTraoGiai($maMua) : [];
-$dsCT    = layCauThuDeTraoGiai();
-$dsHLV   = layHLVDeTraoGiai();
+$ketQua = $maMua ? layKetQuaTraoGiai($maMua) : [];
+$dsCT   = layCauThuDeTraoGiai();
+$dsHLV  = layHLVDeTraoGiai();
+$tenMua = array_column($dsMua, 'ten_mua_giai', 'ma_mua_giai')[$maMua] ?? '';
 
 // Gom cầu thủ theo đội để hiển thị <optgroup>
 $ctTheoDoi = [];
 foreach ($dsCT as $ct) {
-    $ctTheoDoi[$ct['ten_doi'] ?? 'Cầu thủ tự do'][] = $ct;
+    $ctTheoDoi[$ct['ten_doi'] ?? 'Không có đội'][] = $ct;
 }
 
-dauTrang('Trao giải thưởng');
+$tieuDe = 'Trao giải thưởng';
+$menu   = 'trao_giai';
+require __DIR__ . '/../../includes/admin_header.php';
 ?>
-<div class="dau">
-    <h1>Trao giải thưởng</h1>
-    <a class="nut phu" href="<?= BASE_URL ?>/admin/cau_thu/index.php">← Quản lý cầu thủ</a>
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <h1 class="h3 mb-0">Trao giải thưởng</h1>
+    <?php if ($dsMua): ?>
+        <form class="d-flex align-items-center gap-2" method="get">
+            <label class="fw-semibold text-nowrap" for="mua">Mùa giải</label>
+            <select class="form-select" id="mua" name="mua" onchange="this.form.submit()">
+                <?php foreach ($dsMua as $m): ?>
+                    <option value="<?= (int) $m['ma_mua_giai'] ?>"<?= chon($maMua, $m['ma_mua_giai']) ?>>
+                        <?= e($m['ten_mua_giai']) ?><?= $m['la_mua_hien_tai'] ? ' (hiện tại)' : '' ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <noscript><button class="btn btn-outline-secondary" type="submit">Xem</button></noscript>
+        </form>
+    <?php endif; ?>
 </div>
 
 <?php if (!$dsMua): ?>
-    <div class="the mo">Chưa có mùa giải nào. Cần có dữ liệu bảng <code>mua_giai</code> (TV4) trước khi trao giải.</div>
-    <?php cuoiTrang(); exit; ?>
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> Chưa có mùa giải nào. Cần có dữ liệu bảng <code>mua_giai</code> (TV4) trước khi trao giải.
+    </div>
+    <?php require __DIR__ . '/../../includes/admin_footer.php'; exit; ?>
 <?php endif; ?>
 
-<form class="bo-loc" method="get">
-    <label for="mua"><strong>Mùa giải:</strong></label>
-    <select id="mua" name="mua" onchange="this.form.submit()">
-        <?php foreach ($dsMua as $m): ?>
-            <option value="<?= $m['ma_mua_giai'] ?>"<?= chon($maMua, $m['ma_mua_giai']) ?>>
-                <?= e($m['ten_mua_giai']) ?><?= $m['la_mua_hien_tai'] ? ' (hiện tại)' : '' ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
-    <noscript><button class="nut" type="submit">Xem</button></noscript>
-</form>
+<?php if ($loi !== ''): ?><div class="alert alert-danger"><?= e($loi) ?></div><?php endif; ?>
 
-<?php if ($loi !== ''): ?><div class="thong-bao loi"><?= e($loi) ?></div><?php endif; ?>
-
-<form class="the" method="post" id="form-trao">
-    <?= oCsrf() ?>
-    <div class="luoi-form">
-        <div class="truong">
-            <label for="ma_giai_thuong">Giải thưởng</label>
-            <select id="ma_giai_thuong" name="ma_giai_thuong" required>
-                <option value="">-- Chọn giải --</option>
-                <?php foreach ($dsGiai as $g): ?>
-                    <option value="<?= $g['ma_giai_thuong'] ?>" data-doi-tuong="<?= e($g['doi_tuong']) ?>"<?= chon($daChonGiai, $g['ma_giai_thuong']) ?>>
-                        <?= e($g['ten_viet_tat'] . ' – ' . $g['ten_giai']) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-
-        <div class="truong" id="o-cau-thu">
-            <label for="ma_cau_thu">Cầu thủ nhận giải</label>
-            <select id="ma_cau_thu" name="ma_cau_thu">
-                <option value="">-- Chọn cầu thủ --</option>
-                <?php foreach ($ctTheoDoi as $tenDoi => $ds): ?>
-                    <optgroup label="<?= e($tenDoi) ?>">
-                        <?php foreach ($ds as $ct): ?>
-                            <option value="<?= $ct['ma_cau_thu'] ?>"><?= e($ct['ho_ten'] . ' (' . $ct['vi_tri'] . ')') ?></option>
+<div class="card shadow-sm mb-4">
+    <div class="card-header fw-semibold"><i class="bi bi-trophy"></i> Trao giải mùa <?= e($tenMua) ?></div>
+    <div class="card-body">
+        <form method="post">
+            <?= oCsrf() ?>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold" for="ma_giai_thuong">Giải thưởng</label>
+                    <select class="form-select" id="ma_giai_thuong" name="ma_giai_thuong" required>
+                        <option value="">-- Chọn giải --</option>
+                        <?php foreach ($dsGiai as $g): ?>
+                            <option value="<?= (int) $g['ma_giai_thuong'] ?>" data-doi-tuong="<?= e($g['doi_tuong']) ?>"<?= chon($daChonGiai, $g['ma_giai_thuong']) ?>>
+                                <?= e($g['ten_viet_tat'] . ' – ' . $g['ten_giai']) ?>
+                            </option>
                         <?php endforeach; ?>
-                    </optgroup>
-                <?php endforeach; ?>
-            </select>
-        </div>
+                    </select>
+                </div>
 
-        <div class="truong" id="o-hlv" style="display:none">
-            <label for="ma_hlv">Huấn luyện viên nhận giải</label>
-            <select id="ma_hlv" name="ma_hlv">
-                <option value="">-- Chọn HLV --</option>
-                <?php foreach ($dsHLV as $h): ?>
-                    <option value="<?= $h['ma_hlv'] ?>">
-                        <?= e($h['ho_ten'] . ' – ' . ($h['ten_doi'] ?? 'Tự do') . ($h['vai_tro'] === 'truong' ? ' (HLV trưởng)' : '')) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-            <?php if (!$dsHLV): ?><div class="mo" style="font-size:13px;margin-top:3px">Chưa có HLV nào (dữ liệu của TV2).</div><?php endif; ?>
-        </div>
-    </div>
-    <div style="margin-top:16px">
-        <button class="nut" type="submit">Trao giải</button>
-        <span class="mo" style="font-size:13px;margin-left:8px">Giải đã trao trong mùa này sẽ được thay người nhận.</span>
-    </div>
-</form>
+                <div class="col-md-6" id="o-cau-thu">
+                    <label class="form-label fw-semibold" for="ma_cau_thu">Cầu thủ nhận giải</label>
+                    <select class="form-select" id="ma_cau_thu" name="ma_cau_thu">
+                        <option value="">-- Chọn cầu thủ --</option>
+                        <?php foreach ($ctTheoDoi as $tenDoi => $ds): ?>
+                            <optgroup label="<?= e($tenDoi) ?>">
+                                <?php foreach ($ds as $ct): ?>
+                                    <option value="<?= (int) $ct['ma_cau_thu'] ?>"><?= e($ct['ho_ten'] . ' (' . $ct['vi_tri'] . ')') ?></option>
+                                <?php endforeach; ?>
+                            </optgroup>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-<h2>Kết quả mùa <?= e(array_column($dsMua, 'ten_mua_giai', 'ma_mua_giai')[$maMua] ?? '') ?></h2>
-<div class="cuon-ngang">
-<table>
-    <thead><tr><th>Giải</th><th>Tên giải</th><th>Người nhận</th><th>Đội</th><th></th></tr></thead>
-    <tbody>
-    <?php foreach ($ketQua as $kq): ?>
-        <tr>
-            <td><strong><?= e($kq['ten_viet_tat']) ?></strong></td>
-            <td><?= e($kq['ten_giai']) ?></td>
-            <td>
-                <?php if ($kq['ma_cau_thu']): ?>
-                    <a href="<?= BASE_URL ?>/cau_thu/ho_so.php?id=<?= $kq['ma_cau_thu'] ?>"><?= e($kq['nguoi_nhan']) ?></a>
-                <?php elseif ($kq['ma_hlv']): ?>
-                    <?= e($kq['nguoi_nhan']) ?> <span class="mo">(HLV)</span>
-                <?php else: ?>
-                    <span class="mo">Chưa trao</span>
-                <?php endif; ?>
-            </td>
-            <td><?= e($kq['ten_doi'] ?? '') ?></td>
-            <td style="white-space:nowrap">
-                <?php if ($kq['ma_trao_giai']): ?>
-                <form class="inline" method="post" onsubmit="return confirm('Hủy trao giải <?= e($kq['ten_viet_tat']) ?>?')">
-                    <?= oCsrf() ?>
-                    <input type="hidden" name="hanh_dong" value="huy">
-                    <input type="hidden" name="ma_giai_thuong" value="<?= $kq['ma_giai_thuong'] ?>">
-                    <button class="nut do nho" type="submit">Hủy</button>
-                </form>
-                <?php endif; ?>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-    </tbody>
-</table>
+                <div class="col-md-6 d-none" id="o-hlv">
+                    <label class="form-label fw-semibold" for="ma_hlv">Huấn luyện viên nhận giải</label>
+                    <select class="form-select" id="ma_hlv" name="ma_hlv">
+                        <option value="">-- Chọn HLV --</option>
+                        <?php foreach ($dsHLV as $h): ?>
+                            <option value="<?= (int) $h['ma_hlv'] ?>">
+                                <?= e($h['ho_ten'] . ' – ' . ($h['ten_doi'] ?? 'Tự do') . ($h['vai_tro'] === 'truong' ? ' (HLV trưởng)' : '')) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <?php if (!$dsHLV): ?><div class="form-text">Chưa có HLV nào (dữ liệu của TV2).</div><?php endif; ?>
+                </div>
+            </div>
+            <div class="mt-4 d-flex align-items-center flex-wrap gap-3">
+                <button class="btn btn-primary" type="submit"><i class="bi bi-award"></i> Trao giải</button>
+                <span class="text-muted small">Giải đã trao trong mùa này sẽ được thay người nhận.</span>
+            </div>
+        </form>
+    </div>
+</div>
+
+<h2 class="h5 mb-3">Kết quả mùa <?= e($tenMua) ?></h2>
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light"><tr><th style="width: 90px">Giải</th><th>Tên giải</th><th>Người nhận</th><th>Đội</th><th class="text-end"></th></tr></thead>
+            <tbody>
+            <?php foreach ($ketQua as $kq): ?>
+                <tr>
+                    <td><span class="badge text-bg-warning"><?= e($kq['ten_viet_tat']) ?></span></td>
+                    <td><?= e($kq['ten_giai']) ?></td>
+                    <td>
+                        <?php if ($kq['ma_cau_thu']): ?>
+                            <a class="fw-semibold" href="<?= url('/cau_thu/ho_so.php?id=' . (int) $kq['ma_cau_thu']) ?>"><?= e($kq['nguoi_nhan']) ?></a>
+                        <?php elseif ($kq['ma_hlv']): ?>
+                            <span class="fw-semibold"><?= e($kq['nguoi_nhan']) ?></span> <span class="text-muted">(HLV)</span>
+                        <?php else: ?>
+                            <span class="text-muted">Chưa trao</span>
+                        <?php endif; ?>
+                    </td>
+                    <td><?= e($kq['ten_doi'] ?? '') ?></td>
+                    <td class="text-end">
+                        <?php if ($kq['ma_trao_giai']): ?>
+                            <form class="d-inline" method="post" onsubmit="return confirm('Hủy trao giải <?= e($kq['ten_viet_tat']) ?>?')">
+                                <?= oCsrf() ?>
+                                <input type="hidden" name="hanh_dong" value="huy">
+                                <input type="hidden" name="ma_giai_thuong" value="<?= (int) $kq['ma_giai_thuong'] ?>">
+                                <button class="btn btn-sm btn-outline-danger" type="submit">Hủy</button>
+                            </form>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <script>
@@ -160,13 +174,12 @@ dauTrang('Trao giải thưởng');
     const chonGiai = document.getElementById('ma_giai_thuong');
     function capNhatOChon() {
         const opt = chonGiai.options[chonGiai.selectedIndex];
-        const doiTuong = opt ? (opt.dataset.doiTuong || '') : '';
-        const laHLV = doiTuong === 'hlv';
-        document.getElementById('o-hlv').style.display = laHLV ? '' : 'none';
-        document.getElementById('o-cau-thu').style.display = laHLV ? 'none' : '';
+        const laHLV = opt && opt.dataset.doiTuong === 'hlv';
+        document.getElementById('o-hlv').classList.toggle('d-none', !laHLV);
+        document.getElementById('o-cau-thu').classList.toggle('d-none', laHLV);
     }
     chonGiai.addEventListener('change', capNhatOChon);
     capNhatOChon();
 </script>
 
-<?php cuoiTrang();
+<?php require __DIR__ . '/../../includes/admin_footer.php'; ?>
