@@ -14,7 +14,8 @@ SET NAMES utf8mb4;
 -- 1. MÙA GIẢI (chỉ 1 mùa có la_mua_hien_tai = 1)
 INSERT INTO mua_giai (ma_mua_giai, ten_mua_giai, ngay_bat_dau, ngay_ket_thuc, la_mua_hien_tai) VALUES
     (1, '2025-26', '2025-10-21', '2026-06-19', 0),
-    (2, '2026-27', '2026-10-20', '2027-06-18', 1);
+    (2, '2026-27', '2026-10-20', '2027-06-18', 1),
+    (3, '2024-25', '2024-10-22', '2025-06-22', 0);
 
 -- 2. PHÂN BẢNG: 30 đội x 2 mùa
 --    ma_khu_vuc theo thứ tự INSERT trong qlbongro.sql:
