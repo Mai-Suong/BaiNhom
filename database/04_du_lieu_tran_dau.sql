@@ -6,17 +6,17 @@
 --  Mã đội, mã sân, mã trọng tài lấy theo 02_du_lieu_doi_bong.sql.
 --  LƯU Ý: tỉ số, khán giả, lịch đấu là DỮ LIỆU MẪU TỰ ĐẶT để test,
 --  không phải kết quả thật của NBA.
+--  Cả nhóm chỉ dùng 1 mùa: 2025-26 (ma_mua_giai = 1, la_mua_hien_tai = 1).
 --  Chưa có trận playoff: tran_dau.ma_loat cần bảng loat_playoff (TV5, file 05).
 -- =====================================================================
 USE qlbongro;
 SET NAMES utf8mb4;
 
--- 1. MÙA GIẢI (chỉ 1 mùa có la_mua_hien_tai = 1)
+-- 1. MÙA GIẢI
 INSERT INTO mua_giai (ma_mua_giai, ten_mua_giai, ngay_bat_dau, ngay_ket_thuc, la_mua_hien_tai) VALUES
-    (1, '2025-26', '2025-10-21', '2026-06-19', 0),
-    (2, '2026-27', '2026-10-20', '2027-06-18', 1);
+    (1, '2025-26', '2025-10-21', '2026-06-19', 1);
 
--- 2. PHÂN BẢNG: 30 đội x 2 mùa
+-- 2. PHÂN BẢNG: 30 đội, mùa 2025-26
 --    ma_khu_vuc theo thứ tự INSERT trong qlbongro.sql:
 --    1 Đại Tây Dương, 2 Trung Tâm, 3 Đông Nam (Miền Đông)
 --    4 Tây Bắc, 5 Thái Bình Dương, 6 Tây Nam (Miền Tây)
@@ -50,120 +50,90 @@ INSERT INTO phan_bang (ma_mua_giai, ma_doi, ma_khu_vuc) VALUES
     (1, 11, 6),  -- HOU - Tây Nam
     (1, 15, 6),  -- MEM - Tây Nam
     (1, 19, 6),  -- NOP - Tây Nam
-    (1, 27, 6),  -- SAS - Tây Nam
-    (2,  2, 1),  -- BOS - Đại Tây Dương
-    (2,  3, 1),  -- BRK - Đại Tây Dương
-    (2, 20, 1),  -- NYK - Đại Tây Dương
-    (2, 23, 1),  -- PHI - Đại Tây Dương
-    (2, 28, 1),  -- TOR - Đại Tây Dương
-    (2,  5, 2),  -- CHI - Trung Tâm
-    (2,  6, 2),  -- CLE - Trung Tâm
-    (2,  9, 2),  -- DET - Trung Tâm
-    (2, 12, 2),  -- IND - Trung Tâm
-    (2, 17, 2),  -- MIL - Trung Tâm
-    (2,  1, 3),  -- ATL - Đông Nam
-    (2,  4, 3),  -- CHO - Đông Nam
-    (2, 16, 3),  -- MIA - Đông Nam
-    (2, 22, 3),  -- ORL - Đông Nam
-    (2, 30, 3),  -- WAS - Đông Nam
-    (2,  8, 4),  -- DEN - Tây Bắc
-    (2, 18, 4),  -- MIN - Tây Bắc
-    (2, 21, 4),  -- OKC - Tây Bắc
-    (2, 25, 4),  -- POR - Tây Bắc
-    (2, 29, 4),  -- UTA - Tây Bắc
-    (2, 10, 5),  -- GSW - Thái Bình Dương
-    (2, 13, 5),  -- LAC - Thái Bình Dương
-    (2, 14, 5),  -- LAL - Thái Bình Dương
-    (2, 24, 5),  -- PHO - Thái Bình Dương
-    (2, 26, 5),  -- SAC - Thái Bình Dương
-    (2,  7, 6),  -- DAL - Tây Nam
-    (2, 11, 6),  -- HOU - Tây Nam
-    (2, 15, 6),  -- MEM - Tây Nam
-    (2, 19, 6),  -- NOP - Tây Nam
-    (2, 27, 6);  -- SAS - Tây Nam
+    (1, 27, 6);  -- SAS - Tây Nam
 
--- 3. TRẬN ĐẤU mùa 2026-27 (ma_san = sân nhà của đội nhà, vì ma_san = ma_doi)
---    20/10 - 26/10: đã đấu (có tỉ số); 27/10 - 02/11: chưa đấu
+-- 3. TRẬN ĐẤU mùa 2025-26 (ma_san = sân nhà của đội nhà, vì ma_san = ma_doi)
+--    21/10 - 27/10/2025: đã đấu (có tỉ số); 28/10 - 03/11/2025: chưa đấu (để test trang Nhập kết quả)
 INSERT INTO tran_dau (ma_tran, ma_mua_giai, ma_doi_nha, ma_doi_khach, ma_san, thoi_gian,
                       giai_doan, diem_doi_nha, diem_doi_khach, khan_gia, trang_thai) VALUES
-    ( 1, 2, 13,  9, 13, '2026-10-20 19:00:00', 'thuong', 108, 115, 17431, 'da_dau'),  -- LAC vs DET
-    ( 2, 2,  7,  3,  7, '2026-10-20 19:30:00', 'thuong', 108, 115, 17794, 'da_dau'),  -- DAL vs BRK
-    ( 3, 2, 14,  7, 14, '2026-10-21 20:00:00', 'thuong', 108, 125, 18088, 'da_dau'),  -- LAL vs DAL
-    ( 4, 2,  2,  9,  2, '2026-10-21 19:30:00', 'thuong', 113, 112, 17502, 'da_dau'),  -- BOS vs DET
-    ( 5, 2,  8,  4,  8, '2026-10-21 20:00:00', 'thuong', 116, 113, 16667, 'da_dau'),  -- DEN vs CHO
-    ( 6, 2, 16,  6, 16, '2026-10-21 19:00:00', 'thuong', 116, 122, 18743, 'da_dau'),  -- MIA vs CLE
-    ( 7, 2,  1,  5,  1, '2026-10-21 22:00:00', 'thuong', 109, 118, 15264, 'da_dau'),  -- ATL vs CHI
-    ( 8, 2, 25, 27, 25, '2026-10-21 20:00:00', 'thuong', 104, 118, 19152, 'da_dau'),  -- POR vs SAS
-    ( 9, 2, 12,  5, 12, '2026-10-22 19:30:00', 'thuong', 109, 105, 15350, 'da_dau'),  -- IND vs CHI
-    (10, 2, 11,  6, 11, '2026-10-22 20:00:00', 'thuong', 101, 116, 16362, 'da_dau'),  -- HOU vs CLE
-    (11, 2,  8, 15,  8, '2026-10-22 22:00:00', 'thuong', 107, 115, 17073, 'da_dau'),  -- DEN vs MEM
-    (12, 2, 21,  7, 21, '2026-10-22 19:00:00', 'thuong', 112, 119, 15810, 'da_dau'),  -- OKC vs DAL
-    (13, 2, 12, 15, 12, '2026-10-23 20:00:00', 'thuong', 117, 109, 17534, 'da_dau'),  -- IND vs MEM
-    (14, 2,  6,  4,  6, '2026-10-23 22:00:00', 'thuong', 110, 114, 17951, 'da_dau'),  -- CLE vs CHO
-    (15, 2, 25,  2, 25, '2026-10-23 19:30:00', 'thuong', 127, 128, 16981, 'da_dau'),  -- POR vs BOS
-    (16, 2, 11, 28, 11, '2026-10-23 20:00:00', 'thuong', 112, 106, 15850, 'da_dau'),  -- HOU vs TOR
-    (17, 2,  8, 20,  8, '2026-10-23 22:00:00', 'thuong', 113, 114, 16981, 'da_dau'),  -- DEN vs NYK
-    (18, 2,  3, 19,  3, '2026-10-23 19:30:00', 'thuong', 114, 107, 15115, 'da_dau'),  -- BRK vs NOP
-    (19, 2,  1,  5,  1, '2026-10-23 19:30:00', 'thuong', 121, 125, 16465, 'da_dau'),  -- ATL vs CHI
-    (20, 2,  3, 12,  3, '2026-10-24 19:30:00', 'thuong', 113, 108, 16944, 'da_dau'),  -- BRK vs IND
-    (21, 2, 21, 13, 21, '2026-10-24 19:00:00', 'thuong', 118, 103, 16823, 'da_dau'),  -- OKC vs LAC
-    (22, 2,  1, 20,  1, '2026-10-24 19:30:00', 'thuong', 113, 123, 16899, 'da_dau'),  -- ATL vs NYK
-    (23, 2, 26,  7, 26, '2026-10-24 19:00:00', 'thuong', 100, 118, 16897, 'da_dau'),  -- SAC vs DAL
-    (24, 2, 23, 19, 23, '2026-10-24 20:00:00', 'thuong', 115, 107, 19012, 'da_dau'),  -- PHI vs NOP
-    (25, 2, 30,  8, 30, '2026-10-24 20:00:00', 'thuong', 114, 116, 18921, 'da_dau'),  -- WAS vs DEN
-    (26, 2,  5, 25,  5, '2026-10-24 22:00:00', 'thuong', 121, 124, 20915, 'da_dau'),  -- CHI vs POR
-    (27, 2, 28,  6, 28, '2026-10-25 20:00:00', 'thuong', 115, 104, 17544, 'da_dau'),  -- TOR vs CLE
-    (28, 2, 14, 10, 14, '2026-10-25 22:00:00', 'thuong', 111, 101, 17904, 'da_dau'),  -- LAL vs GSW
-    (29, 2, 24, 17, 24, '2026-10-25 19:30:00', 'thuong', 127, 115, 15844, 'da_dau'),  -- PHO vs MIL
-    (30, 2, 23, 19, 23, '2026-10-25 19:30:00', 'thuong', 118, 105, 19695, 'da_dau'),  -- PHI vs NOP
-    (31, 2, 10, 20, 10, '2026-10-26 20:00:00', 'thuong', 108, 116, 15878, 'da_dau'),  -- GSW vs NYK
-    (32, 2, 25, 19, 25, '2026-10-26 19:00:00', 'thuong', 114, 120, 18735, 'da_dau'),  -- POR vs NOP
-    (33, 2, 14, 22, 14, '2026-10-26 20:00:00', 'thuong', 114, 112, 16743, 'da_dau'),  -- LAL vs ORL
-    (34, 2, 15, 27, 15, '2026-10-26 19:00:00', 'thuong', 103, 119, 15239, 'da_dau'),  -- MEM vs SAS
-    (35, 2, 21, 28, 21, '2026-10-26 19:00:00', 'thuong', 113, 106, 17497, 'da_dau'),  -- OKC vs TOR
-    (36, 2, 11,  6, 11, '2026-10-26 22:00:00', 'thuong', 117, 116, 17150, 'da_dau'),  -- HOU vs CLE
-    (37, 2,  8,  9,  8, '2026-10-26 19:30:00', 'thuong', 130, 123, 17063, 'da_dau'),  -- DEN vs DET
-    (38, 2, 12, 10, 12, '2026-10-27 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- IND vs GSW
-    (39, 2,  9, 19,  9, '2026-10-27 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- DET vs NOP
-    (40, 2, 16,  5, 16, '2026-10-27 22:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- MIA vs CHI
-    (41, 2, 25, 24, 25, '2026-10-27 22:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- POR vs PHO
-    (42, 2,  1, 28,  1, '2026-10-27 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- ATL vs TOR
-    (43, 2,  4, 29,  4, '2026-10-27 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- CHO vs UTA
-    (44, 2, 21, 14, 21, '2026-10-27 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- OKC vs LAL
-    (45, 2,  4, 17,  4, '2026-10-28 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- CHO vs MIL
-    (46, 2, 25, 28, 25, '2026-10-28 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- POR vs TOR
-    (47, 2, 22,  1, 22, '2026-10-28 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- ORL vs ATL
-    (48, 2,  7,  5,  7, '2026-10-28 22:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- DAL vs CHI
-    (49, 2,  2, 11,  2, '2026-10-28 22:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- BOS vs HOU
-    (50, 2, 19, 20, 19, '2026-10-28 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- NOP vs NYK
-    (51, 2, 21, 26, 21, '2026-10-28 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- OKC vs SAC
-    (52, 2,  3, 29,  3, '2026-10-29 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- BRK vs UTA
-    (53, 2, 17, 23, 17, '2026-10-29 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- MIL vs PHI
-    (54, 2,  2,  8,  2, '2026-10-29 20:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- BOS vs DEN
-    (55, 2, 30, 28, 30, '2026-10-29 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- WAS vs TOR
-    (56, 2, 13, 16, 13, '2026-10-29 22:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- LAC vs MIA
-    (57, 2, 15,  9, 15, '2026-10-29 22:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- MEM vs DET
-    (58, 2,  5, 20,  5, '2026-10-29 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- CHI vs NYK
-    (59, 2, 10, 14, 10, '2026-10-30 22:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- GSW vs LAL
-    (60, 2, 18, 19, 18, '2026-10-30 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- MIN vs NOP
-    (61, 2, 20, 13, 20, '2026-10-30 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- NYK vs LAC
-    (62, 2,  8,  7,  8, '2026-10-30 20:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- DEN vs DAL
-    (63, 2,  1, 27,  1, '2026-10-30 20:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- ATL vs SAS
-    (64, 2, 26, 15, 26, '2026-10-30 20:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- SAC vs MEM
-    (65, 2, 16, 23, 16, '2026-10-30 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- MIA vs PHI
-    (66, 2, 25, 23, 25, '2026-10-31 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- POR vs PHI
-    (67, 2, 14, 30, 14, '2026-10-31 22:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- LAL vs WAS
-    (68, 2, 21,  3, 21, '2026-10-31 22:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- OKC vs BRK
-    (69, 2, 27,  5, 27, '2026-10-31 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- SAS vs CHI
-    (70, 2,  9,  6,  9, '2026-10-31 20:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- DET vs CLE
-    (71, 2, 16,  6, 16, '2026-11-01 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- MIA vs CLE
-    (72, 2, 26, 17, 26, '2026-11-01 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- SAC vs MIL
-    (73, 2,  5,  8,  5, '2026-11-01 20:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- CHI vs DEN
-    (74, 2, 22, 15, 22, '2026-11-01 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- ORL vs MEM
-    (75, 2,  7,  9,  7, '2026-11-02 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- DAL vs DET
-    (76, 2,  2, 27,  2, '2026-11-02 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- BOS vs SAS
-    (77, 2, 29, 11, 29, '2026-11-02 22:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- UTA vs HOU
-    (78, 2, 21, 22, 21, '2026-11-02 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau');  -- OKC vs ORL
+    ( 1, 1, 13,  9, 13, '2025-10-21 19:00:00', 'thuong', 108, 115, 17431, 'da_dau'),  -- LAC vs DET
+    ( 2, 1,  7,  3,  7, '2025-10-21 19:30:00', 'thuong', 108, 115, 17794, 'da_dau'),  -- DAL vs BRK
+    ( 3, 1, 14,  7, 14, '2025-10-22 20:00:00', 'thuong', 108, 125, 18088, 'da_dau'),  -- LAL vs DAL
+    ( 4, 1,  2,  9,  2, '2025-10-22 19:30:00', 'thuong', 113, 112, 17502, 'da_dau'),  -- BOS vs DET
+    ( 5, 1,  8,  4,  8, '2025-10-22 20:00:00', 'thuong', 116, 113, 16667, 'da_dau'),  -- DEN vs CHO
+    ( 6, 1, 16,  6, 16, '2025-10-22 19:00:00', 'thuong', 116, 122, 18743, 'da_dau'),  -- MIA vs CLE
+    ( 7, 1,  1,  5,  1, '2025-10-22 22:00:00', 'thuong', 109, 118, 15264, 'da_dau'),  -- ATL vs CHI
+    ( 8, 1, 25, 27, 25, '2025-10-22 20:00:00', 'thuong', 104, 118, 19152, 'da_dau'),  -- POR vs SAS
+    ( 9, 1, 12,  5, 12, '2025-10-23 19:30:00', 'thuong', 109, 105, 15350, 'da_dau'),  -- IND vs CHI
+    (10, 1, 11,  6, 11, '2025-10-23 20:00:00', 'thuong', 101, 116, 16362, 'da_dau'),  -- HOU vs CLE
+    (11, 1,  8, 15,  8, '2025-10-23 22:00:00', 'thuong', 107, 115, 17073, 'da_dau'),  -- DEN vs MEM
+    (12, 1, 21,  7, 21, '2025-10-23 19:00:00', 'thuong', 112, 119, 15810, 'da_dau'),  -- OKC vs DAL
+    (13, 1, 12, 15, 12, '2025-10-24 20:00:00', 'thuong', 117, 109, 17534, 'da_dau'),  -- IND vs MEM
+    (14, 1,  6,  4,  6, '2025-10-24 22:00:00', 'thuong', 110, 114, 17951, 'da_dau'),  -- CLE vs CHO
+    (15, 1, 25,  2, 25, '2025-10-24 19:30:00', 'thuong', 127, 128, 16981, 'da_dau'),  -- POR vs BOS
+    (16, 1, 11, 28, 11, '2025-10-24 20:00:00', 'thuong', 112, 106, 15850, 'da_dau'),  -- HOU vs TOR
+    (17, 1,  8, 20,  8, '2025-10-24 22:00:00', 'thuong', 113, 114, 16981, 'da_dau'),  -- DEN vs NYK
+    (18, 1,  3, 19,  3, '2025-10-24 19:30:00', 'thuong', 114, 107, 15115, 'da_dau'),  -- BRK vs NOP
+    (19, 1,  1,  5,  1, '2025-10-24 19:30:00', 'thuong', 121, 125, 16465, 'da_dau'),  -- ATL vs CHI
+    (20, 1,  3, 12,  3, '2025-10-25 19:30:00', 'thuong', 113, 108, 16944, 'da_dau'),  -- BRK vs IND
+    (21, 1, 21, 13, 21, '2025-10-25 19:00:00', 'thuong', 118, 103, 16823, 'da_dau'),  -- OKC vs LAC
+    (22, 1,  1, 20,  1, '2025-10-25 19:30:00', 'thuong', 113, 123, 16899, 'da_dau'),  -- ATL vs NYK
+    (23, 1, 26,  7, 26, '2025-10-25 19:00:00', 'thuong', 100, 118, 16897, 'da_dau'),  -- SAC vs DAL
+    (24, 1, 23, 19, 23, '2025-10-25 20:00:00', 'thuong', 115, 107, 19012, 'da_dau'),  -- PHI vs NOP
+    (25, 1, 30,  8, 30, '2025-10-25 20:00:00', 'thuong', 114, 116, 18921, 'da_dau'),  -- WAS vs DEN
+    (26, 1,  5, 25,  5, '2025-10-25 22:00:00', 'thuong', 121, 124, 20915, 'da_dau'),  -- CHI vs POR
+    (27, 1, 28,  6, 28, '2025-10-26 20:00:00', 'thuong', 115, 104, 17544, 'da_dau'),  -- TOR vs CLE
+    (28, 1, 14, 10, 14, '2025-10-26 22:00:00', 'thuong', 111, 101, 17904, 'da_dau'),  -- LAL vs GSW
+    (29, 1, 24, 17, 24, '2025-10-26 19:30:00', 'thuong', 127, 115, 15844, 'da_dau'),  -- PHO vs MIL
+    (30, 1, 23, 19, 23, '2025-10-26 19:30:00', 'thuong', 118, 105, 19695, 'da_dau'),  -- PHI vs NOP
+    (31, 1, 10, 20, 10, '2025-10-27 20:00:00', 'thuong', 108, 116, 15878, 'da_dau'),  -- GSW vs NYK
+    (32, 1, 25, 19, 25, '2025-10-27 19:00:00', 'thuong', 114, 120, 18735, 'da_dau'),  -- POR vs NOP
+    (33, 1, 14, 22, 14, '2025-10-27 20:00:00', 'thuong', 114, 112, 16743, 'da_dau'),  -- LAL vs ORL
+    (34, 1, 15, 27, 15, '2025-10-27 19:00:00', 'thuong', 103, 119, 15239, 'da_dau'),  -- MEM vs SAS
+    (35, 1, 21, 28, 21, '2025-10-27 19:00:00', 'thuong', 113, 106, 17497, 'da_dau'),  -- OKC vs TOR
+    (36, 1, 11,  6, 11, '2025-10-27 22:00:00', 'thuong', 117, 116, 17150, 'da_dau'),  -- HOU vs CLE
+    (37, 1,  8,  9,  8, '2025-10-27 19:30:00', 'thuong', 130, 123, 17063, 'da_dau'),  -- DEN vs DET
+    (38, 1, 12, 10, 12, '2025-10-28 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- IND vs GSW
+    (39, 1,  9, 19,  9, '2025-10-28 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- DET vs NOP
+    (40, 1, 16,  5, 16, '2025-10-28 22:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- MIA vs CHI
+    (41, 1, 25, 24, 25, '2025-10-28 22:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- POR vs PHO
+    (42, 1,  1, 28,  1, '2025-10-28 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- ATL vs TOR
+    (43, 1,  4, 29,  4, '2025-10-28 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- CHO vs UTA
+    (44, 1, 21, 14, 21, '2025-10-28 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- OKC vs LAL
+    (45, 1,  4, 17,  4, '2025-10-29 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- CHO vs MIL
+    (46, 1, 25, 28, 25, '2025-10-29 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- POR vs TOR
+    (47, 1, 22,  1, 22, '2025-10-29 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- ORL vs ATL
+    (48, 1,  7,  5,  7, '2025-10-29 22:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- DAL vs CHI
+    (49, 1,  2, 11,  2, '2025-10-29 22:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- BOS vs HOU
+    (50, 1, 19, 20, 19, '2025-10-29 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- NOP vs NYK
+    (51, 1, 21, 26, 21, '2025-10-29 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- OKC vs SAC
+    (52, 1,  3, 29,  3, '2025-10-30 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- BRK vs UTA
+    (53, 1, 17, 23, 17, '2025-10-30 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- MIL vs PHI
+    (54, 1,  2,  8,  2, '2025-10-30 20:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- BOS vs DEN
+    (55, 1, 30, 28, 30, '2025-10-30 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- WAS vs TOR
+    (56, 1, 13, 16, 13, '2025-10-30 22:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- LAC vs MIA
+    (57, 1, 15,  9, 15, '2025-10-30 22:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- MEM vs DET
+    (58, 1,  5, 20,  5, '2025-10-30 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- CHI vs NYK
+    (59, 1, 10, 14, 10, '2025-10-31 22:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- GSW vs LAL
+    (60, 1, 18, 19, 18, '2025-10-31 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- MIN vs NOP
+    (61, 1, 20, 13, 20, '2025-10-31 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- NYK vs LAC
+    (62, 1,  8,  7,  8, '2025-10-31 20:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- DEN vs DAL
+    (63, 1,  1, 27,  1, '2025-10-31 20:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- ATL vs SAS
+    (64, 1, 26, 15, 26, '2025-10-31 20:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- SAC vs MEM
+    (65, 1, 16, 23, 16, '2025-10-31 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- MIA vs PHI
+    (66, 1, 25, 23, 25, '2025-11-01 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- POR vs PHI
+    (67, 1, 14, 30, 14, '2025-11-01 22:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- LAL vs WAS
+    (68, 1, 21,  3, 21, '2025-11-01 22:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- OKC vs BRK
+    (69, 1, 27,  5, 27, '2025-11-01 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- SAS vs CHI
+    (70, 1,  9,  6,  9, '2025-11-01 20:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- DET vs CLE
+    (71, 1, 16,  6, 16, '2025-11-02 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- MIA vs CLE
+    (72, 1, 26, 17, 26, '2025-11-02 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- SAC vs MIL
+    (73, 1,  5,  8,  5, '2025-11-02 20:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- CHI vs DEN
+    (74, 1, 22, 15, 22, '2025-11-02 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- ORL vs MEM
+    (75, 1,  7,  9,  7, '2025-11-03 19:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- DAL vs DET
+    (76, 1,  2, 27,  2, '2025-11-03 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- BOS vs SAS
+    (77, 1, 29, 11, 29, '2025-11-03 22:00:00', 'thuong', NULL, NULL, NULL, 'chua_dau'),  -- UTA vs HOU
+    (78, 1, 21, 22, 21, '2025-11-03 19:30:00', 'thuong', NULL, NULL, NULL, 'chua_dau');  -- OKC vs ORL
 
 -- 4. ĐIỂM THEO HIỆP (hiệp 1-4; hiệp 5 trở đi là hiệp phụ)
 --    Tổng các hiệp của mỗi đội = điểm trong tran_dau
