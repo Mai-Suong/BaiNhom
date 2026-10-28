@@ -1,0 +1,93 @@
+/* CSS riêng cho các trang của TV5 (bảng xếp hạng, thống kê, box score, playoff).
+   Dùng kèm Bootstrap và style.css chung; màu lấy từ biến --nba-xanh / --nba-do. */
+:root { --tk-xanh-la: #1f7a4f; --tk-cam: #c2410c; --tk-toi: #0f1b2d; }
+
+/* ---- Bảng số liệu ---- */
+.bang-so th, .bang-so td { white-space: nowrap; text-align: right; vertical-align: middle; }
+.bang-so th:first-child, .bang-so td:first-child,
+.bang-so .trai { text-align: left; }
+.bang-so .giua { text-align: center; }
+.bang-so thead th { background: #f8f9fa; font-size: .8rem; color: #52606d; }
+.bang-so .cot-chinh { background: #fff1e8; font-weight: 700; }
+.bang-so thead th.cot-chinh { background: var(--tk-cam); color: #fff; }
+.bang-so tr.nhom-dong td { background: #f1f3f5; font-size: .75rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: #495057; text-align: left; }
+.bang-so tr.tong-dong td { border-top: 2px solid var(--tk-toi); background: #f1f3f5; font-weight: 700; }
+.bang-so tr.khong-dau td { color: #6c757d; }
+.hang { display: inline-block; min-width: 28px; padding: 2px 0; border-radius: 6px; background: #e9ecef; font-weight: 700; text-align: center; }
+tr.playoff .hang { background: var(--tk-xanh-la); color: #fff; }
+tr.playin .hang { background: #2b5fa8; color: #fff; }
+tr.playoff .nhom-nhan { color: var(--tk-xanh-la); font-weight: 600; }
+tr.playin .nhom-nhan { color: #2b5fa8; font-weight: 600; }
+.vong-tron { display: inline-flex; width: 32px; height: 32px; border-radius: 50%; background: #e9ecef; color: #343a40; align-items: center; justify-content: center; font-size: .7rem; font-weight: 700; margin-right: .5rem; vertical-align: middle; }
+.chu-thich i { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; margin-right: 6px; }
+.duong { color: var(--tk-xanh-la); font-weight: 600; }
+.am { color: #b42318; font-weight: 600; }
+
+/* ---- Ô dẫn đầu chỉ số ---- */
+.o-dan-dau .so-lon { font-size: 2.6rem; line-height: 1; font-weight: 700; color: var(--tk-cam); }
+.o-dan-dau .nhan-nho { font-size: .75rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: #6c757d; }
+
+/* ---- Bảng điểm đầu box score ---- */
+.bang-diem { background: var(--tk-toi); color: #fff; padding: 1.75rem 2rem; display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); align-items: center; gap: 1.25rem; border-radius: .375rem .375rem 0 0; }
+.bang-diem .doi-lon { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
+.bang-diem .doi-lon.phai { flex-direction: row-reverse; text-align: right; }
+.bang-diem .huy-hieu { width: 64px; height: 64px; border-radius: 50%; background: #1e3350; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; }
+.bang-diem .ten-lon { font-size: 1.2rem; font-weight: 600; }
+.bang-diem .vai-tro { font-size: .85rem; color: #9fb0c6; }
+.bang-diem .diem-lon { font-size: 4rem; line-height: 1; font-weight: 700; }
+.bang-diem .diem-lon.thua { color: #9fb0c6; }
+.bang-diem .giua-bang { display: flex; flex-direction: column; align-items: center; gap: .35rem; text-align: center; }
+.bang-diem .trang-thai { font-size: .75rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #ff8a4c; }
+.luoi-thong-tin { padding: 1rem 2rem 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem 2rem; border-top: 1px solid #dee2e6; }
+.luoi-thong-tin .tieu-nho { display: block; font-size: .75rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #6c757d; margin-bottom: .2rem; }
+.dong-kiem-tra .khop { color: var(--tk-xanh-la); font-weight: 600; }
+.dong-kiem-tra .lech { color: #b42318; font-weight: 600; }
+
+/* ---- Form nhập box score ---- */
+.bang-nhap input[type=number] { width: 3.8rem; padding: .15rem .3rem; text-align: right; }
+.bang-nhap td, .bang-nhap th { padding: .3rem .35rem; }
+.tong-doi { padding: .75rem 1.25rem; display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; background: #f1f3f5; border-top: 2px solid var(--tk-toi); font-weight: 600; }
+.tong-doi.khop b, .tong-doi.khop .chenh { color: var(--tk-xanh-la); }
+.tong-doi.lech b, .tong-doi.lech .chenh { color: #b42318; }
+
+/* ---- So sánh cầu thủ ---- */
+.khung-bieu-do { position: relative; height: 340px; margin-top: .75rem; }
+.khung-bieu-do.cao { height: 380px; }
+.so-sanh-hang { display: grid; grid-template-columns: minmax(0,1fr) 140px minmax(0,1fr); align-items: center; gap: 1rem; min-height: 48px; border-top: 1px solid #dee2e6; }
+.so-sanh-hang .ben { display: flex; align-items: center; gap: .75rem; }
+.so-sanh-hang .ben.trai { justify-content: flex-end; }
+.so-sanh-hang .thanh-bar { width: 60%; display: flex; }
+.so-sanh-hang .ben.trai .thanh-bar { justify-content: flex-end; }
+.so-sanh-hang .thanh-bar i { display: block; height: 12px; border-radius: 6px; }
+.so-sanh-hang .nhan-giua { text-align: center; color: #343a40; }
+.mau-a { color: #9a3412; }
+.mau-b { color: #1e4e8c; }
+
+/* ---- Sơ đồ nhánh Playoff ---- */
+.nhanh-cuon { overflow-x: auto; }
+.nhanh-tieu-de, .nhanh-luoi { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); column-gap: .85rem; min-width: 1040px; }
+.nhanh-tieu-de > div { font-size: 1.4rem; font-weight: 700; padding-bottom: .3rem; border-bottom: 3px solid var(--tk-toi); margin-bottom: .5rem; }
+.nhanh-tieu-de .dong { grid-column: 1 / 4; }
+.nhanh-tieu-de .chung-ket { grid-column: 4 / 5; text-align: center; border-bottom-color: var(--tk-do, var(--nba-do)); }
+.nhanh-tieu-de .tay { grid-column: 5 / 8; text-align: right; }
+.cot-nhanh { display: flex; flex-direction: column; min-width: 0; }
+.cot-nhanh .ten-vong { min-height: 36px; font-size: .75rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #6c757d; display: flex; align-items: center; justify-content: center; text-align: center; }
+.cot-nhanh .noi-dung { height: 580px; display: flex; flex-direction: column; justify-content: space-around; gap: .5rem; }
+.the-loat { background: #fff; border: 1px solid #b8c2d0; border-radius: 8px; overflow: hidden; }
+.the-loat .doi { display: grid; grid-template-columns: 16px minmax(0,1fr) 32px; align-items: center; column-gap: 6px; min-height: 40px; padding: 0 6px 0 10px; border-bottom: 1px solid #e9ecef; }
+.the-loat .doi:nth-of-type(2) { border-bottom: 0; }
+.the-loat .hat-giong { font-size: .75rem; color: #6c757d; }
+.the-loat .ten { font-weight: 500; color: #343a40; }
+.the-loat .doi.dan .ten, .the-loat .doi.thang .ten { font-weight: 700; color: var(--tk-toi); }
+.the-loat .so-thang { min-height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-weight: 700; background: #e9ecef; color: #343a40; }
+.the-loat .doi.thang .so-thang { background: var(--tk-toi); color: #fff; }
+.the-loat .doi.dan .so-thang { background: #fff1e8; color: #9a3412; }
+.the-loat .trang-thai-loat { padding: .3rem .6rem; font-size: .75rem; font-weight: 600; background: #f8f9fa; color: #6c757d; }
+.the-loat .trang-thai-loat.dang { color: #9a3412; }
+
+@media (max-width: 767px) {
+    .bang-diem { grid-template-columns: 1fr; padding: 1.25rem; }
+    .bang-diem .doi-lon.phai { flex-direction: row; text-align: left; }
+    .luoi-thong-tin { padding: 1rem 1.25rem; }
+    .so-sanh-hang { grid-template-columns: minmax(0,1fr) 90px minmax(0,1fr); gap: .5rem; }
+}
