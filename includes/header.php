@@ -51,7 +51,7 @@ $thongBao = layThongBao();
                     <?php elseif (laCauThu()): ?>
                         <li class="nav-item"><a class="nav-link" href="<?= url('/cau_thu/cua_toi.php') ?>"><i class="bi bi-person-badge"></i> Của tôi</a></li>
                     <?php endif; ?>
-                    <li class="nav-item"><span class="nav-link text-white-50"><i class="bi bi-person-circle"></i> <?= e(tenDangNhap()) ?></span></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= url('/doi_mat_khau.php') ?>" title="Đổi mật khẩu"><i class="bi bi-person-circle"></i> <?= e(tenDangNhap()) ?></a></li>
                     <li class="nav-item"><a class="nav-link" href="<?= url('/dang_xuat.php') ?>">Đăng xuất</a></li>
                 <?php else: ?>
                     <li class="nav-item"><a class="btn btn-outline-light btn-sm mt-1" href="<?= url('/dang_nhap.php') ?>">Đăng nhập</a></li>
