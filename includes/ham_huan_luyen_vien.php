@@ -3,7 +3,7 @@
  * MODULE HUẤN LUYỆN VIÊN (TV2) - hàm truy vấn và nghiệp vụ.
  * Các trang chỉ gọi hàm ở đây, không viết SQL trực tiếp trong trang.
  *
- * Bảng dùng: huan_luyen_vien (ghi); doi_bong, trao_giai, nhiem_ky_hlv (chỉ đọc)
+ * Bảng dùng: huan_luyen_vien, nhiem_ky_hlv (ghi); doi_bong, trao_giai, mua_giai (chỉ đọc)
  *
  * Mỗi module của TV2 nằm trong 1 file riêng để các Pull Request độc lập, merge thứ tự nào cũng được.
  * Tên hàm có tiền tố riêng của từng module, không trùng hàm của TV3 (ham_cau_thu.php).
@@ -22,7 +22,8 @@ const THU_MUC_ANH_HLV = 'hlv';
  */
 function hlvLayDanhSach(string $tuKhoa = '', string $locDoi = ''): array
 {
-    $sql = 'SELECT h.*, d.ten_doi, d.ten_viet_tat
+    $sql = 'SELECT h.*, d.ten_doi, d.ten_viet_tat,
+                   (SELECT COUNT(*) FROM nhiem_ky_hlv nk WHERE nk.ma_hlv = h.ma_hlv) AS so_nhiem_ky
               FROM huan_luyen_vien h
               LEFT JOIN doi_bong d ON d.ma_doi = h.ma_doi
              WHERE 1 = 1';
@@ -191,4 +192,199 @@ function hlvXoa(int $maHlv): ?string
     $pdo->prepare('DELETE FROM huan_luyen_vien WHERE ma_hlv = ?')->execute([$maHlv]);
     tv2XoaAnh($hlv['anh'], THU_MUC_ANH_HLV);
     return null;
+}
+
+/* =====================================================================
+ * NHIỆM KỲ HLV THEO MÙA (bảng nhiem_ky_hlv) - để xem nhiều mùa giải.
+ * huan_luyen_vien.ma_doi / vai_tro vẫn là "hiện tại" và sửa ở form HLV;
+ * phần này chỉ quản lý lịch sử dẫn dắt từng mùa.
+ * ===================================================================== */
+
+/** Danh sách mùa giải (mới nhất trước) cho ô chọn */
+function nkLayDsMua(): array
+{
+    return ketNoi()->query(
+        'SELECT ma_mua_giai, ten_mua_giai, ngay_bat_dau, ngay_ket_thuc FROM mua_giai ORDER BY ngay_bat_dau DESC'
+    )->fetchAll();
+}
+
+/** Các nhiệm kỳ của 1 HLV, mùa mới nhất trước */
+function nkLayCuaHlv(int $maHlv): array
+{
+    $st = ketNoi()->prepare(
+        'SELECT nk.*, mg.ten_mua_giai, mg.ngay_ket_thuc AS het_mua, d.ten_doi, d.ten_viet_tat
+           FROM nhiem_ky_hlv nk
+           JOIN mua_giai mg ON mg.ma_mua_giai = nk.ma_mua_giai
+           JOIN doi_bong d  ON d.ma_doi = nk.ma_doi
+          WHERE nk.ma_hlv = ?
+          ORDER BY mg.ngay_bat_dau DESC, nk.tu_ngay DESC'
+    );
+    $st->execute([$maHlv]);
+    return $st->fetchAll();
+}
+
+function nkLay(int $maNhiemKy): ?array
+{
+    $st = ketNoi()->prepare('SELECT * FROM nhiem_ky_hlv WHERE ma_nhiem_ky = ?');
+    $st->execute([$maNhiemKy]);
+    return $st->fetch() ?: null;
+}
+
+function nkChuanHoa(array $p): array
+{
+    $hoacNull = function ($v) {
+        $v = trim((string) ($v ?? ''));
+        return $v === '' ? null : $v;
+    };
+    return [
+        'ma_mua_giai' => $hoacNull($p['ma_mua_giai'] ?? null),
+        'ma_doi'      => $hoacNull($p['ma_doi'] ?? null),
+        'vai_tro'     => (string) ($p['vai_tro'] ?? ''),
+        'tam_quyen'   => empty($p['tam_quyen']) ? 0 : 1,
+        'tu_ngay'     => $hoacNull($p['tu_ngay'] ?? null),
+        'den_ngay'    => $hoacNull($p['den_ngay'] ?? null),
+    ];
+}
+
+/**
+ * Kiểm tra 1 nhiệm kỳ của HLV $maHlv. Trả về mảng lỗi [tên ô => thông báo]; rỗng = hợp lệ.
+ * Quy tắc:
+ *  - Ngày nằm trong mùa giải; để trống "từ ngày" = ngày bắt đầu mùa; "đến ngày" trống = hết mùa.
+ *  - Mỗi đội chỉ 1 HLV trưởng tại một thời điểm (không trùng thời gian với HLV trưởng khác của đội).
+ *  - Một HLV không dẫn dắt 2 đội cùng lúc (không trùng thời gian với nhiệm kỳ khác của chính HLV đó).
+ * $boQuaMa: mã nhiệm kỳ đang sửa (không so với chính nó).
+ */
+function nkKiemTra(int $maHlv, array &$d, int $boQuaMa = 0): array
+{
+    $loi = [];
+    $pdo = ketNoi();
+
+    $mua = null;
+    if ($d['ma_mua_giai'] === null || !ctype_digit($d['ma_mua_giai'])) {
+        $loi['ma_mua_giai'] = 'Vui lòng chọn mùa giải.';
+    } else {
+        $st = $pdo->prepare('SELECT * FROM mua_giai WHERE ma_mua_giai = ?');
+        $st->execute([(int) $d['ma_mua_giai']]);
+        $mua = $st->fetch() ?: null;
+        if (!$mua) {
+            $loi['ma_mua_giai'] = 'Mùa giải không hợp lệ.';
+        } else {
+            $d['ma_mua_giai'] = (int) $d['ma_mua_giai'];
+        }
+    }
+
+    $doi = null;
+    if ($d['ma_doi'] === null || !ctype_digit($d['ma_doi'])) {
+        $loi['ma_doi'] = 'Vui lòng chọn đội.';
+    } else {
+        $st = $pdo->prepare('SELECT ma_doi, ten_doi FROM doi_bong WHERE ma_doi = ?');
+        $st->execute([(int) $d['ma_doi']]);
+        $doi = $st->fetch() ?: null;
+        if (!$doi) {
+            $loi['ma_doi'] = 'Đội không hợp lệ.';
+        } else {
+            $d['ma_doi'] = (int) $d['ma_doi'];
+        }
+    }
+
+    if (!isset(VAI_TRO_HLV[$d['vai_tro']])) {
+        $loi['vai_tro'] = 'Vui lòng chọn vai trò.';
+    }
+
+    if ($d['tu_ngay'] === null && $mua) {
+        $d['tu_ngay'] = $mua['ngay_bat_dau'];
+    }
+    if ($d['tu_ngay'] === null || !tv2NgayHopLe($d['tu_ngay'])) {
+        $loi['tu_ngay'] = 'Ngày bắt đầu không hợp lệ.';
+    }
+    if ($d['den_ngay'] !== null && !tv2NgayHopLe($d['den_ngay'])) {
+        $loi['den_ngay'] = 'Ngày kết thúc không hợp lệ.';
+    }
+    if ($loi || !$mua || !$doi) {
+        return $loi;
+    }
+
+    if ($d['den_ngay'] !== null && $d['den_ngay'] < $d['tu_ngay']) {
+        $loi['den_ngay'] = 'Ngày kết thúc phải từ ngày bắt đầu trở đi.';
+        return $loi;
+    }
+    $bd = $mua['ngay_bat_dau'];
+    $kt = $mua['ngay_ket_thuc'];
+    if ($d['tu_ngay'] < $bd || $d['tu_ngay'] > $kt) {
+        $loi['tu_ngay'] = "Ngày bắt đầu phải nằm trong mùa {$mua['ten_mua_giai']} ("
+                        . date('d/m/Y', strtotime($bd)) . ' - ' . date('d/m/Y', strtotime($kt)) . ').';
+    }
+    if ($d['den_ngay'] !== null && $d['den_ngay'] > $kt) {
+        $loi['den_ngay'] = 'Ngày kết thúc không được sau ngày kết thúc mùa (' . date('d/m/Y', strtotime($kt)) . ').';
+    }
+    if ($loi) {
+        return $loi;
+    }
+
+    // Khoảng [tu, den] của nhiệm kỳ mới; den trống = hết mùa
+    $tu  = $d['tu_ngay'];
+    $den = $d['den_ngay'] ?? $kt;
+    $trungThoiGian = "nk.ma_mua_giai = ? AND nk.ma_nhiem_ky <> ?
+                      AND nk.tu_ngay <= ? AND COALESCE(nk.den_ngay, mg.ngay_ket_thuc) >= ?";
+    $hienNgay = fn($r) => date('d/m/Y', strtotime($r['tu_ngay'])) . ' - '
+                        . ($r['den_ngay'] ? date('d/m/Y', strtotime($r['den_ngay'])) : 'hết mùa');
+
+    if ($d['vai_tro'] === 'truong') {
+        $st = $pdo->prepare(
+            "SELECT nk.tu_ngay, nk.den_ngay, h.ho_ten
+               FROM nhiem_ky_hlv nk
+               JOIN mua_giai mg ON mg.ma_mua_giai = nk.ma_mua_giai
+               JOIN huan_luyen_vien h ON h.ma_hlv = nk.ma_hlv
+              WHERE nk.ma_doi = ? AND nk.vai_tro = 'truong' AND nk.ma_hlv <> ? AND $trungThoiGian
+              LIMIT 1"
+        );
+        $st->execute([$d['ma_doi'], $maHlv, $d['ma_mua_giai'], $boQuaMa, $den, $tu]);
+        if ($r = $st->fetch()) {
+            $loi['tu_ngay'] = "Trùng thời gian với HLV trưởng {$r['ho_ten']} của {$doi['ten_doi']} ("
+                            . $hienNgay($r) . '). Mỗi đội chỉ 1 HLV trưởng tại một thời điểm: '
+                            . 'hãy cho nhiệm kỳ kia kết thúc trước ngày bắt đầu của nhiệm kỳ này.';
+            return $loi;
+        }
+    }
+
+    $st = $pdo->prepare(
+        "SELECT nk.tu_ngay, nk.den_ngay, d.ten_doi
+           FROM nhiem_ky_hlv nk
+           JOIN mua_giai mg ON mg.ma_mua_giai = nk.ma_mua_giai
+           JOIN doi_bong d  ON d.ma_doi = nk.ma_doi
+          WHERE nk.ma_hlv = ? AND $trungThoiGian
+          LIMIT 1"
+    );
+    $st->execute([$maHlv, $d['ma_mua_giai'], $boQuaMa, $den, $tu]);
+    if ($r = $st->fetch()) {
+        $loi['tu_ngay'] = "Trùng thời gian với nhiệm kỳ khác của HLV này ở {$r['ten_doi']} ("
+                        . $hienNgay($r) . '). Một HLV không dẫn dắt 2 đội cùng lúc.';
+    }
+    return $loi;
+}
+
+function nkThem(int $maHlv, array $d): int
+{
+    $pdo = ketNoi();
+    $pdo->prepare(
+        'INSERT INTO nhiem_ky_hlv (ma_hlv, ma_doi, ma_mua_giai, vai_tro, tam_quyen, tu_ngay, den_ngay)
+         VALUES (?, ?, ?, ?, ?, ?, ?)'
+    )->execute([$maHlv, $d['ma_doi'], $d['ma_mua_giai'], $d['vai_tro'], $d['tam_quyen'], $d['tu_ngay'], $d['den_ngay']]);
+    return (int) $pdo->lastInsertId();
+}
+
+function nkSua(int $maNhiemKy, array $d): void
+{
+    ketNoi()->prepare(
+        'UPDATE nhiem_ky_hlv SET ma_doi = ?, ma_mua_giai = ?, vai_tro = ?, tam_quyen = ?, tu_ngay = ?, den_ngay = ?
+          WHERE ma_nhiem_ky = ?'
+    )->execute([$d['ma_doi'], $d['ma_mua_giai'], $d['vai_tro'], $d['tam_quyen'], $d['tu_ngay'], $d['den_ngay'], $maNhiemKy]);
+}
+
+/** Xóa nhiệm kỳ của đúng HLV $maHlv (không xóa nhầm nhiệm kỳ của HLV khác). Trả về true nếu đã xóa. */
+function nkXoa(int $maHlv, int $maNhiemKy): bool
+{
+    $st = ketNoi()->prepare('DELETE FROM nhiem_ky_hlv WHERE ma_nhiem_ky = ? AND ma_hlv = ?');
+    $st->execute([$maNhiemKy, $maHlv]);
+    return $st->rowCount() > 0;
 }
