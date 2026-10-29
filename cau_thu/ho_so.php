@@ -22,6 +22,7 @@ $chiSo      = layChiSoTrungBinh($id);
 $chanThuong = layDanhSachChanThuong($id, true);
 $lichSu     = layLichSuChuyenNhuong($id);
 $danhHieu   = layDanhHieuCauThu($id);
+$doiTheoMua = layDoiTheoMuaCuaCauThu($id);
 $fmt = fn($v) => $v === null ? '—' : number_format((float) $v, 1);
 
 require __DIR__ . '/../includes/header.php';
@@ -108,6 +109,25 @@ require __DIR__ . '/../includes/header.php';
                 </tbody>
             </table>
         </div>
+    </div>
+<?php endif; ?>
+
+<?php if ($doiTheoMua): ?>
+    <h2 class="h5 mt-4 mb-3"><i class="bi bi-shield"></i> Đội theo mùa</h2>
+    <p class="text-muted small">Mùa hiện tại: đội đang thi đấu. Mùa trước: các đội đã ra sân theo box score.</p>
+    <div class="card shadow-sm">
+        <ul class="list-group list-group-flush">
+            <?php foreach ($doiTheoMua as $m): ?>
+                <li class="list-group-item d-flex flex-wrap gap-2 align-items-center">
+                    <span class="fw-semibold" style="width: 80px"><?= e($m['ten_mua_giai']) ?></span>
+                    <?php foreach ($m['ds_doi'] as $i => $d): ?>
+                        <?php if ($i > 0): ?><i class="bi bi-arrow-right text-muted"></i><?php endif; ?>
+                        <a href="<?= url('/doi_bong/chi_tiet.php?id=' . (int) $d['ma_doi']) ?>"><?= e($d['ten_doi']) ?></a>
+                        <?php if ($d['so_tran'] !== null): ?><span class="text-muted small">(<?= (int) $d['so_tran'] ?> trận)</span><?php endif; ?>
+                    <?php endforeach; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
     </div>
 <?php endif; ?>
 
