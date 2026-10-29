@@ -15,15 +15,19 @@ require_once __DIR__ . '/../config/db.php';
  * ===================================================================== */
 
 /** Danh sách trọng tài (tìm theo tên hoặc số áo), kèm số trận đã được phân công */
-function ttLayDanhSach(string $tuKhoa = ''): array
+/** $maMuaGiai: có thì thêm so_tran_mua = số trận được phân công trong mùa đó */
+function ttLayDanhSach(string $tuKhoa = '', ?int $maMuaGiai = null): array
 {
     $sql = 'SELECT t.*,
-                   (SELECT COUNT(*) FROM phan_cong_trong_tai pc WHERE pc.ma_trong_tai = t.ma_trong_tai) AS so_tran
+                   (SELECT COUNT(*) FROM phan_cong_trong_tai pc WHERE pc.ma_trong_tai = t.ma_trong_tai) AS so_tran,
+                   (SELECT COUNT(*) FROM phan_cong_trong_tai pc JOIN tran_dau td ON td.ma_tran = pc.ma_tran
+                     WHERE pc.ma_trong_tai = t.ma_trong_tai AND td.ma_mua_giai = ?) AS so_tran_mua
               FROM trong_tai t';
-    $thamSo = [];
+    $thamSo = [$maMuaGiai ?? 0];
     if ($tuKhoa !== '') {
         $sql .= ' WHERE t.ho_ten LIKE ? OR t.so_ao = ?';
-        $thamSo = ['%' . $tuKhoa . '%', ctype_digit($tuKhoa) ? (int) $tuKhoa : -1];
+        $thamSo[] = '%' . $tuKhoa . '%';
+        $thamSo[] = ctype_digit($tuKhoa) ? (int) $tuKhoa : -1;
     }
     $st = ketNoi()->prepare($sql . ' ORDER BY t.so_ao IS NULL, t.so_ao, t.ho_ten');
     $st->execute($thamSo);
