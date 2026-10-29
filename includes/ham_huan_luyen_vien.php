@@ -3,7 +3,7 @@
  * MODULE HUẤN LUYỆN VIÊN (TV2) - hàm truy vấn và nghiệp vụ.
  * Các trang chỉ gọi hàm ở đây, không viết SQL trực tiếp trong trang.
  *
- * Bảng dùng: huan_luyen_vien (ghi); doi_bong, trao_giai (chỉ đọc)
+ * Bảng dùng: huan_luyen_vien (ghi); doi_bong, trao_giai, nhiem_ky_hlv (chỉ đọc)
  *
  * Mỗi module của TV2 nằm trong 1 file riêng để các Pull Request độc lập, merge thứ tự nào cũng được.
  * Tên hàm có tiền tố riêng của từng module, không trùng hàm của TV3 (ham_cau_thu.php).
@@ -168,7 +168,8 @@ function hlvSua(int $maHlv, array $d, ?string $anhMoi): void
 
 /**
  * Xóa HLV. Trả về NULL nếu xóa được, hoặc câu thông báo lý do bị chặn.
- * HLV đã nhận giải (bảng trao_giai, ON DELETE RESTRICT) thì không xóa được.
+ * HLV đã nhận giải (trao_giai) hoặc đã có lịch sử dẫn dắt (nhiem_ky_hlv) thì không xóa được
+ * (cả 2 bảng đặt ON DELETE RESTRICT).
  */
 function hlvXoa(int $maHlv): ?string
 {
@@ -181,6 +182,11 @@ function hlvXoa(int $maHlv): ?string
     $st->execute([$maHlv]);
     if ($soGiai = (int) $st->fetchColumn()) {
         return "Không thể xóa HLV {$hlv['ho_ten']}: đã nhận $soGiai giải thưởng.";
+    }
+    $st = $pdo->prepare('SELECT COUNT(*) FROM nhiem_ky_hlv WHERE ma_hlv = ?');
+    $st->execute([$maHlv]);
+    if ($soNhiemKy = (int) $st->fetchColumn()) {
+        return "Không thể xóa HLV {$hlv['ho_ten']}: đã có $soNhiemKy nhiệm kỳ trong lịch sử dẫn dắt.";
     }
     $pdo->prepare('DELETE FROM huan_luyen_vien WHERE ma_hlv = ?')->execute([$maHlv]);
     tv2XoaAnh($hlv['anh'], THU_MUC_ANH_HLV);

@@ -3,7 +3,7 @@
  * MODULE ĐỘI BÓNG (TV2) - hàm truy vấn và nghiệp vụ trang quản trị đội.
  * Các trang chỉ gọi hàm ở đây, không viết SQL trực tiếp trong trang.
  *
- * Bảng dùng: doi_bong (ghi); san_thi_dau, cau_thu, huan_luyen_vien, tran_dau (chỉ đọc)
+ * Bảng dùng: doi_bong (ghi); san_thi_dau, cau_thu, huan_luyen_vien, tran_dau, nhiem_ky_hlv (chỉ đọc)
  *
  * Mỗi module của TV2 nằm trong 1 file riêng để các Pull Request độc lập, merge thứ tự nào cũng được.
  * Tên hàm có tiền tố riêng của từng module, không trùng hàm của TV3 (ham_cau_thu.php).
@@ -161,7 +161,7 @@ function dbSua(int $maDoi, array $d, ?string $logoMoi): void
 /**
  * Xóa đội. Trả về NULL nếu xóa được, hoặc câu thông báo lý do bị chặn.
  * - Chặn khi đội còn cầu thủ: CSDL đặt ON DELETE SET NULL nên không tự chặn.
- * - Chặn khi đội đã có trận đấu.
+ * - Chặn khi đội đã có trận đấu hoặc lịch sử HLV (nhiem_ky_hlv).
  * - Các ràng buộc RESTRICT khác (phân bảng, playoff, box score) bắt qua PDOException.
  * HLV của đội tự chuyển về "tự do" (CSDL đặt ON DELETE SET NULL).
  */
@@ -178,14 +178,20 @@ function dbXoa(int $maDoi): ?string
     $st = $pdo->prepare('SELECT COUNT(*) FROM tran_dau WHERE ma_doi_nha = ? OR ma_doi_khach = ?');
     $st->execute([$maDoi, $maDoi]);
     $soTran = (int) $st->fetchColumn();
+    $st = $pdo->prepare('SELECT COUNT(*) FROM nhiem_ky_hlv WHERE ma_doi = ?');
+    $st->execute([$maDoi]);
+    $soNhiemKy = (int) $st->fetchColumn();
 
-    if ($soCauThu > 0 || $soTran > 0) {
+    if ($soCauThu > 0 || $soTran > 0 || $soNhiemKy > 0) {
         $lyDo = [];
         if ($soCauThu > 0) {
             $lyDo[] = "còn $soCauThu cầu thủ";
         }
         if ($soTran > 0) {
             $lyDo[] = "đã có $soTran trận đấu";
+        }
+        if ($soNhiemKy > 0) {
+            $lyDo[] = "có $soNhiemKy nhiệm kỳ HLV trong lịch sử";
         }
         return 'Không thể xóa đội ' . $doi['ten_doi'] . ': đội ' . implode(' và ', $lyDo) . '.';
     }

@@ -1,6 +1,6 @@
 -- =====================================================================
 --  ĐỒ ÁN: QUẢN LÝ GIẢI BÓNG RỔ NHÀ NGHỀ MỸ (NBA)
---  File: database/qlbongro.sql - tạo database, 19 bảng, dữ liệu danh mục, 2 VIEW
+--  File: database/qlbongro.sql - tạo database, 20 bảng, dữ liệu danh mục, 2 VIEW
 --  Chạy trên: XAMPP (MariaDB 10.4) - đã import thử thành công
 --  Cách dùng: phpMyAdmin -> tab Import -> chọn file này -> Import
 --             (không cần tạo database trước, file tự tạo)
@@ -376,6 +376,35 @@ CREATE TABLE tai_khoan (
     CONSTRAINT fk_taikhoan_cauthu FOREIGN KEY (ma_cau_thu)
         REFERENCES cau_thu (ma_cau_thu)
         ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB;
+ 
+-- 20. Nhiệm kỳ HLV theo mùa (TV2) - để xem được nhiều mùa giải:
+--     HLV nào dẫn dắt đội nào, trong mùa nào, từ ngày nào đến ngày nào.
+--     Mỗi mùa 1 dòng: HLV dẫn dắt 3 mùa liên tiếp = 3 dòng.
+--     Thay HLV giữa mùa = 2 dòng cùng mùa (người cũ có den_ngay, người mới có tu_ngay).
+--     huan_luyen_vien.ma_doi / vai_tro vẫn là "hiện tại"; bảng này lưu lịch sử.
+--     "Mỗi đội chỉ 1 HLV trưởng tại một thời điểm" kiểm tra bằng PHP (TV2).
+CREATE TABLE nhiem_ky_hlv (
+    ma_nhiem_ky    INT         NOT NULL AUTO_INCREMENT,
+    ma_hlv         INT         NOT NULL,
+    ma_doi         INT         NOT NULL,
+    ma_mua_giai    INT         NOT NULL,
+    vai_tro        ENUM('truong','pho') NOT NULL DEFAULT 'truong',
+    tam_quyen      TINYINT(1)  NOT NULL DEFAULT 0,   -- 1 = HLV tạm quyền (interim)
+    tu_ngay        DATE        NOT NULL,             -- ngày bắt đầu dẫn dắt trong mùa này
+    den_ngay       DATE,                             -- NULL = dẫn dắt đến hết mùa
+    PRIMARY KEY (ma_nhiem_ky),
+    UNIQUE KEY uq_nhiem_ky (ma_hlv, ma_doi, ma_mua_giai, tu_ngay),
+    CHECK (den_ngay IS NULL OR den_ngay >= tu_ngay),
+    CONSTRAINT fk_nhiemky_hlv FOREIGN KEY (ma_hlv)
+        REFERENCES huan_luyen_vien (ma_hlv)
+        ON UPDATE CASCADE ON DELETE RESTRICT,        -- chặn xóa HLV đã có lịch sử
+    CONSTRAINT fk_nhiemky_doibong FOREIGN KEY (ma_doi)
+        REFERENCES doi_bong (ma_doi)
+        ON UPDATE CASCADE ON DELETE RESTRICT,        -- chặn xóa đội đã có lịch sử HLV
+    CONSTRAINT fk_nhiemky_muagiai FOREIGN KEY (ma_mua_giai)
+        REFERENCES mua_giai (ma_mua_giai)
+        ON UPDATE CASCADE ON DELETE CASCADE          -- xóa mùa thì xóa nhiệm kỳ của mùa đó
 ) ENGINE=InnoDB;
  
 --  DỮ LIỆU DANH MỤC CỐ ĐỊNH (không thay đổi giữa các mùa) 
