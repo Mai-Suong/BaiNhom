@@ -49,7 +49,7 @@ require __DIR__ . '/../../includes/admin_header.php';
                 <th>Quốc tịch</th>
                 <th>Ngày sinh</th>
                 <th>Dẫn dắt từ</th>
-                <th class="text-end" style="width: 150px"></th>
+                <th class="text-end" style="width: 250px"></th>
             </tr>
             </thead>
             <tbody>
@@ -76,6 +76,8 @@ require __DIR__ . '/../../includes/admin_header.php';
                     <td><?= $hlv['ngay_sinh'] ? e(date('d/m/Y', strtotime($hlv['ngay_sinh']))) : '' ?></td>
                     <td><?= $hlv['ngay_bat_dau'] ? e(date('d/m/Y', strtotime($hlv['ngay_bat_dau']))) : '' ?></td>
                     <td class="text-end text-nowrap">
+                        <a class="btn btn-sm btn-outline-secondary" title="Lịch sử dẫn dắt theo mùa"
+                           href="<?= url('/admin/huan_luyen_vien/nhiem_ky.php?hlv=' . (int) $hlv['ma_hlv']) ?>">Nhiệm kỳ (<?= (int) $hlv['so_nhiem_ky'] ?>)</a>
                         <a class="btn btn-sm btn-outline-primary"
                            href="<?= url('/admin/huan_luyen_vien/form.php?id=' . (int) $hlv['ma_hlv']) ?>">Sửa</a>
                         <form class="d-inline" method="post" action="<?= url('/admin/huan_luyen_vien/xoa.php') ?>">

@@ -50,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $dsDoi = hlvLayDoiLuaChon();
+$dsNhiemKy = $laSua ? nkLayCuaHlv($id) : [];
 
 /** Ô nhập có nhãn + thông báo lỗi (Bootstrap) */
 function oNhapHlv(string $ten, string $nhan, array $d, array $loi, string $kieu = 'text', string $them = ''): void
@@ -131,5 +132,26 @@ require __DIR__ . '/../../includes/admin_header.php';
         </form>
     </div>
 </div>
+
+<?php if ($laSua): ?>
+<div class="card shadow-sm mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span class="fw-semibold"><i class="bi bi-clock-history"></i> Lịch sử dẫn dắt theo mùa</span>
+        <a class="btn btn-sm btn-outline-primary" href="<?= url('/admin/huan_luyen_vien/nhiem_ky.php?hlv=' . $id) ?>">Quản lý nhiệm kỳ</a>
+    </div>
+    <ul class="list-group list-group-flush">
+        <?php if (!$dsNhiemKy): ?><li class="list-group-item text-muted">Chưa có nhiệm kỳ nào.</li><?php endif; ?>
+        <?php foreach ($dsNhiemKy as $nk): ?>
+            <li class="list-group-item">
+                <span class="fw-semibold"><?= e($nk['ten_mua_giai']) ?></span> · <?= e($nk['ten_doi']) ?> ·
+                <?= e(VAI_TRO_HLV[$nk['vai_tro']] ?? $nk['vai_tro']) ?><?= (int) $nk['tam_quyen'] === 1 ? ' (tạm quyền)' : '' ?>
+                <span class="text-muted small">
+                    (<?= e(date('d/m/Y', strtotime($nk['tu_ngay']))) ?> - <?= $nk['den_ngay'] ? e(date('d/m/Y', strtotime($nk['den_ngay']))) : 'hết mùa' ?>)
+                </span>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</div>
+<?php endif; ?>
 
 <?php require __DIR__ . '/../../includes/admin_footer.php'; ?>
