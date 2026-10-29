@@ -17,7 +17,7 @@
 | Thành viên | Bảng phụ trách | File dữ liệu mẫu |
 |---|---|---|
 | TV1 Sương | `tai_khoan` (+ tạo toàn bộ cấu trúc) | `qlbongro.sql` |
-| TV2 Duy | `san_thi_dau`, `doi_bong`, `huan_luyen_vien`, `trong_tai`, `nhiem_ky_hlv` | `02_du_lieu_doi_bong.sql` |
+| TV2 Duy | `san_thi_dau`, `doi_bong`, `huan_luyen_vien`, `trong_tai`, `nhiem_ky_hlv` | `02_du_lieu_doi_bong.sql`, `07_du_lieu_nhiem_ky_hlv.sql` |
 | TV3 Nguyên | `cau_thu`, `chuyen_nhuong`, `chan_thuong`, `trao_giai` | `03_du_lieu_cau_thu.sql` , `06_du_lieu_trao_giai.sql`|
 | TV4 Huy | `mua_giai`, `phan_bang`, `tran_dau`, `diem_hiep`, `phan_cong_trong_tai` | `04_du_lieu_tran_dau.sql` |
 | TV5 Đạt | `chi_so_tran_dau`, `loat_playoff` | `05_du_lieu_thong_ke.sql` |
@@ -43,7 +43,7 @@ Máy nào đặt mật khẩu MySQL khác thì tạo file `config/db.local.php` 
 ## Thứ tự import database
 
 1. `database/qlbongro.sql` (cấu trúc bảng + dữ liệu danh mục) **luôn import đầu tiên**
-2. Các file dữ liệu mẫu theo đúng số thứ tự: `02_du_lieu_doi_bong.sql` → `03_du_lieu_cau_thu.sql` → `04_du_lieu_tran_dau.sql` → `05_du_lieu_thong_ke.sql` → `06_du_lieu_trao_giai.sql`
+2. Các file dữ liệu mẫu theo đúng số thứ tự: `02_du_lieu_doi_bong.sql` → `03_du_lieu_cau_thu.sql` → `04_du_lieu_tran_dau.sql` → `05_du_lieu_thong_ke.sql` → `06_du_lieu_trao_giai.sql` → `07_du_lieu_nhiem_ky_hlv.sql`
 
 Khi có người sửa cấu trúc bảng: xóa database `qlbongro` rồi import lại tất cả theo đúng thứ tự trên.
 
