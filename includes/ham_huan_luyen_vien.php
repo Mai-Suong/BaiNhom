@@ -43,6 +43,51 @@ function hlvLayDanhSach(string $tuKhoa = '', string $locDoi = ''): array
     return $st->fetchAll();
 }
 
+/**
+ * Danh sách HLV khi xem một mùa đã qua: đội / vai trò lấy từ nhiem_ky_hlv của mùa đó.
+ * Mỗi HLV có 'ds_nhiem_ky' (các đội dẫn dắt trong mùa, theo thời gian; rỗng = không dẫn dắt).
+ * $locDoi: '' tất cả, 'tu_do' = không dẫn dắt đội nào trong mùa, số = mã đội.
+ */
+function hlvLayDanhSachTheoMua(string $tuKhoa, string $locDoi, int $maMuaGiai): array
+{
+    $sql = 'SELECT h.*, nk.ma_doi AS nk_ma_doi, nk.vai_tro AS nk_vai_tro, nk.tam_quyen, nk.tu_ngay, nk.den_ngay,
+                   d.ten_doi AS nk_ten_doi,
+                   (SELECT COUNT(*) FROM nhiem_ky_hlv x WHERE x.ma_hlv = h.ma_hlv) AS so_nhiem_ky
+              FROM huan_luyen_vien h
+              LEFT JOIN nhiem_ky_hlv nk ON nk.ma_hlv = h.ma_hlv AND nk.ma_mua_giai = ?
+              LEFT JOIN doi_bong d      ON d.ma_doi = nk.ma_doi';
+    $thamSo = [$maMuaGiai];
+    if ($tuKhoa !== '') {
+        $sql .= ' WHERE h.ho_ten LIKE ?';
+        $thamSo[] = '%' . $tuKhoa . '%';
+    }
+    $st = ketNoi()->prepare($sql . ' ORDER BY h.ma_hlv, nk.tu_ngay');
+    $st->execute($thamSo);
+
+    $ds = [];
+    foreach ($st->fetchAll() as $r) {
+        $ma = (int) $r['ma_hlv'];
+        $ds[$ma] ??= $r + ['ds_nhiem_ky' => []];
+        if ($r['nk_ma_doi'] !== null) {
+            $ds[$ma]['ds_nhiem_ky'][] = [
+                'ma_doi' => (int) $r['nk_ma_doi'], 'ten_doi' => $r['nk_ten_doi'], 'vai_tro' => $r['nk_vai_tro'],
+                'tam_quyen' => (int) $r['tam_quyen'], 'tu_ngay' => $r['tu_ngay'], 'den_ngay' => $r['den_ngay'],
+            ];
+        }
+    }
+    $ds = array_filter($ds, function ($h) use ($locDoi) {
+        if ($locDoi === 'tu_do') {
+            return !$h['ds_nhiem_ky'];
+        }
+        return !ctype_digit($locDoi) || in_array((int) $locDoi, array_column($h['ds_nhiem_ky'], 'ma_doi'), true);
+    });
+    // Theo tên đội (HLV không dẫn dắt xuống cuối), HLV trưởng trước, rồi theo thời gian dẫn dắt, rồi tên
+    $khoa = fn($h) => [$h['ds_nhiem_ky'] ? 0 : 1, $h['ds_nhiem_ky'][0]['ten_doi'] ?? '',
+                       ($h['ds_nhiem_ky'][0]['vai_tro'] ?? '') === 'pho', $h['ds_nhiem_ky'][0]['tu_ngay'] ?? '', $h['ho_ten']];
+    usort($ds, fn($a, $b) => $khoa($a) <=> $khoa($b));
+    return $ds;
+}
+
 /** Danh sách đội cho ô lọc / ô chọn đội, kèm tên HLV trưởng hiện tại */
 function hlvLayDoiLuaChon(): array
 {
