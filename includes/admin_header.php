@@ -58,7 +58,7 @@ $thongBao = layThongBao();
         <a class="navbar-brand fw-bold" href="<?= url('/admin/index.php') ?>"><i class="bi bi-dribbble"></i> Quản trị</a>
         <div class="d-flex align-items-center gap-3">
             <a class="text-white-50 small text-decoration-none d-none d-sm-inline" href="<?= url('/index.php') ?>"><i class="bi bi-box-arrow-up-right"></i> Xem trang web</a>
-            <span class="text-white small"><i class="bi bi-person-circle"></i> <?= e(tenDangNhap()) ?></span>
+            <a class="text-white small text-decoration-none" href="<?= url('/doi_mat_khau.php') ?>" title="Đổi mật khẩu"><i class="bi bi-person-circle"></i> <?= e(tenDangNhap()) ?> <i class="bi bi-key"></i></a>
             <a class="btn btn-outline-light btn-sm" href="<?= url('/dang_xuat.php') ?>">Đăng xuất</a>
         </div>
     </div>
