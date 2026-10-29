@@ -3,9 +3,10 @@ require_once __DIR__ . '/includes/init.php';
 require_once __DIR__ . '/includes/ham_trang_chu.php'; // TV2: dữ liệu 3 khung bên dưới
 
 $mua        = tv2LayMuaHienTai();
-$tranSapToi = tcTranSapToi(5);
-$ketQua     = tcKetQuaMoiNhat(5);
-$topCauThu  = tcTopCauThu($mua ? (int) $mua['ma_mua_giai'] : null, 5);
+$maMua      = $mua ? (int) $mua['ma_mua_giai'] : null;
+$tranSapToi = tcTranSapToi($maMua, 5);
+$ketQua     = tcKetQuaMoiNhat($maMua, 5);
+$topCauThu  = tcTopCauThu($maMua, 5);
 $fmtNgay    = fn($s) => date('d/m H:i', strtotime($s));
 
 $tieuDe = 'Trang chủ';
