@@ -19,9 +19,7 @@ const THU_MUC_ANH_SAN = 'san_thi_dau';
 /** Danh sách sân (tìm theo tên sân / thành phố), kèm số đội đang dùng làm sân nhà */
 function sanLayDanhSach(string $tuKhoa = ''): array
 {
-    $sql = 'SELECT s.*,
-                   (SELECT COUNT(*) FROM doi_bong d WHERE d.ma_san = s.ma_san) AS so_doi
-              FROM san_thi_dau s';
+    $sql = 'SELECT s.* FROM san_thi_dau s';
     $thamSo = [];
     if ($tuKhoa !== '') {
         $sql .= ' WHERE s.ten_san LIKE ? OR s.thanh_pho LIKE ?';
@@ -30,6 +28,17 @@ function sanLayDanhSach(string $tuKhoa = ''): array
     $st = ketNoi()->prepare($sql . ' ORDER BY s.ten_san');
     $st->execute($thamSo);
     return $st->fetchAll();
+}
+
+/** Số trận tổ chức ở từng sân trong mùa: [ma_san => số trận] */
+function sanDemTranTheoMua(int $maMuaGiai): array
+{
+    $st = ketNoi()->prepare(
+        'SELECT ma_san, COUNT(*) AS so_tran FROM tran_dau
+          WHERE ma_mua_giai = ? AND ma_san IS NOT NULL GROUP BY ma_san'
+    );
+    $st->execute([$maMuaGiai]);
+    return array_map('intval', array_column($st->fetchAll(), 'so_tran', 'ma_san'));
 }
 
 function sanLay(int $maSan): ?array
