@@ -574,6 +574,50 @@ function layLichSuChuyenNhuong(int $maCauThu): array
 }
 
 /* =====================================================================
+ * ĐỘI THEO MÙA CỦA CẦU THỦ (cùng quy tắc với tkhLayDoiHinh() của TV2)
+ *   - Mùa hiện tại (la_mua_hien_tai = 1): đội hiện tại của cầu thủ (cau_thu.ma_doi).
+ *   - Mùa cũ: các đội cầu thủ đã ra sân trong mùa đó (theo box score chi_so_tran_dau của TV5).
+ * ===================================================================== */
+
+/**
+ * Trả về [['ten_mua_giai' => '2024-25', 'ds_doi' => [['ma_doi' => .., 'ten_doi' => .., 'so_tran' => ..|null], ...]], ...]
+ * (mới nhất trước). Mùa cũ mà cầu thủ chưa có trận nào trong box score thì không hiện.
+ */
+function layDoiTheoMuaCuaCauThu(int $maCauThu): array
+{
+    $ct = layCauThu($maCauThu);
+    if (!$ct) {
+        return [];
+    }
+    $pdo = ketNoi();
+    $stCu = $pdo->prepare(
+        "SELECT cs.ma_doi, d.ten_doi, COUNT(*) AS so_tran
+           FROM chi_so_tran_dau cs
+           JOIN tran_dau td ON td.ma_tran = cs.ma_tran
+           JOIN doi_bong d  ON d.ma_doi = cs.ma_doi
+          WHERE cs.ma_cau_thu = ? AND td.ma_mua_giai = ? AND cs.trang_thai = 'thi_dau'
+          GROUP BY cs.ma_doi, d.ten_doi
+          ORDER BY MIN(td.thoi_gian)"
+    );
+
+    $kq = [];
+    foreach ($pdo->query('SELECT * FROM mua_giai ORDER BY ngay_bat_dau DESC')->fetchAll() as $mua) {
+        if ((int) $mua['la_mua_hien_tai'] === 1) {
+            $dsDoi = $ct['ma_doi'] === null ? [] : [[
+                'ma_doi' => (int) $ct['ma_doi'], 'ten_doi' => $ct['ten_doi'], 'so_tran' => null,
+            ]];
+        } else {
+            $stCu->execute([$maCauThu, (int) $mua['ma_mua_giai']]);
+            $dsDoi = $stCu->fetchAll();
+        }
+        if ($dsDoi) {
+            $kq[] = ['ten_mua_giai' => $mua['ten_mua_giai'], 'ds_doi' => $dsDoi];
+        }
+    }
+    return $kq;
+}
+
+/* =====================================================================
  * CHẤN THƯƠNG
  * ===================================================================== */
 

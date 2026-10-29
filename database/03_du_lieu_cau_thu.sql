@@ -2,19 +2,29 @@
 --  File: database/03_du_lieu_cau_thu.sql  (TV3 - Nguyễn Đỗ Thảo Nguyên)
 --  Dữ liệu mẫu: cau_thu, chuyen_nhuong, chan_thuong
 --  Import SAU 02_du_lieu_doi_bong.sql (TV2), TRƯỚC 04_du_lieu_tran_dau.sql
---  Nguồn: đội hình NBA đầu mùa 2025-26 (8 cầu thủ chính mỗi đội) và các giao dịch thật năm 2025.
---  Ngày sinh / nơi sinh để NULL khi chưa đối chiếu được nguồn. Số áo, chiều cao, cân nặng
---  theo danh sách đội đầu mùa 2025-26, có thể lệch với thực tế mùa 2026-27.
+--
+--  - cau_thu.ma_doi = đội của cầu thủ ở ĐẦU MÙA 2025-26 (mùa hiện tại), 8 cầu thủ chính mỗi đội.
+--  - chuyen_nhuong = lịch sử giao dịch THẬT từ đầu mùa 2023-24 đến đầu mùa 2025-26 của 242 cầu thủ này
+--    (hiện ở trang hồ sơ cầu thủ). Giao dịch cuối của mỗi người khớp với cau_thu.ma_doi.
+--    Giao dịch giữa mùa 2025-26 (hạn chót 2/2026) KHÔNG đưa vào để giữ đúng bảng mã bên dưới.
+--  - Đội hình mùa cũ trên web lấy theo box score (chi_so_tran_dau) như quy ước của TV2.
+--    TV5 làm box score mùa cũ thì tra bảng chuyen_nhuong để biết cầu thủ thuộc đội nào mùa đó
+--    (VD Luka Dončić thuộc DAL mùa 2023-24, chuyển LAL ngày 02/02/2025).
+--  - Ngày giao dịch hè lấy theo ngày hợp lệ đầu tiên sau kỳ cấm chuyển nhượng (6-7/7), có thể lệch vài ngày
+--    so với ngày công bố; không ảnh hưởng việc cầu thủ thuộc đội nào trong mùa nào.
+--  - Ngày sinh / nơi sinh để NULL khi chưa đối chiếu được nguồn. Số áo, chiều cao, cân nặng
+--    theo danh sách đội đầu mùa 2025-26.
 -- =====================================================================
 
 USE qlbongro;
 
 -- ---------------------------------------------------------------------
 --  BẢNG MÃ CẦU THỦ (TV4, TV5 điền ma_cau_thu theo bảng này)
---  Mỗi đội 8 cầu thủ, mã cầu thủ của đội có ma_doi = N là từ (N-1)*8+1 đến N*8.
+--  Mỗi đội 8 cầu thủ, mã cầu thủ của đội có ma_doi = N là từ (N-1)*8+1 đến N*8 (đội hình đầu mùa 2025-26).
 --  VD: ATL (ma_doi 1) = 1..8, BOS (2) = 9..16, ..., WAS (30) = 233..240.
---  241, 242 = cầu thủ đã giải nghệ (không có đội).
+--  241, 242 = cầu thủ đã giải nghệ (không có đội ở mùa 2025-26).
 --  Trong mỗi đội, 5 cầu thủ đầu tiên là đội hình xuất phát gợi ý (dùng cho box score).
+--  Đội hình MÙA CŨ khác bảng này: xem bảng chuyen_nhuong.
 
 --   1 ATL Atlanta Hawks             1-  8: 1 Trae Young, 2 Dyson Daniels, 3 Jalen Johnson, ...
 --   2 BOS Boston Celtics            9- 16: 9 Jayson Tatum, 10 Jaylen Brown, 11 Derrick White, ...
@@ -355,32 +365,128 @@ INSERT INTO cau_thu (ma_cau_thu, ho_ten, ngay_sinh, noi_sinh, quoc_tich, chieu_c
     (241, 'Derrick Rose', '1988-10-04', 'Chicago, Illinois', 'Mỹ', 191, 91, 'PG', 'phai', NULL, 'Memphis', 2008, NULL, 'giai_nghe'),
     (242, 'Blake Griffin', '1989-03-16', 'Oklahoma City, Oklahoma', 'Mỹ', 206, 113, 'PF', 'phai', NULL, 'Oklahoma', 2009, NULL, 'giai_nghe');
 
--- 2. CHUYỂN NHƯỢNG (theo thứ tự thời gian; giao dịch cuối của mỗi người khớp với đội hiện tại)
+-- 2. CHUYỂN NHƯỢNG (120 giao dịch thật, xếp theo thời gian)
 INSERT INTO chuyen_nhuong (ma_chuyen_nhuong, ma_cau_thu, loai, ma_doi_cu, ma_doi_moi, ngay_chuyen, ghi_chu) VALUES
-    ( 1, 105, 'trao_doi', 7, 14, '2025-02-02', 'Trao đổi lấy Anthony Davis'),  -- Luka Dončić
-    ( 2,  49, 'trao_doi', 14, 7, '2025-02-02', 'Trao đổi lấy Luka Dončić'),  -- Anthony Davis
-    ( 3, 210, 'trao_doi', 26, 27, '2025-02-03', 'Thương vụ 3 đội'),  -- De'Aaron Fox
-    ( 4, 202, 'trao_doi', 5, 26, '2025-02-03', 'Thương vụ 3 đội'),  -- Zach LaVine
-    ( 5,  74, 'trao_doi', 16, 10, '2025-02-06', NULL),  -- Jimmy Butler
-    ( 6, 123, 'trao_doi', 10, 16, '2025-02-06', NULL),  -- Andrew Wiggins
-    ( 7, 218, 'trao_doi', 19, 28, '2025-02-06', NULL),  -- Brandon Ingram
-    ( 8,  51, 'tuyen_chon_draft', NULL, 7, '2025-06-25', 'Lượt chọn số 1 Draft 2025'),  -- Cooper Flagg
-    ( 9, 212, 'tuyen_chon_draft', NULL, 27, '2025-06-25', 'Lượt chọn số 2 Draft 2025'),  -- Dylan Harper
-    (10, 180, 'tuyen_chon_draft', NULL, 23, '2025-06-25', 'Lượt chọn số 3 Draft 2025'),  -- VJ Edgecombe
-    (11, 108, 'giai_phong', 25, NULL, '2025-06-30', 'Thỏa thuận chấm dứt hợp đồng'),  -- Deandre Ayton
-    (12, 200, 'giai_phong', 17, NULL, '2025-07-01', NULL),  -- Damian Lillard
-    (13,  81, 'trao_doi', 24, 11, '2025-07-06', NULL),  -- Kevin Durant
-    (14, 186, 'trao_doi', 11, 24, '2025-07-06', 'Trong thương vụ Kevin Durant'),  -- Jalen Green
-    (15, 187, 'trao_doi', 11, 24, '2025-07-06', 'Trong thương vụ Kevin Durant'),  -- Dillon Brooks
-    (16, 172, 'trao_doi', 15, 22, '2025-07-07', NULL),  -- Desmond Bane
-    (17,   4, 'trao_doi', 2, 1, '2025-07-07', NULL),  -- Kristaps Porziņģis
-    (18, 195, 'trao_doi', 2, 25, '2025-07-07', NULL),  -- Jrue Holiday
-    (19,  13, 'trao_doi', 25, 2, '2025-07-07', NULL),  -- Anfernee Simons
-    (20,  61, 'trao_doi', 3, 8, '2025-07-07', NULL),  -- Cameron Johnson
-    (21,  17, 'trao_doi', 8, 3, '2025-07-07', NULL),  -- Michael Porter Jr.
-    (22, 130, 'ky_hop_dong', 12, 17, '2025-07-07', 'Ký hợp đồng khi là cầu thủ tự do'),  -- Myles Turner
-    (23, 108, 'ky_hop_dong', NULL, 14, '2025-07-07', NULL),  -- Deandre Ayton
-    (24, 200, 'ky_hop_dong', NULL, 25, '2025-07-19', 'Trở lại đội cũ');  -- Damian Lillard
+    (  1,  98, 'trao_doi', 23, 13, '2023-10-31', NULL),  -- James Harden: PHI -> LAC
+    (  2, 156, 'trao_doi', 28, 20, '2023-12-30', 'Trao đổi lấy RJ Barrett, Immanuel Quickley'),  -- OG Anunoby: TOR -> NYK
+    (  3, 219, 'trao_doi', 20, 28, '2023-12-30', 'Trong thương vụ OG Anunoby'),  -- RJ Barrett: NYK -> TOR
+    (  4, 220, 'trao_doi', 20, 28, '2023-12-30', 'Trong thương vụ OG Anunoby'),  -- Immanuel Quickley: NYK -> TOR
+    (  5, 134, 'giai_phong', 30, NULL, '2024-01-08', NULL),  -- Ryan Rollins: WAS -> tự do
+    (  6,  90, 'trao_doi', 28, 12, '2024-01-17', 'Thương vụ 3 đội'),  -- Pascal Siakam: TOR -> IND
+    (  7,  63, 'trao_doi', 12, 28, '2024-01-17', 'Trong thương vụ Pascal Siakam'),  -- Bruce Brown: IND -> TOR
+    (  8,  53, 'trao_doi', 4, 7, '2024-02-08', 'Hạn chót chuyển nhượng 2024'),  -- P.J. Washington: CHO -> DAL
+    (  9,  55, 'trao_doi', 30, 7, '2024-02-08', 'Hạn chót chuyển nhượng 2024'),  -- Daniel Gafford: WAS -> DAL
+    ( 10,  79, 'trao_doi', 12, 23, '2024-02-08', 'Hạn chót chuyển nhượng 2024'),  -- Buddy Hield: IND -> PHI
+    ( 11, 182, 'trao_doi', 20, 9, '2024-02-08', 'Hạn chót chuyển nhượng 2024'),  -- Quentin Grimes: NYK -> DET
+    ( 12, 206, 'trao_doi', 28, 3, '2024-02-08', 'Hạn chót chuyển nhượng 2024'),  -- Dennis Schröder: TOR -> BRK
+    ( 13,  86, 'trao_doi', 15, 11, '2024-02-08', 'Hạn chót chuyển nhượng 2024'),  -- Steven Adams: MEM -> HOU
+    ( 14, 134, 'ky_hop_dong', NULL, 17, '2024-02-21', 'Hợp đồng two-way'),  -- Ryan Rollins: tự do -> MIL
+    ( 15, 104, 'giai_phong', 10, NULL, '2024-06-30', NULL),  -- Chris Paul: GSW -> tự do
+    ( 16, 241, 'giai_phong', 15, NULL, '2024-07-01', 'Giải nghệ tháng 9/2024'),  -- Derrick Rose: MEM -> tự do
+    ( 17,  33, 'trao_doi', 21, 5, '2024-07-06', 'Trao đổi lấy Alex Caruso'),  -- Josh Giddey: OKC -> CHI
+    ( 18, 166, 'trao_doi', 5, 21, '2024-07-06', 'Trao đổi lấy Josh Giddey'),  -- Alex Caruso: CHI -> OKC
+    ( 19, 193, 'trao_doi', 30, 25, '2024-07-06', NULL),  -- Deni Avdija: WAS -> POR
+    ( 20, 155, 'trao_doi', 3, 20, '2024-07-06', NULL),  -- Mikal Bridges: BRK -> NYK
+    ( 21,  52, 'trao_doi', 10, 7, '2024-07-06', 'Ký rồi trao đổi (sign-and-trade)'),  -- Klay Thompson: GSW -> DAL
+    ( 22,  31, 'trao_doi', 7, 4, '2024-07-06', 'Trong thương vụ Klay Thompson'),  -- Josh Green: DAL -> CHO
+    ( 23,  79, 'trao_doi', 23, 10, '2024-07-06', 'Ký rồi trao đổi (sign-and-trade)'),  -- Buddy Hield: PHI -> GSW
+    ( 24, 203, 'trao_doi', 5, 26, '2024-07-06', 'Ký rồi trao đổi (sign-and-trade)'),  -- DeMar DeRozan: CHI -> SAC
+    ( 25, 214, 'trao_doi', 26, 27, '2024-07-06', 'Trong thương vụ DeMar DeRozan'),  -- Harrison Barnes: SAC -> SAS
+    ( 26, 179, 'ky_hop_dong', 13, 23, '2024-07-06', NULL),  -- Paul George: LAC -> PHI
+    ( 27,  68, 'ky_hop_dong', 23, 9, '2024-07-06', NULL),  -- Tobias Harris: PHI -> DET
+    ( 28, 164, 'ky_hop_dong', 20, 21, '2024-07-06', NULL),  -- Isaiah Hartenstein: NYK -> OKC
+    ( 29, 102, 'ky_hop_dong', 7, 13, '2024-07-06', NULL),  -- Derrick Jones Jr.: DAL -> LAC
+    ( 30, 103, 'trao_doi', 29, 13, '2024-07-06', 'Ký rồi trao đổi (sign-and-trade)'),  -- Kris Dunn: UTA -> LAC
+    ( 31, 118, 'ky_hop_dong', 8, 22, '2024-07-06', NULL),  -- Kentavious Caldwell-Pope: DEN -> ORL
+    ( 32,  62, 'ky_hop_dong', 19, 30, '2024-07-06', NULL),  -- Jonas Valančiūnas: NOP -> WAS
+    ( 33, 183, 'ky_hop_dong', 5, 23, '2024-07-06', NULL),  -- Andre Drummond: CHI -> PHI
+    ( 34, 176, 'ky_hop_dong', 30, 24, '2024-07-06', NULL),  -- Tyus Jones: WAS -> PHO
+    ( 35, 136, 'ky_hop_dong', 28, 17, '2024-07-06', NULL),  -- Gary Trent Jr.: TOR -> MIL
+    ( 36, 127, 'trao_doi', 26, 28, '2024-07-06', NULL),  -- Davion Mitchell: SAC -> TOR
+    ( 37, 182, 'trao_doi', 9, 7, '2024-07-06', NULL),  -- Quentin Grimes: DET -> DAL
+    ( 38, 150, 'trao_doi', 1, 30, '2024-07-06', 'Ký rồi trao đổi (sign-and-trade)'),  -- Saddiq Bey: ATL -> WAS
+    ( 39, 104, 'ky_hop_dong', NULL, 27, '2024-07-06', NULL),  -- Chris Paul: tự do -> SAS
+    ( 40, 133, 'ky_hop_dong', NULL, 13, '2024-07-06', 'Trở lại NBA sau 1 mùa thi đấu ở Hy Lạp'),  -- Kevin Porter Jr.: tự do -> LAC
+    ( 41, 160, 'ky_hop_dong', NULL, 23, '2024-07-06', 'Trở lại NBA từ Real Madrid'),  -- Guerschon Yabusele: tự do -> PHI
+    ( 42, 191, 'ky_hop_dong', 8, 24, '2024-07-06', NULL),  -- Collin Gillespie: DEN -> PHO
+    ( 43,  30, 'ky_hop_dong', 13, 4, '2024-07-06', NULL),  -- Moussa Diabaté: LAC -> CHO
+    ( 44,   2, 'trao_doi', 19, 1, '2024-07-08', 'Trao đổi lấy Dejounte Murray'),  -- Dyson Daniels: NOP -> ATL
+    ( 45, 207, 'trao_doi', 13, 29, '2024-07-17', NULL),  -- Russell Westbrook: LAC -> UTA
+    ( 46, 207, 'giai_phong', 29, NULL, '2024-07-18', NULL),  -- Russell Westbrook: UTA -> tự do
+    ( 47, 207, 'ky_hop_dong', NULL, 8, '2024-07-20', NULL),  -- Russell Westbrook: tự do -> DEN
+    ( 48, 154, 'trao_doi', 18, 20, '2024-10-02', 'Trao đổi lấy Julius Randle, Donte DiVincenzo'),  -- Karl-Anthony Towns: MIN -> NYK
+    ( 49, 138, 'trao_doi', 20, 18, '2024-10-02', 'Trong thương vụ Karl-Anthony Towns'),  -- Julius Randle: NYK -> MIN
+    ( 50, 142, 'trao_doi', 20, 18, '2024-10-02', 'Trong thương vụ Karl-Anthony Towns'),  -- Donte DiVincenzo: NYK -> MIN
+    ( 51, 206, 'trao_doi', 3, 10, '2024-12-15', NULL),  -- Dennis Schröder: BRK -> GSW
+    ( 52,  56, 'trao_doi', 14, 3, '2024-12-29', NULL),  -- D'Angelo Russell: LAL -> BRK
+    ( 53, 230, 'trao_doi', 24, 4, '2025-01-15', NULL),  -- Jusuf Nurkić: PHO -> CHO
+    ( 54, 105, 'trao_doi', 7, 14, '2025-02-02', 'Trao đổi lấy Anthony Davis'),  -- Luka Dončić: DAL -> LAL
+    ( 55,  49, 'trao_doi', 14, 7, '2025-02-02', 'Trao đổi lấy Luka Dončić'),  -- Anthony Davis: LAL -> DAL
+    ( 56, 210, 'trao_doi', 26, 27, '2025-02-03', 'Thương vụ 3 đội'),  -- De'Aaron Fox: SAC -> SAS
+    ( 57, 202, 'trao_doi', 5, 26, '2025-02-03', 'Thương vụ 3 đội'),  -- Zach LaVine: CHI -> SAC
+    ( 58,  39, 'trao_doi', 26, 5, '2025-02-03', 'Trong thương vụ Zach LaVine'),  -- Kevin Huerter: SAC -> CHI
+    ( 59, 112, 'trao_doi', 15, 26, '2025-02-03', 'Trong thương vụ De''Aaron Fox'),  -- Jake LaRavia: MEM -> SAC
+    ( 60,  74, 'trao_doi', 16, 10, '2025-02-06', 'Hạn chót chuyển nhượng 2025'),  -- Jimmy Butler: MIA -> GSW
+    ( 61, 123, 'trao_doi', 10, 16, '2025-02-06', 'Trong thương vụ Jimmy Butler'),  -- Andrew Wiggins: GSW -> MIA
+    ( 62, 127, 'trao_doi', 28, 16, '2025-02-06', 'Hạn chót chuyển nhượng 2025'),  -- Davion Mitchell: TOR -> MIA
+    ( 63, 206, 'trao_doi', 10, 9, '2025-02-06', 'Trong thương vụ Jimmy Butler'),  -- Dennis Schröder: GSW -> DET
+    ( 64, 218, 'trao_doi', 19, 28, '2025-02-06', 'Hạn chót chuyển nhượng 2025'),  -- Brandon Ingram: NOP -> TOR
+    ( 65,  63, 'trao_doi', 28, 19, '2025-02-06', 'Trong thương vụ Brandon Ingram'),  -- Bruce Brown: TOR -> NOP
+    ( 66, 131, 'trao_doi', 30, 17, '2025-02-06', 'Trao đổi lấy Khris Middleton'),  -- Kyle Kuzma: WAS -> MIL
+    ( 67, 238, 'trao_doi', 17, 30, '2025-02-06', 'Trao đổi lấy Kyle Kuzma'),  -- Khris Middleton: MIL -> WAS
+    ( 68,  45, 'trao_doi', 1, 6, '2025-02-06', 'Hạn chót chuyển nhượng 2025'),  -- De'Andre Hunter: ATL -> CLE
+    ( 69,  21, 'trao_doi', 13, 1, '2025-02-06', 'Hạn chót chuyển nhượng 2025'),  -- Terance Mann: LAC -> ATL
+    ( 70, 133, 'trao_doi', 13, 17, '2025-02-06', 'Hạn chót chuyển nhượng 2025'),  -- Kevin Porter Jr.: LAC -> MIL
+    ( 71, 110, 'trao_doi', 15, 30, '2025-02-06', 'Hạn chót chuyển nhượng 2025'),  -- Marcus Smart: MEM -> WAS
+    ( 72,  62, 'trao_doi', 30, 26, '2025-02-06', 'Hạn chót chuyển nhượng 2025'),  -- Jonas Valančiūnas: WAS -> SAC
+    ( 73, 182, 'trao_doi', 7, 23, '2025-02-06', 'Hạn chót chuyển nhượng 2025'),  -- Quentin Grimes: DAL -> PHI
+    ( 74,  51, 'tuyen_chon_draft', NULL, 7, '2025-06-25', 'Lượt chọn số 1 Draft 2025'),  -- Cooper Flagg: tự do -> DAL
+    ( 75, 212, 'tuyen_chon_draft', NULL, 27, '2025-06-25', 'Lượt chọn số 2 Draft 2025'),  -- Dylan Harper: tự do -> SAS
+    ( 76, 180, 'tuyen_chon_draft', NULL, 23, '2025-06-25', 'Lượt chọn số 3 Draft 2025'),  -- VJ Edgecombe: tự do -> PHI
+    ( 77, 108, 'giai_phong', 25, NULL, '2025-06-30', 'Thỏa thuận chấm dứt hợp đồng'),  -- Deandre Ayton: POR -> tự do
+    ( 78, 200, 'giai_phong', 17, NULL, '2025-07-01', NULL),  -- Damian Lillard: MIL -> tự do
+    ( 79,   8, 'ky_hop_dong', 15, 1, '2025-07-06', NULL),  -- Luke Kennard: MEM -> ATL
+    ( 80,  81, 'trao_doi', 24, 11, '2025-07-06', NULL),  -- Kevin Durant: PHO -> HOU
+    ( 81, 186, 'trao_doi', 11, 24, '2025-07-06', 'Trong thương vụ Kevin Durant'),  -- Jalen Green: HOU -> PHO
+    ( 82, 187, 'trao_doi', 11, 24, '2025-07-06', 'Trong thương vụ Kevin Durant'),  -- Dillon Brooks: HOU -> PHO
+    ( 83, 112, 'ky_hop_dong', 26, 14, '2025-07-06', NULL),  -- Jake LaRavia: SAC -> LAL
+    ( 84, 119, 'ky_hop_dong', 6, 15, '2025-07-06', NULL),  -- Ty Jerome: CLE -> MEM
+    ( 85, 172, 'trao_doi', 15, 22, '2025-07-07', NULL),  -- Desmond Bane: MEM -> ORL
+    ( 86, 118, 'trao_doi', 22, 15, '2025-07-07', 'Trong thương vụ Desmond Bane'),  -- Kentavious Caldwell-Pope: ORL -> MEM
+    ( 87,   4, 'trao_doi', 2, 1, '2025-07-07', NULL),  -- Kristaps Porziņģis: BOS -> ATL
+    ( 88, 195, 'trao_doi', 2, 25, '2025-07-07', 'Trao đổi lấy Anfernee Simons'),  -- Jrue Holiday: BOS -> POR
+    ( 89,  13, 'trao_doi', 25, 2, '2025-07-07', 'Trao đổi lấy Jrue Holiday'),  -- Anfernee Simons: POR -> BOS
+    ( 90,  61, 'trao_doi', 3, 8, '2025-07-07', 'Trao đổi lấy Michael Porter Jr.'),  -- Cameron Johnson: BRK -> DEN
+    ( 91,  17, 'trao_doi', 8, 3, '2025-07-07', 'Trao đổi lấy Cameron Johnson'),  -- Michael Porter Jr.: DEN -> BRK
+    ( 92, 130, 'ky_hop_dong', 12, 17, '2025-07-07', 'Ký hợp đồng khi là cầu thủ tự do'),  -- Myles Turner: IND -> MIL
+    ( 93, 108, 'ky_hop_dong', NULL, 14, '2025-07-07', NULL),  -- Deandre Ayton: tự do -> LAL
+    ( 94,   7, 'trao_doi', 18, 1, '2025-07-07', 'Ký rồi trao đổi (sign-and-trade)'),  -- Nickeil Alexander-Walker: MIN -> ATL
+    ( 95,  21, 'trao_doi', 1, 3, '2025-07-07', NULL),  -- Terance Mann: ATL -> BRK
+    ( 96,  29, 'trao_doi', 29, 4, '2025-07-07', 'Trao đổi lấy Jusuf Nurkić'),  -- Collin Sexton: UTA -> CHO
+    ( 97, 230, 'trao_doi', 4, 29, '2025-07-07', 'Trao đổi lấy Collin Sexton'),  -- Jusuf Nurkić: CHO -> UTA
+    ( 98,  40, 'trao_doi', 6, 5, '2025-07-07', 'Trao đổi lấy Lonzo Ball'),  -- Isaac Okoro: CLE -> CHI
+    ( 99,  48, 'trao_doi', 5, 6, '2025-07-07', 'Trao đổi lấy Isaac Okoro'),  -- Lonzo Ball: CHI -> CLE
+    (100,  56, 'ky_hop_dong', 3, 7, '2025-07-07', NULL),  -- D'Angelo Russell: BRK -> DAL
+    (101,  62, 'trao_doi', 26, 8, '2025-07-07', NULL),  -- Jonas Valančiūnas: SAC -> DEN
+    (102,  63, 'ky_hop_dong', 19, 8, '2025-07-07', NULL),  -- Bruce Brown: NOP -> DEN
+    (103,  71, 'trao_doi', 16, 9, '2025-07-07', 'Ký rồi trao đổi (sign-and-trade)'),  -- Duncan Robinson: MIA -> DET
+    (104, 124, 'trao_doi', 13, 16, '2025-07-07', 'Thương vụ 3 đội'),  -- Norman Powell: LAC -> MIA
+    (105, 101, 'trao_doi', 29, 13, '2025-07-07', 'Thương vụ 3 đội'),  -- John Collins: UTA -> LAC
+    (106, 188, 'trao_doi', 4, 24, '2025-07-07', NULL),  -- Mark Williams: CHO -> PHO
+    (107, 148, 'trao_doi', 30, 19, '2025-07-07', 'Trao đổi lấy CJ McCollum'),  -- Jordan Poole: WAS -> NOP
+    (108, 150, 'trao_doi', 30, 19, '2025-07-07', 'Trong thương vụ CJ McCollum'),  -- Saddiq Bey: WAS -> NOP
+    (109, 237, 'trao_doi', 19, 30, '2025-07-07', 'Trao đổi lấy Jordan Poole'),  -- CJ McCollum: NOP -> WAS
+    (110, 206, 'trao_doi', 9, 26, '2025-07-07', 'Ký rồi trao đổi (sign-and-trade)'),  -- Dennis Schröder: DET -> SAC
+    (111, 160, 'ky_hop_dong', 23, 20, '2025-07-07', NULL),  -- Guerschon Yabusele: PHI -> NYK
+    (112, 176, 'ky_hop_dong', 24, 22, '2025-07-07', NULL),  -- Tyus Jones: PHO -> ORL
+    (113, 100, 'giai_phong', 24, NULL, '2025-07-16', 'Thỏa thuận chấm dứt hợp đồng'),  -- Bradley Beal: PHO -> tự do
+    (114, 100, 'ky_hop_dong', NULL, 13, '2025-07-18', NULL),  -- Bradley Beal: tự do -> LAC
+    (115, 110, 'giai_phong', 30, NULL, '2025-07-18', 'Thỏa thuận chấm dứt hợp đồng'),  -- Marcus Smart: WAS -> tự do
+    (116, 200, 'ky_hop_dong', NULL, 25, '2025-07-19', 'Trở lại đội cũ'),  -- Damian Lillard: tự do -> POR
+    (117, 110, 'ky_hop_dong', NULL, 14, '2025-07-20', NULL),  -- Marcus Smart: tự do -> LAL
+    (118, 104, 'ky_hop_dong', 27, 13, '2025-07-20', 'Trở lại đội cũ'),  -- Chris Paul: SAS -> LAC
+    (119,  80, 'ky_hop_dong', 2, 10, '2025-07-24', NULL),  -- Al Horford: BOS -> GSW
+    (120, 207, 'ky_hop_dong', 8, 26, '2025-10-01', NULL);  -- Russell Westbrook: DEN -> SAC
 
 -- 3. CHẤN THƯƠNG (lịch sử thật, đều đã hồi phục; demo "đang chấn thương" thì thêm qua trang quản trị)
 INSERT INTO chan_thuong (ma_chan_thuong, ma_cau_thu, loai_chan_thuong, ngay_bi, ngay_du_kien_tro_lai, da_hoi_phuc, ghi_chu) VALUES
