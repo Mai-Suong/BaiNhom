@@ -2,7 +2,11 @@
 --  File: database/02_du_lieu_doi_bong.sql  (TV2 - Đặng Ngọc Nhật Duy)
 --  Dữ liệu mẫu: san_thi_dau, doi_bong, huan_luyen_vien, trong_tai
 --  Import SAU database/qlbongro.sql, TRƯỚC 03_du_lieu_cau_thu.sql
---  Nguồn: danh sách sân & HLV trưởng NBA mùa 2026-27 (Wikipedia, NBA.com)
+--  Nhóm xem 3 mùa: 2023-24, 2024-25, 2025-26. Dữ liệu "hiện tại" = cuối mùa 2025-26.
+--  Lịch sử HLV từng mùa nằm ở file 07_du_lieu_nhiem_ky_hlv.sql (import sau file 04).
+--  Nguồn: sân - Wikipedia "List of NBA arenas"; HLV - Wikipedia (các trang mùa 2023-24,
+--         2024-25, 2025-26, List of current NBA head coaches), NBA.com, báo chí;
+--         trọng tài - referee.com (số áo), NBAstuffer 2023-24 & 2025-26 (năm kinh nghiệm).
 -- =====================================================================
 USE qlbongro;
 SET NAMES utf8mb4;
@@ -102,66 +106,81 @@ INSERT INTO doi_bong (ma_doi, ten_doi, ten_viet_tat, thanh_pho, ma_san, nam_than
     (30, 'Washington Wizards',     'WAS', 'Washington',    30, 1961, 'Thành lập với tên Chicago Packers, vô địch NBA năm 1978.');
 
 -- 3. HUẤN LUYỆN VIÊN
---    30 HLV trưởng mùa 2026-27 (mỗi đội đúng 1 người, ngay_bat_dau = ngày nhận việc ở đội hiện tại)
+--    Mã 1-30: HLV trưởng của đội có cùng mã ở CUỐI MÙA 2025-26 (ngay_bat_dau = ngày nhận việc
+--    ở đội đó). Mã 31-46: HLV từng là HLV trưởng trong 3 mùa nhưng cuối mùa 2025-26 không dẫn
+--    dắt đội nào (ma_doi = NULL). Ai dẫn dắt đội nào ở từng mùa: xem file 07.
 --    ngay_sinh để trống (chưa đối chiếu nguồn); HLV phó thêm qua trang quản trị.
 INSERT INTO huan_luyen_vien (ma_hlv, ho_ten, quoc_tich, ma_doi, vai_tro, ngay_bat_dau) VALUES
-    ( 1, 'Quin Snyder',       'Mỹ',        1, 'truong', '2023-02-26'),
-    ( 2, 'Joe Mazzulla',      'Mỹ',        2, 'truong', '2023-02-16'),
+    ( 1, 'Quin Snyder',       'Mỹ',          1, 'truong', '2023-02-26'),
+    ( 2, 'Joe Mazzulla',      'Mỹ',          2, 'truong', '2023-02-16'),
     ( 3, 'Jordi Fernández',   'Tây Ban Nha', 3, 'truong', '2024-04-22'),
-    ( 4, 'Charles Lee',       'Mỹ',        4, 'truong', '2024-05-09'),
-    ( 5, 'Tiago Splitter',    'Brazil',    5, 'truong', '2026-06-16'),
-    ( 6, 'Kenny Atkinson',    'Mỹ',        6, 'truong', '2024-06-28'),
-    ( 7, 'Dusty May',         'Mỹ',        7, 'truong', '2026-06-23'),
-    ( 8, 'David Adelman',     'Mỹ',        8, 'truong', '2025-04-08'),
-    ( 9, 'J. B. Bickerstaff', 'Mỹ',        9, 'truong', '2024-07-03'),
-    (10, 'Steve Kerr',        'Mỹ',       10, 'truong', '2014-05-19'),
-    (11, 'Ime Udoka',         'Mỹ',       11, 'truong', '2023-04-25'),
-    (12, 'Rick Carlisle',     'Mỹ',       12, 'truong', '2021-06-24'),
-    (13, 'Tyronn Lue',        'Mỹ',       13, 'truong', '2020-10-20'),
-    (14, 'JJ Redick',         'Mỹ',       14, 'truong', '2024-06-24'),
-    (15, 'Tuomas Iisalo',     'Phần Lan', 15, 'truong', '2025-03-28'),
-    (16, 'Erik Spoelstra',    'Mỹ',       16, 'truong', '2008-04-28'),
-    (17, 'Taylor Jenkins',    'Mỹ',       17, 'truong', '2026-04-30'),
-    (18, 'Chris Finch',       'Mỹ',       18, 'truong', '2021-02-22'),
-    (19, 'Jamahl Mosley',     'Mỹ',       19, 'truong', '2026-05-18'),
-    (20, 'Mike Brown',        'Mỹ',       20, 'truong', '2025-07-07'),
-    (21, 'Mark Daigneault',   'Mỹ',       21, 'truong', '2020-11-11'),
-    (22, 'Sean Sweeney',      'Mỹ',       22, 'truong', '2026-06-01'),
-    (23, 'Nick Nurse',        'Mỹ',       23, 'truong', '2023-06-01'),
-    (24, 'Jordan Ott',        'Mỹ',       24, 'truong', '2025-06-04'),
-    (25, 'Micah Nori',        'Mỹ',       25, 'truong', '2026-06-23'),
-    (26, 'Doug Christie',     'Mỹ',       26, 'truong', '2024-12-27'),
-    (27, 'Mitch Johnson',     'Mỹ',       27, 'truong', '2025-05-02'),
-    (28, 'Darko Rajaković',   'Serbia',   28, 'truong', '2023-06-13'),
-    (29, 'Will Hardy',        'Mỹ',       29, 'truong', '2022-06-29'),
-    (30, 'Brian Keefe',       'Mỹ',       30, 'truong', '2024-05-29');
+    ( 4, 'Charles Lee',       'Mỹ',          4, 'truong', '2024-05-09'),
+    ( 5, 'Billy Donovan',     'Mỹ',          5, 'truong', '2020-09-22'),
+    ( 6, 'Kenny Atkinson',    'Mỹ',          6, 'truong', '2024-06-28'),
+    ( 7, 'Jason Kidd',        'Mỹ',          7, 'truong', '2021-06-28'),
+    ( 8, 'David Adelman',     'Mỹ',          8, 'truong', '2025-04-08'),
+    ( 9, 'J. B. Bickerstaff', 'Mỹ',          9, 'truong', '2024-07-03'),
+    (10, 'Steve Kerr',        'Mỹ',         10, 'truong', '2014-05-19'),
+    (11, 'Ime Udoka',         'Mỹ',         11, 'truong', '2023-04-25'),
+    (12, 'Rick Carlisle',     'Mỹ',         12, 'truong', '2021-06-24'),
+    (13, 'Tyronn Lue',        'Mỹ',         13, 'truong', '2020-10-20'),
+    (14, 'JJ Redick',         'Mỹ',         14, 'truong', '2024-06-24'),
+    (15, 'Tuomas Iisalo',     'Phần Lan',   15, 'truong', '2025-03-28'),
+    (16, 'Erik Spoelstra',    'Mỹ',         16, 'truong', '2008-04-28'),
+    (17, 'Doc Rivers',        'Mỹ',         17, 'truong', '2024-01-26'),
+    (18, 'Chris Finch',       'Mỹ',         18, 'truong', '2021-02-22'),
+    (19, 'James Borrego',     'Mỹ',         19, 'truong', '2025-11-15'),  -- tạm quyền
+    (20, 'Mike Brown',        'Mỹ',         20, 'truong', '2025-07-07'),
+    (21, 'Mark Daigneault',   'Mỹ',         21, 'truong', '2020-11-11'),
+    (22, 'Jamahl Mosley',     'Mỹ',         22, 'truong', '2021-07-11'),
+    (23, 'Nick Nurse',        'Mỹ',         23, 'truong', '2023-06-01'),
+    (24, 'Jordan Ott',        'Mỹ',         24, 'truong', '2025-06-04'),
+    (25, 'Tiago Splitter',    'Brazil',     25, 'truong', '2025-10-23'),  -- tạm quyền
+    (26, 'Doug Christie',     'Mỹ',         26, 'truong', '2024-12-27'),
+    (27, 'Mitch Johnson',     'Mỹ',         27, 'truong', '2025-05-02'),
+    (28, 'Darko Rajaković',   'Serbia',     28, 'truong', '2023-06-13'),
+    (29, 'Will Hardy',        'Mỹ',         29, 'truong', '2022-06-29'),
+    (30, 'Brian Keefe',       'Mỹ',         30, 'truong', '2024-05-29');
 
--- HLV đang tự do (rời ghế sau mùa 2025-26) - dùng để test gán HLV / kiểm tra "1 HLV trưởng"
+-- HLV từng dẫn dắt trong 3 mùa, cuối mùa 2025-26 không có đội (cũng dùng để test gán HLV)
 INSERT INTO huan_luyen_vien (ma_hlv, ho_ten, quoc_tich, ma_doi, vai_tro, ngay_bat_dau) VALUES
-    (31, 'Billy Donovan',     'Mỹ', NULL, 'truong', NULL),
-    (32, 'Jason Kidd',        'Mỹ', NULL, 'truong', NULL),
-    (33, 'Doc Rivers',        'Mỹ', NULL, 'truong', NULL),
-    (34, 'Willie Green',      'Mỹ', NULL, 'truong', NULL);
+    (31, 'Taylor Jenkins',    'Mỹ', NULL, 'truong', NULL),  -- MEM đến 03/2025
+    (32, 'Willie Green',      'Mỹ', NULL, 'truong', NULL),  -- NOP đến 11/2025
+    (33, 'Chauncey Billups',  'Mỹ', NULL, 'truong', NULL),  -- POR đến 10/2025
+    (34, 'Tom Thibodeau',     'Mỹ', NULL, 'truong', NULL),  -- NYK đến hết 2024-25
+    (35, 'Mike Budenholzer',  'Mỹ', NULL, 'truong', NULL),  -- PHO mùa 2024-25
+    (36, 'Frank Vogel',       'Mỹ', NULL, 'truong', NULL),  -- PHO mùa 2023-24
+    (37, 'Michael Malone',    'Mỹ', NULL, 'truong', NULL),  -- DEN đến 04/2025
+    (38, 'Gregg Popovich',    'Mỹ', NULL, 'truong', NULL),  -- SAS đến 11/2024
+    (39, 'Monty Williams',    'Mỹ', NULL, 'truong', NULL),  -- DET mùa 2023-24
+    (40, 'Darvin Ham',        'Mỹ', NULL, 'truong', NULL),  -- LAL mùa 2023-24
+    (41, 'Steve Clifford',    'Mỹ', NULL, 'truong', NULL),  -- CHA mùa 2023-24
+    (42, 'Jacque Vaughn',     'Mỹ', NULL, 'truong', NULL),  -- BKN đến 02/2024
+    (43, 'Kevin Ollie',       'Mỹ', NULL, 'truong', NULL),  -- BKN tạm quyền 2023-24
+    (44, 'Adrian Griffin',    'Mỹ', NULL, 'truong', NULL),  -- MIL đến 01/2024
+    (45, 'Joe Prunty',        'Mỹ', NULL, 'truong', NULL),  -- MIL tạm quyền 01/2024
+    (46, 'Wes Unseld Jr.',    'Mỹ', NULL, 'truong', NULL);  -- WAS đến 01/2024
 
--- 4. TRỌNG TÀI (danh sách tham khảo; nam_bat_dau để trống, bổ sung qua trang quản trị)
-INSERT INTO trong_tai (ma_trong_tai, ho_ten, so_ao) VALUES
-    ( 1, 'Marc Davis',        8),
-    ( 2, 'Sean Wright',       4),
-    ( 3, 'Kane Fitzgerald',   5),
-    ( 4, 'John Goble',       10),
-    ( 5, 'Ed Malloy',        14),
-    ( 6, 'Zach Zarba',       15),
-    ( 7, 'David Guthrie',    16),
-    ( 8, 'James Capers',     19),
-    ( 9, 'Kevin Scott',      24),
-    (10, 'Tony Brothers',    25),
-    (11, 'Pat Fraher',       26),
-    (12, 'Mitchell Ervin',   27),
-    (13, 'Eric Lewis',       42),
-    (14, 'Brian Forte',      45),
-    (15, 'Ben Taylor',       46),
-    (16, 'Scott Foster',     48),
-    (17, 'Bill Kennedy',     55),
-    (18, 'Josh Tiven',       58),
-    (19, 'Courtney Kirkland',61),
-    (20, 'Rodney Mott',      71);
+-- 4. TRỌNG TÀI: đều bắt trận NBA cả 3 mùa 2023-24, 2024-25, 2025-26.
+--    so_ao theo referee.com; nam_bat_dau = mùa đầu tiên ở NBA (tính từ số năm kinh nghiệm).
+INSERT INTO trong_tai (ma_trong_tai, ho_ten, so_ao, nam_bat_dau) VALUES
+    ( 1, 'Marc Davis',         8, 1998),
+    ( 2, 'Sean Wright',        4, 2005),
+    ( 3, 'Sean Corbin',       33, 1993),
+    ( 4, 'John Goble',        10, 2007),
+    ( 5, 'Ed Malloy',         14, 2002),
+    ( 6, 'Zach Zarba',        15, 2003),
+    ( 7, 'David Guthrie',     16, 2005),
+    ( 8, 'James Capers',      19, 1995),
+    ( 9, 'Kevin Scott',       24, 2010),
+    (10, 'Tony Brothers',     25, 1994),
+    (11, 'Pat Fraher',        26, 1995),
+    (12, 'Mitchell Ervin',    27, 2014),
+    (13, 'Michael Smith',     38, 1993),
+    (14, 'Brian Forte',       45, 2006),
+    (15, 'Ben Taylor',        46, 2011),
+    (16, 'Scott Foster',      48, 1994),
+    (17, 'Bill Kennedy',      55, 1995),
+    (18, 'Josh Tiven',        58, 2009),
+    (19, 'Courtney Kirkland', 61, 1999),
+    (20, 'Rodney Mott',       71, 1995);
