@@ -68,7 +68,7 @@ require __DIR__ . '/../../includes/admin_header.php';
 </div>
 <p class="text-muted small mt-2">
     Tổng: <?= count($dsMua) ?> mùa. Chỉ có 1 mùa hiện tại; trang chủ, đội bóng, trao giải dùng mùa này.
-    Mùa hiện tại hoặc mùa đã có trận, phân bảng, playoff, giải thưởng sẽ không xóa được.
+    Mùa hiện tại hoặc mùa đã có trận, phân bảng, playoff, giải thưởng, nhiệm kỳ HLV sẽ không xóa được.
 </p>
 
 <?php require __DIR__ . '/../../includes/admin_footer.php'; ?>

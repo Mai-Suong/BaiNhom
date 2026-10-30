@@ -63,6 +63,38 @@ function ltdLayDsSan(): array
     return ketNoi()->query('SELECT ma_san, ten_san, thanh_pho FROM san_thi_dau ORDER BY ten_san')->fetchAll();
 }
 
+/**
+ * Sân nhà của từng đội theo từng mùa: [ma_mua_giai => [ma_doi => ma_san]].
+ * Lấy sân đội đá sân nhà nhiều trận nhất trong mùa đó (VD LAC mùa 2023-24 = Crypto.com Arena, mã 14);
+ * mùa / đội chưa có trận thì dùng sân nhà hiện tại trong doi_bong. Dùng để tự chọn sân trong form.
+ */
+function ltdSanNhaTheoMua(array $dsMua, array $dsDoi): array
+{
+    $hienTai = [];
+    foreach ($dsDoi as $doi) {
+        $hienTai[(int) $doi['ma_doi']] = $doi['ma_san'] === null ? null : (int) $doi['ma_san'];
+    }
+    $kq = [];
+    foreach ($dsMua as $m) {
+        $kq[(int) $m['ma_mua_giai']] = $hienTai;
+    }
+    $rows = ketNoi()->query(
+        'SELECT ma_mua_giai, ma_doi_nha, ma_san, COUNT(*) AS so
+           FROM tran_dau WHERE ma_san IS NOT NULL
+          GROUP BY ma_mua_giai, ma_doi_nha, ma_san
+          ORDER BY ma_mua_giai, ma_doi_nha, so DESC, ma_san'
+    )->fetchAll();
+    $daCo = [];
+    foreach ($rows as $r) {
+        $k = $r['ma_mua_giai'] . '-' . $r['ma_doi_nha'];
+        if (!isset($daCo[$k]) && isset($kq[(int) $r['ma_mua_giai']])) {
+            $kq[(int) $r['ma_mua_giai']][(int) $r['ma_doi_nha']] = (int) $r['ma_san'];
+            $daCo[$k] = true;
+        }
+    }
+    return $kq;
+}
+
 function ltdLayDsTrongTai(): array
 {
     return ketNoi()->query('SELECT ma_trong_tai, ho_ten, so_ao FROM trong_tai ORDER BY ho_ten')->fetchAll();
