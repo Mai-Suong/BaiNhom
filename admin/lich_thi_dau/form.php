@@ -90,7 +90,7 @@ foreach ($dsLoat as $l) {
     $chonLoat[$l['ma_loat']] = $tenMua . ' · ' . $l['vong'] . ': ' . $l['vt_1'] . ' - ' . $l['vt_2'];
 }
 $chonTrangThai = $khoa ? LTD_TRANG_THAI : ['chua_dau' => LTD_TRANG_THAI['chua_dau'], 'hoan' => LTD_TRANG_THAI['hoan']];
-$sanNhaCuaDoi = array_column($dsDoi, 'ma_san', 'ma_doi'); // dùng cho JS tự chọn sân nhà
+$sanNhaTheoMua = ltdSanNhaTheoMua($dsMua, $dsDoi); // dùng cho JS tự chọn sân nhà theo mùa
 
 $tieuDe = $laSua ? 'Sửa trận đấu' : 'Thêm trận đấu';
 $menu   = 'lich';
@@ -175,9 +175,10 @@ require __DIR__ . '/../../includes/admin_header.php';
 </div>
 
 <script>
-// Hiện ô playoff khi chọn giai đoạn Playoff; chọn đội nhà thì tự chọn sân nhà của đội (nếu chưa chọn sân khác)
+// Hiện ô playoff khi chọn giai đoạn Playoff; chọn đội nhà / mùa thì tự chọn sân nhà của đội trong mùa đó (nếu chưa chọn sân khác)
 (function () {
-    var sanNha = <?= json_encode(array_map(fn($v) => $v === null ? null : (int) $v, $sanNhaCuaDoi)) ?>;
+    var sanNhaMua = <?= json_encode($sanNhaTheoMua, JSON_FORCE_OBJECT) ?>;
+    var mua = document.getElementById('ma_mua_giai');
     var giaiDoan = document.getElementById('giai_doan');
     var khung = document.getElementById('khung_playoff');
     var doiNha = document.getElementById('ma_doi_nha');
@@ -185,11 +186,12 @@ require __DIR__ . '/../../includes/admin_header.php';
     function capNhatPlayoff() { khung.style.display = giaiDoan.value === 'playoff' ? '' : 'none'; }
     giaiDoan.addEventListener('change', capNhatPlayoff);
     capNhatPlayoff();
-    var sanTuDong = san.value === '' || String(sanNha[doiNha.value]) === san.value;
+    function sanCuaDoi() { var m = sanNhaMua[mua.value] || {}; return m[doiNha.value]; }
+    var sanTuDong = san.value === '' || String(sanCuaDoi()) === san.value;
     san.addEventListener('change', function () { sanTuDong = false; });
-    doiNha.addEventListener('change', function () {
-        if (sanTuDong && sanNha[doiNha.value]) { san.value = String(sanNha[doiNha.value]); }
-    });
+    function tuChonSan() { if (sanTuDong && sanCuaDoi()) { san.value = String(sanCuaDoi()); } }
+    doiNha.addEventListener('change', tuChonSan);
+    mua.addEventListener('change', tuChonSan);
 })();
 </script>
 

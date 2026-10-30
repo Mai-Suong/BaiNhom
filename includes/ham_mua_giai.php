@@ -3,7 +3,7 @@
  * MODULE MÙA GIẢI (TV4) - hàm truy vấn và nghiệp vụ.
  * Các trang chỉ gọi hàm ở đây, không viết SQL trực tiếp trong trang.
  *
- * Bảng dùng: mua_giai (ghi); phan_bang, tran_dau, loat_playoff, trao_giai (chỉ đọc, để chặn xóa)
+ * Bảng dùng: mua_giai (ghi); phan_bang, tran_dau, loat_playoff, trao_giai, nhiem_ky_hlv (chỉ đọc, để chặn xóa)
  * Tên hàm có tiền tố mg để không trùng hàm của module khác.
  *
  * Quy tắc:
@@ -11,7 +11,7 @@
  *  - Ngày bắt đầu thuộc năm đầu, ngày kết thúc thuộc năm sau, kết thúc > bắt đầu.
  *  - Mùa đã có trận thì khoảng ngày mới phải chứa hết các trận.
  *  - Chỉ 1 mùa có la_mua_hien_tai = 1 (đặt mùa mới thì tự bỏ cờ mùa cũ).
- *  - Không xóa mùa hiện tại, mùa đã có trận / phân bảng / playoff / trao giải.
+ *  - Không xóa mùa hiện tại, mùa đã có trận / phân bảng / playoff / trao giải / nhiệm kỳ HLV.
  */
 require_once __DIR__ . '/../config/db.php';
 
@@ -200,7 +200,7 @@ function mgDem(string $bang, int $maMua): int
 
 /**
  * Xóa mùa. Trả về NULL nếu xóa được, hoặc câu thông báo lý do bị chặn.
- * CSDL đặt ON DELETE CASCADE cho phan_bang, loat_playoff, trao_giai: nếu không chặn ở đây,
+ * CSDL đặt ON DELETE CASCADE cho phan_bang, loat_playoff, trao_giai, nhiem_ky_hlv: nếu không chặn ở đây,
  * xóa mùa sẽ âm thầm xóa luôn các dữ liệu đó.
  */
 function mgXoa(int $maMua): ?string
@@ -214,7 +214,8 @@ function mgXoa(int $maMua): ?string
     }
     $lyDo = [];
     foreach (['tran_dau' => 'trận đấu', 'phan_bang' => 'đội đã phân bảng',
-              'loat_playoff' => 'loạt playoff', 'trao_giai' => 'giải thưởng đã trao'] as $bang => $ten) {
+              'loat_playoff' => 'loạt playoff', 'trao_giai' => 'giải thưởng đã trao',
+              'nhiem_ky_hlv' => 'nhiệm kỳ HLV'] as $bang => $ten) {
         $so = mgDem($bang, $maMua);
         if ($so > 0) {
             $lyDo[] = "$so $ten";
