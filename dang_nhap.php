@@ -34,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['ten_dang_nhap'] = $tk['ten_dang_nhap'];
             $_SESSION['vai_tro']       = $tk['vai_tro'];
             $_SESSION['ma_cau_thu']    = $tk['ma_cau_thu'] !== null ? (int) $tk['ma_cau_thu'] : null;
+            $_SESSION['hoat_dong_cuoi'] = time();
 
             datThongBao('ok', 'Đăng nhập thành công. Xin chào ' . $tk['ten_dang_nhap'] . '!');
             chuyenTrang(url($tk['vai_tro'] === 'admin' ? '/admin/index.php' : '/index.php'));

@@ -10,8 +10,33 @@
  */
 require_once __DIR__ . '/../config/db.php';
 
+// Số giây không thao tác thì tự đăng xuất (3 phút)
+const THOI_GIAN_CHO_TOI_DA = 3 * 60;
+
 if (session_status() === PHP_SESSION_NONE) {
+    // Cookie phiên chỉ sống trong phiên trình duyệt: đóng hẳn trình duyệt là mất đăng nhập
+    ini_set('session.gc_maxlifetime', (string) (THOI_GIAN_CHO_TOI_DA * 2));
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path'     => '/',
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
     session_start();
+}
+
+// Đang đăng nhập mà quá 3 phút không thao tác -> đăng xuất; ngược lại ghi lại lần hoạt động cuối
+if (!empty($_SESSION['ma_tai_khoan'])) {
+    $lanCuoi = $_SESSION['hoat_dong_cuoi'] ?? time();
+    if (time() - $lanCuoi > THOI_GIAN_CHO_TOI_DA) {
+        unset($_SESSION['ma_tai_khoan'], $_SESSION['ten_dang_nhap'], $_SESSION['vai_tro'],
+              $_SESSION['ma_cau_thu'], $_SESSION['hoat_dong_cuoi']);
+        session_regenerate_id(true);
+        $_SESSION['thong_bao'] = ['loai' => 'loi',
+            'noi_dung' => 'Phiên đăng nhập đã hết hạn do không hoạt động quá 3 phút. Vui lòng đăng nhập lại.'];
+    } else {
+        $_SESSION['hoat_dong_cuoi'] = time();
+    }
 }
 
 // Trang đăng nhập của TV1
