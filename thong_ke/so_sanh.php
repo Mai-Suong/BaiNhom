@@ -31,7 +31,7 @@ $dsCauThu = tkTruyVan($pdo,
 function tkTrungBinhCauThu(PDO $pdo, int $maMua, int $maCauThu): ?array
 {
     $r = tkTruyVan($pdo,
-        "SELECT v.*, c.ho_ten, d.ten_viet_tat
+        "SELECT v.*, c.ho_ten, c.anh, d.ten_viet_tat
          FROM v_chi_so_trung_binh v
          JOIN cau_thu c ON c.ma_cau_thu = v.ma_cau_thu
          LEFT JOIN doi_bong d ON d.ma_doi = c.ma_doi
@@ -175,9 +175,9 @@ echo tkCss();
 
     <div class="card shadow-sm mb-3"><div class="card-body">
         <div class="so-sanh-hang" style="border-top:0">
-            <strong class="mau-a text-end fs-5"><?= e($A['ho_ten']) ?></strong>
+            <strong class="mau-a text-end fs-5 d-flex align-items-center justify-content-end"><?= e($A['ho_ten']) ?><span class="ms-2"><?= tkAnhCT($A['anh'], $A['ho_ten'], 56) ?></span></strong>
             <span class="nhan-giua small text-uppercase fw-semibold">Chỉ số trung bình</span>
-            <strong class="mau-b fs-5"><?= e($B['ho_ten']) ?></strong>
+            <strong class="mau-b fs-5 d-flex align-items-center"><?= tkAnhCT($B['anh'], $B['ho_ten'], 56) ?><?= e($B['ho_ten']) ?></strong>
         </div>
         <?php foreach ($dongSoSanh as [$nhan, $cot, $hauTo, $mucTran]):
             $va  = $A[$cot] === null ? 0 : (float) $A[$cot];

@@ -91,3 +91,15 @@ tr.playin .nhom-nhan { color: #2b5fa8; font-weight: 600; }
     .luoi-thong-tin { padding: 1rem 1.25rem; }
     .so-sanh-hang { grid-template-columns: minmax(0,1fr) 90px minmax(0,1fr); gap: .5rem; }
 }
+
+/* ---- Ảnh: logo đội, ảnh cầu thủ (tkLogo, tkAnhCT) ---- */
+.tk-logo { object-fit: contain; margin-right: .5rem; vertical-align: middle; flex-shrink: 0; }
+.tk-anh { border-radius: 50%; object-fit: cover; object-position: top; background: #e9ecef; margin-right: .5rem; vertical-align: middle; flex-shrink: 0; }
+.vong-tron.tk-chu { background: var(--nba-xanh, #17408b); color: #fff; }
+.vong-tron.d-none { display: none !important; }
+.the-loat .ten { display: inline-flex; align-items: center; }
+.the-loat .ten .tk-logo { margin-right: .35rem; }
+.the-loat .ten .vong-tron { display: none; }
+.bang-diem .tk-logo, .bang-diem .vong-tron { margin-right: 0; }
+.bang-diem .tk-logo { background: #fff; border-radius: 50%; padding: 6px; }
+.o-dan-dau .tk-anh, .o-dan-dau .vong-tron { margin: 0 0 .5rem; }

@@ -9,6 +9,46 @@
 
 /* ======================= Tiện ích chung ======================= */
 
+/* ---------- Ảnh: logo đội và ảnh cầu thủ ----------
+ * Cột ảnh (doi_bong.logo, cau_thu.anh) có thể là file tải lên (uploads/...) hoặc link https://...
+ * (VD dữ liệu database/08_du_lieu_anh.sql). Không có ảnh, hoặc ảnh không tải được (mất mạng),
+ * thì hiện vòng tròn chữ: tên viết tắt đội (ATL) hoặc chữ đầu họ tên cầu thủ (LJ). */
+
+/** Đường dẫn ảnh: giữ nguyên link http(s), còn file tải lên thì thêm BASE_URL */
+function tkUrlAnh(string $duongDan): string
+{
+    $duongDan = trim($duongDan);
+    return preg_match('#^https?://#i', $duongDan) ? $duongDan : url('/' . ltrim($duongDan, '/'));
+}
+
+/** Ảnh + ô chữ thay thế (ô chữ ẩn sẵn, hiện ra khi ảnh lỗi) */
+function tkAnhHoacChu(?string $anh, string $chu, string $tieuDe, int $co, string $lopAnh, string $lopChu): string
+{
+    $kieu = 'width:' . $co . 'px;height:' . $co . 'px;font-size:' . max(10, (int) ($co / 2.8)) . 'px';
+    $o = '<span class="' . $lopChu . '%s" style="' . $kieu . '" title="' . e($tieuDe) . '">' . e($chu) . '</span>';
+    if (trim((string) $anh) === '') {
+        return sprintf($o, '');
+    }
+    return '<img class="' . $lopAnh . '" src="' . e(tkUrlAnh($anh)) . '" alt="' . e($tieuDe) . '" title="' . e($tieuDe) . '"'
+         . ' width="' . $co . '" height="' . $co . '" loading="lazy"'
+         . ' onerror="this.hidden=true;this.nextElementSibling.classList.remove(\'d-none\')">'
+         . sprintf($o, ' d-none');
+}
+
+/** Logo đội, VD tkLogo($r['logo'], 'ATL', 'Atlanta Hawks', 32) */
+function tkLogo(?string $logo, string $vietTat, string $tenDoi = '', int $co = 32): string
+{
+    return tkAnhHoacChu($logo, $vietTat, $tenDoi !== '' ? $tenDoi : $vietTat, $co, 'tk-logo', 'vong-tron');
+}
+
+/** Ảnh tròn cầu thủ, VD tkAnhCT($r['anh'], $r['ho_ten'], 28) */
+function tkAnhCT(?string $anh, string $hoTen, int $co = 28): string
+{
+    $tu  = preg_split('/\s+/u', trim($hoTen), -1, PREG_SPLIT_NO_EMPTY) ?: ['?'];
+    $chu = mb_strtoupper(mb_substr($tu[0], 0, 1) . (count($tu) > 1 ? mb_substr(end($tu), 0, 1) : ''));
+    return tkAnhHoacChu($anh, $chu, $hoTen, $co, 'tk-anh', 'vong-tron tk-chu');
+}
+
 /** Chạy câu SELECT có tham số (dấu ?), trả về mảng các dòng (rỗng nếu không có) */
 function tkTruyVan(PDO $pdo, string $sql, array $thamSo = []): array
 {
@@ -133,7 +173,8 @@ function tkTinhDoi(array $dong): array
 function tkDongCauThu(array $r): string
 {
     $pm = (int) $r['cong_tru'];
-    $h  = '<tr><td class="trai"><a class="text-decoration-none" href="' . url('/cau_thu/ho_so.php?id=' . (int) $r['ma_cau_thu']) . '">'
+    $h  = '<tr><td class="trai">' . tkAnhCT($r['anh'] ?? null, $r['ho_ten'], 28)
+        . '<a class="text-decoration-none" href="' . url('/cau_thu/ho_so.php?id=' . (int) $r['ma_cau_thu']) . '">'
         . e($r['ho_ten']) . '</a> <small class="text-muted">' . e($r['vi_tri']) . '</small></td>';
     $h .= '<td>' . (int) $r['so_phut'] . '</td>';
     $h .= '<td>' . (int) $r['nem_trung'] . '-' . (int) $r['nem_thu'] . '</td>';
@@ -149,13 +190,13 @@ function tkDongCauThu(array $r): string
 }
 
 /** Bảng box score của một đội (thẻ card Bootstrap) */
-function tkBangDoi(string $tenDoi, string $vietTat, array $dong): string
+function tkBangDoi(string $tenDoi, string $vietTat, array $dong, ?string $logo = null): string
 {
     [$xp, $du, $khong, $t] = tkTinhDoi($dong);
     ob_start();
     ?>
     <div class="card shadow-sm mb-4">
-      <div class="card-header fw-semibold"><span class="vong-tron"><?= e($vietTat) ?></span><?= e($tenDoi) ?></div>
+      <div class="card-header fw-semibold"><?= tkLogo($logo, $vietTat, $tenDoi, 32) ?><?= e($tenDoi) ?></div>
       <div class="table-responsive">
         <table class="table table-sm table-hover mb-0 bang-so">
           <thead><tr>
@@ -206,7 +247,7 @@ function tkLayLoat(PDO $pdo, int $maMua): array
                      OR (t.ma_doi_khach = l.$cotDoi AND t.diem_doi_khach > t.diem_doi_nha)))";
     };
     return tkTruyVan($pdo,
-        'SELECT l.*, d1.ten_viet_tat vt1, d2.ten_viet_tat vt2, kv.ma_hoi_nghi,
+        'SELECT l.*, d1.ten_viet_tat vt1, d2.ten_viet_tat vt2, d1.logo logo1, d2.logo logo2, kv.ma_hoi_nghi,
                 ' . $dem('ma_doi_1') . ' AS thang1, ' . $dem('ma_doi_2') . ' AS thang2
          FROM loat_playoff l
          JOIN doi_bong d1 ON d1.ma_doi = l.ma_doi_1
@@ -390,8 +431,8 @@ function tkTheLoat(?array $r): string
     }
     $tt = $xong ? 'Kết thúc' : (($w1 + $w2) > 0 ? 'Đang diễn ra' : 'Chưa đấu');
     $h  = '<div class="the-loat">';
-    $h .= '<div class="doi' . $lop1 . '"><span class="hat-giong">' . e($r['hat_giong_1']) . '</span><span class="ten">' . e($r['vt1']) . '</span><span class="so-thang">' . $w1 . '</span></div>';
-    $h .= '<div class="doi' . $lop2 . '"><span class="hat-giong">' . e($r['hat_giong_2']) . '</span><span class="ten">' . e($r['vt2']) . '</span><span class="so-thang">' . $w2 . '</span></div>';
+    $h .= '<div class="doi' . $lop1 . '"><span class="hat-giong">' . e($r['hat_giong_1']) . '</span><span class="ten">' . tkLogo($r['logo1'] ?? null, $r['vt1'], '', 20) . e($r['vt1']) . '</span><span class="so-thang">' . $w1 . '</span></div>';
+    $h .= '<div class="doi' . $lop2 . '"><span class="hat-giong">' . e($r['hat_giong_2']) . '</span><span class="ten">' . tkLogo($r['logo2'] ?? null, $r['vt2'], '', 20) . e($r['vt2']) . '</span><span class="so-thang">' . $w2 . '</span></div>';
     $h .= '<div class="trang-thai-loat' . ((!$xong && ($w1 + $w2) > 0) ? ' dang' : '') . '">' . e($tt) . '</div></div>';
     return $h;
 }

@@ -14,7 +14,8 @@ $thu = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Th�
 // ---- Chưa chọn trận: hiện danh sách ----
 if ($id === 0) {
     $ds = tkTruyVan($pdo,
-        "SELECT t.ma_tran, t.thoi_gian, t.diem_doi_nha, t.diem_doi_khach, n.ten_viet_tat vt_nha, k.ten_viet_tat vt_khach
+        "SELECT t.ma_tran, t.thoi_gian, t.diem_doi_nha, t.diem_doi_khach, n.ten_viet_tat vt_nha, k.ten_viet_tat vt_khach,
+                n.logo logo_nha, k.logo logo_khach
          FROM tran_dau t
          JOIN doi_bong n ON n.ma_doi = t.ma_doi_nha
          JOIN doi_bong k ON k.ma_doi = t.ma_doi_khach
@@ -34,7 +35,7 @@ if ($id === 0) {
             <?php foreach ($ds as $t): ?>
                 <a class="list-group-item list-group-item-action d-flex flex-wrap justify-content-between gap-2" href="?id=<?= (int) $t['ma_tran'] ?>">
                     <span class="text-muted"><?= e(date('d/m/Y H:i', strtotime($t['thoi_gian']))) ?></span>
-                    <strong><?= e($t['vt_khach']) ?> <?= (int) $t['diem_doi_khach'] ?> – <?= (int) $t['diem_doi_nha'] ?> <?= e($t['vt_nha']) ?></strong>
+                    <strong class="d-inline-flex align-items-center"><?= tkLogo($t['logo_khach'], $t['vt_khach'], '', 24) ?><?= e($t['vt_khach']) ?>&nbsp;<?= (int) $t['diem_doi_khach'] ?> – <?= (int) $t['diem_doi_nha'] ?>&nbsp;<?= e($t['vt_nha']) ?><span class="ms-2"><?= tkLogo($t['logo_nha'], $t['vt_nha'], '', 24) ?></span></strong>
                 </a>
             <?php endforeach; ?>
         </div>
@@ -47,6 +48,7 @@ if ($id === 0) {
 // ---- Có chọn trận ----
 $tran = tkTruyVan($pdo,
     'SELECT t.*, n.ten_doi ten_nha, n.ten_viet_tat vt_nha, k.ten_doi ten_khach, k.ten_viet_tat vt_khach,
+            n.logo logo_nha, k.logo logo_khach,
             s.ten_san, m.ten_mua_giai
      FROM tran_dau t
      JOIN doi_bong n ON n.ma_doi = t.ma_doi_nha
@@ -70,7 +72,7 @@ $trongTai = tkTruyVan($pdo,
     'SELECT tt.ho_ten FROM phan_cong_trong_tai p JOIN trong_tai tt ON tt.ma_trong_tai = p.ma_trong_tai
      WHERE p.ma_tran = ? ORDER BY tt.ho_ten', [$id]);
 $cauThu   = tkTruyVan($pdo,
-    'SELECT cs.*, c.ho_ten, c.vi_tri
+    'SELECT cs.*, c.ho_ten, c.vi_tri, c.anh
      FROM chi_so_tran_dau cs JOIN cau_thu c ON c.ma_cau_thu = cs.ma_cau_thu
      WHERE cs.ma_tran = ?
      ORDER BY cs.xuat_phat DESC, cs.so_phut DESC, c.ho_ten', [$id]);
@@ -118,7 +120,7 @@ echo tkCss();
 <div class="card shadow-sm mt-2 mb-3 overflow-hidden">
     <div class="bang-diem">
         <div class="doi-lon">
-            <span class="huy-hieu"><?= e($t['vt_khach']) ?></span>
+            <?= tkLogo($t['logo_khach'], $t['vt_khach'], $t['ten_khach'], 64) ?>
             <div><div class="ten-lon"><?= e($t['ten_khach']) ?></div><div class="vai-tro">Đội khách</div></div>
             <span class="diem-lon ms-auto<?= $daDau && $nhaThang ? ' thua' : '' ?>"><?= $daDau ? $dK : '–' ?></span>
         </div>
@@ -127,7 +129,7 @@ echo tkCss();
             <span class="vai-tro"><?= e($giaiDoan) ?> <?= e($t['ten_mua_giai']) ?></span>
         </div>
         <div class="doi-lon phai">
-            <span class="huy-hieu"><?= e($t['vt_nha']) ?></span>
+            <?= tkLogo($t['logo_nha'], $t['vt_nha'], $t['ten_nha'], 64) ?>
             <div><div class="ten-lon"><?= e($t['ten_nha']) ?></div><div class="vai-tro">Đội chủ nhà</div></div>
             <span class="diem-lon me-auto<?= $daDau && !$nhaThang ? ' thua' : '' ?>"><?= $daDau ? $dN : '–' ?></span>
         </div>
@@ -177,8 +179,8 @@ echo tkCss();
             <a class="btn btn-sm btn-outline-primary" href="<?= url('/admin/box_score/index.php?id=' . $id) ?>">Sửa box score trận này</a>
         <?php endif; ?>
     </div>
-    <?= tkBangDoi($t['ten_nha'], $t['vt_nha'], $dongNha) ?>
-    <?= tkBangDoi($t['ten_khach'], $t['vt_khach'], $dongKhach) ?>
+    <?= tkBangDoi($t['ten_nha'], $t['vt_nha'], $dongNha, $t['logo_nha']) ?>
+    <?= tkBangDoi($t['ten_khach'], $t['vt_khach'], $dongKhach, $t['logo_khach']) ?>
     <p class="small text-muted">BBTC: bắt bóng tấn công · BBPT: bắt bóng phòng thủ · KT: kiến tạo. Tỉ lệ ném và tổng bóng bắt tính khi hiển thị, không lưu trong database.</p>
 <?php else: ?>
     <div class="alert alert-info">

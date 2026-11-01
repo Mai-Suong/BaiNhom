@@ -19,7 +19,7 @@ $tatCa = tkTruyVan($pdo,
             v.thang, v.thua, v.ti_le_thang, v.cach_dau_bang,
             v.thang_san_nha, v.thua_san_nha, v.thang_san_khach, v.thua_san_khach,
             v.tong_diem_ghi, v.tong_diem_bi_ghi,
-            d.ten_doi, d.ten_viet_tat, kv.ten_khu_vuc, hn.ten_hoi_nghi
+            d.ten_doi, d.ten_viet_tat, d.logo, kv.ten_khu_vuc, hn.ten_hoi_nghi
      FROM v_bang_xep_hang v
      JOIN doi_bong d  ON d.ma_doi = v.ma_doi
      JOIN khu_vuc kv  ON kv.ma_khu_vuc = v.ma_khu_vuc
@@ -98,7 +98,7 @@ echo tkCss();
                 ?>
                     <tr class="<?= $lop ?>">
                         <td class="giua"><span class="hang"><?= $i + 1 ?></span></td>
-                        <td class="trai"><span class="vong-tron"><?= e($r['ten_viet_tat']) ?></span><?= e($r['ten_doi']) ?></td>
+                        <td class="trai"><?= tkLogo($r['logo'], $r['ten_viet_tat'], $r['ten_doi'], 32) ?><?= e($r['ten_doi']) ?></td>
                         <td><strong><?= (int) $r['thang'] ?></strong></td>
                         <td><?= (int) $r['thua'] ?></td>
                         <td><strong><?= e($tiLe) ?></strong></td>

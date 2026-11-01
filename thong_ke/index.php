@@ -22,7 +22,7 @@ $cot = [
 $sx = isset($cot[$_GET['sx'] ?? '']) ? $_GET['sx'] : 'diem';
 
 $dong = tkTruyVan($pdo,
-    'SELECT v.*, c.ho_ten, c.vi_tri, d.ten_viet_tat
+    'SELECT v.*, c.ho_ten, c.vi_tri, c.anh, d.ten_viet_tat, d.ten_doi, d.logo
      FROM v_chi_so_trung_binh v
      JOIN cau_thu c ON c.ma_cau_thu = v.ma_cau_thu
      LEFT JOIN doi_bong d ON d.ma_doi = c.ma_doi
@@ -38,7 +38,7 @@ foreach ($cot as [$tenCot, $nhan]) {
         }
     }
     if ($tot !== null) {
-        $danDau[] = ['nhan' => $nhan, 'gia_tri' => tkSo($tot[$tenCot]), 'ma' => (int) $tot['ma_cau_thu'], 'ten' => $tot['ho_ten'],
+        $danDau[] = ['nhan' => $nhan, 'gia_tri' => tkSo($tot[$tenCot]), 'ma' => (int) $tot['ma_cau_thu'], 'ten' => $tot['ho_ten'], 'anh' => $tot['anh'],
                      'doi' => trim(($tot['ten_viet_tat'] ?? '') . ' · ' . $tot['vi_tri'], ' ·')];
     }
 }
@@ -82,6 +82,7 @@ echo tkCss();
             <div class="col-6 col-md-4 col-xl">
                 <div class="card shadow-sm h-100 o-dan-dau">
                     <div class="card-body">
+                        <?= tkAnhCT($o['anh'], $o['ten'], 56) ?>
                         <div class="nhan-nho"><?= e($o['nhan']) ?></div>
                         <div class="so-lon"><?= e($o['gia_tri']) ?></div>
                         <a class="fw-semibold d-block text-truncate text-decoration-none" href="<?= url('/cau_thu/ho_so.php?id=' . $o['ma']) ?>"><?= e($o['ten']) ?></a>
@@ -118,8 +119,8 @@ echo tkCss();
                 <?php foreach ($top as $i => $r): ?>
                     <tr>
                         <td class="giua"><strong><?= $i + 1 ?></strong></td>
-                        <td class="trai"><a class="text-decoration-none" href="<?= url('/cau_thu/ho_so.php?id=' . (int) $r['ma_cau_thu']) ?>"><?= e($r['ho_ten']) ?></a> <small class="text-muted"><?= e($r['vi_tri']) ?></small></td>
-                        <td class="giua"><?= e($r['ten_viet_tat'] ?? '—') ?></td>
+                        <td class="trai"><?= tkAnhCT($r['anh'], $r['ho_ten'], 28) ?><a class="text-decoration-none" href="<?= url('/cau_thu/ho_so.php?id=' . (int) $r['ma_cau_thu']) ?>"><?= e($r['ho_ten']) ?></a> <small class="text-muted"><?= e($r['vi_tri']) ?></small></td>
+                        <td class="giua"><?php if ($r['ten_viet_tat']): ?><?= tkLogo($r['logo'], $r['ten_viet_tat'], $r['ten_doi'], 22) ?><?= e($r['ten_viet_tat']) ?><?php else: ?>—<?php endif; ?></td>
                         <td><?= (int) $r['so_tran'] ?></td>
                         <td><?= tkSo($r['phut_tb']) ?></td>
                         <?php foreach ($cot as $khoa => [$tenCot, $nhan]): ?>

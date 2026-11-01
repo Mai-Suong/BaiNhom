@@ -73,7 +73,8 @@ $dsTran = tkTruyVan($pdo,
      ORDER BY t.thoi_gian DESC LIMIT 150');
 
 $tran = $id ? tkTruyVan($pdo,
-    'SELECT t.*, n.ten_doi ten_nha, n.ten_viet_tat vt_nha, k.ten_doi ten_khach, k.ten_viet_tat vt_khach
+    'SELECT t.*, n.ten_doi ten_nha, n.ten_viet_tat vt_nha, k.ten_doi ten_khach, k.ten_viet_tat vt_khach,
+            n.logo logo_nha, k.logo logo_khach
      FROM tran_dau t
      JOIN doi_bong n ON n.ma_doi = t.ma_doi_nha
      JOIN doi_bong k ON k.ma_doi = t.ma_doi_khach
@@ -94,7 +95,7 @@ if ($choNhap) {
     foreach ($dinh as [$maDoi, $ten, $vt, $muc]) {
         // đội hình hiện tại + những người đã có dòng trong trận này cho đội đó
         $ds = tkTruyVan($pdo,
-            'SELECT c.ma_cau_thu, c.ho_ten, c.vi_tri, c.so_ao FROM cau_thu c
+            'SELECT c.ma_cau_thu, c.ho_ten, c.vi_tri, c.so_ao, c.anh FROM cau_thu c
              WHERE c.ma_doi = ?
                 OR c.ma_cau_thu IN (SELECT ma_cau_thu FROM chi_so_tran_dau WHERE ma_tran = ? AND ma_doi = ?)
              ORDER BY c.ho_ten', [$maDoi, $id, $maDoi]);
@@ -252,7 +253,7 @@ echo tkCss();
     <?php foreach ($doi as $stt => [$maDoi, $ten, $vt, $muc, $ds]): ?>
         <div class="card shadow-sm mb-4">
             <div class="card-header fw-semibold">
-                <span class="vong-tron"><?= e($vt) ?></span><?= e($ten) ?>
+                <?= tkLogo((int) $maDoi === (int) $t['ma_doi_nha'] ? $t['logo_nha'] : $t['logo_khach'], $vt, $ten, 32) ?><?= e($ten) ?>
                 <small class="text-muted fw-normal">· <?= $stt === 0 ? 'chủ nhà' : 'khách' ?> · tỉ số <?= $muc ?></small>
             </div>
             <?php if (!$ds): ?>
@@ -268,7 +269,7 @@ echo tkCss();
                     <tbody>
                     <?php foreach ($ds as $c): $ma = (int) $c['ma_cau_thu']; $tt = tkTrangThaiO($ma, $cu, $daGui); ?>
                         <tr data-hang="1" data-doi="<?= $stt ?>">
-                            <td class="trai"><?= e($c['ho_ten']) ?> <small class="text-muted"><?= e($c['vi_tri']) ?><?= $c['so_ao'] !== null ? ' · #' . (int) $c['so_ao'] : '' ?></small></td>
+                            <td class="trai"><?= tkAnhCT($c['anh'], $c['ho_ten'], 28) ?><?= e($c['ho_ten']) ?> <small class="text-muted"><?= e($c['vi_tri']) ?><?= $c['so_ao'] !== null ? ' · #' . (int) $c['so_ao'] : '' ?></small></td>
                             <td>
                                 <select class="form-select form-select-sm" name="cs[<?= $ma ?>][trang_thai]" aria-label="Trạng thái – <?= e($c['ho_ten']) ?>">
                                     <option value=""<?= $tt === '' ? ' selected' : '' ?>>— không ghi —</option>
