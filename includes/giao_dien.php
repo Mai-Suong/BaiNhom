@@ -10,13 +10,9 @@ require_once __DIR__ . '/ham_cau_thu.php';
 /** Ảnh đại diện cầu thủ, không có ảnh thì hiện chữ cái đầu trong vòng tròn */
 function anhCauThu(array $ct, int $co = 44): string
 {
-    if (!empty($ct['anh'])) {
-        return '<img class="rounded-circle object-fit-cover bg-light" src="' . e(url('/' . $ct['anh'])) . '" alt="'
-             . e($ct['ho_ten']) . '" width="' . $co . '" height="' . $co . '">';
-    }
-    $chu = mb_strtoupper(mb_substr(trim($ct['ho_ten'] ?? '?'), 0, 1));
-    return '<span class="rounded-circle bg-nba text-white fw-bold d-inline-flex align-items-center justify-content-center flex-shrink-0"'
-         . ' style="width:' . $co . 'px;height:' . $co . 'px;font-size:' . (int) ($co / 2.4) . 'px">' . e($chu) . '</span>';
+    // Dùng hàm chung anhTron() (includes/ham_chung.php): có ảnh thì hiện ảnh (file uploads/ hoặc link https),
+    // không có / không tải được thì hiện chữ viết tắt tên
+    return anhTron($ct['anh'] ?? null, $ct['ho_ten'] ?? '?', $co);
 }
 
 /** Nhãn trạng thái cầu thủ (Bootstrap badge) */

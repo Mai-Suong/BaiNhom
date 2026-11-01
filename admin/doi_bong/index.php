@@ -91,7 +91,7 @@ require __DIR__ . '/../../includes/admin_header.php';
                 <tr>
                     <td>
                         <?php if ($doi['logo']): ?>
-                            <img src="<?= e(url('/' . $doi['logo'])) ?>" alt="" width="44" height="44" class="object-fit-contain">
+                            <img src="<?= e(urlAnh($doi['logo'])) ?>" alt="" width="44" height="44" class="object-fit-contain">
                         <?php else: ?>
                             <span class="badge text-bg-secondary"><?= e($doi['ten_viet_tat']) ?></span>
                         <?php endif; ?>

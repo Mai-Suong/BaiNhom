@@ -107,7 +107,7 @@ require __DIR__ . '/../../includes/admin_header.php';
                     <?php if (isset($loi['logo'])): ?><div class="invalid-feedback"><?= e($loi['logo']) ?></div><?php endif; ?>
                     <?php if ($laSua && $cu['logo']): ?>
                         <div class="mt-2">
-                            <img src="<?= e(url('/' . $cu['logo'])) ?>" alt="" height="64">
+                            <img src="<?= e(urlAnh($cu['logo'])) ?>" alt="" height="64">
                             <div class="form-text">Chọn ảnh mới để thay logo hiện tại.</div>
                         </div>
                     <?php endif; ?>

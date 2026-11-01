@@ -84,7 +84,7 @@ require __DIR__ . '/../includes/header.php';
                    href="<?= e($linkMua('/doi_bong/chi_tiet.php', ['id' => (int) $doi['ma_doi']])) ?>">
                     <div class="card-body text-center">
                         <?php if ($doi['logo']): ?>
-                            <img src="<?= e(url('/' . $doi['logo'])) ?>" alt="Logo <?= e($doi['ten_doi']) ?>"
+                            <img src="<?= e(urlAnh($doi['logo'])) ?>" alt="Logo <?= e($doi['ten_doi']) ?>"
                                  width="72" height="72" class="object-fit-contain mb-2">
                         <?php else: ?>
                             <div class="rounded-circle bg-nba text-white fw-bold d-inline-flex align-items-center justify-content-center mb-2"

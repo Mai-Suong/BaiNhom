@@ -58,7 +58,7 @@ require __DIR__ . '/../includes/header.php';
 <div class="card shadow-sm mb-4">
     <div class="card-body d-flex flex-wrap gap-4 align-items-center">
         <?php if ($doi['logo']): ?>
-            <img src="<?= e(url('/' . $doi['logo'])) ?>" alt="Logo <?= e($doi['ten_doi']) ?>" width="120" height="120" class="object-fit-contain">
+            <img src="<?= e(urlAnh($doi['logo'])) ?>" alt="Logo <?= e($doi['ten_doi']) ?>" width="120" height="120" class="object-fit-contain">
         <?php else: ?>
             <div class="rounded-circle bg-nba text-white fw-bold fs-3 d-flex align-items-center justify-content-center"
                  style="width: 120px; height: 120px"><?= e($doi['ten_viet_tat']) ?></div>
@@ -98,9 +98,7 @@ require __DIR__ . '/../includes/header.php';
                 <?php if (!$san): ?>
                     <span class="text-muted">Chưa có thông tin sân nhà.</span>
                 <?php else: ?>
-                    <?php if ($san['hinh_anh']): ?>
-                        <img src="<?= e(url('/' . $san['hinh_anh'])) ?>" alt="" class="img-fluid rounded mb-3">
-                    <?php endif; ?>
+                    <?= anhSan($san['hinh_anh'], $san['ten_san'], 'img-fluid rounded mb-3') ?>
                     <div class="fw-semibold"><?= e(implode(' → ', $san['ten_trong_mua'])) ?></div>
                     <?php if (count($san['ten_trong_mua']) > 1): ?>
                         <div class="small text-muted">Sân đổi tên trong mùa.</div>
@@ -128,11 +126,7 @@ require __DIR__ . '/../includes/header.php';
                 <?php endif; ?>
                 <?php foreach ($dsHlv as $hlv): $danhHieu = layDanhHieuHLV((int) $hlv['ma_hlv']); ?>
                     <li class="list-group-item d-flex gap-3 align-items-center">
-                        <?php if ($hlv['anh']): ?>
-                            <img src="<?= e(url('/' . $hlv['anh'])) ?>" alt="" width="48" height="48" class="rounded-circle object-fit-cover">
-                        <?php else: ?>
-                            <i class="bi bi-person-circle fs-2 text-muted"></i>
-                        <?php endif; ?>
+                        <?= anhTron($hlv['anh'], $hlv['ho_ten'], 48) ?>
                         <div>
                             <div class="fw-semibold"><?= e($hlv['ho_ten']) ?>
                                 <span class="badge <?= $hlv['vai_tro'] === 'truong' ? 'text-bg-primary' : 'text-bg-secondary' ?> ms-1">
