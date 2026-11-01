@@ -96,11 +96,7 @@ require __DIR__ . '/../../includes/admin_header.php';
             <?php foreach ($dsHlv as $hlv): ?>
                 <tr>
                     <td>
-                        <?php if ($hlv['anh']): ?>
-                            <img src="<?= e(url('/' . $hlv['anh'])) ?>" alt="" width="40" height="40" class="rounded-circle object-fit-cover">
-                        <?php else: ?>
-                            <i class="bi bi-person-circle fs-3 text-muted"></i>
-                        <?php endif; ?>
+                        <?= anhTron($hlv['anh'], $hlv['ho_ten'], 40) ?>
                     </td>
                     <td class="fw-semibold"><?= e($hlv['ho_ten']) ?></td>
                     <td>

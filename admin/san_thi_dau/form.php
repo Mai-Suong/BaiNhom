@@ -92,7 +92,7 @@ require __DIR__ . '/../../includes/admin_header.php';
                     <?php if (isset($loi['hinh_anh'])): ?><div class="invalid-feedback"><?= e($loi['hinh_anh']) ?></div><?php endif; ?>
                     <?php if ($laSua && $cu['hinh_anh']): ?>
                         <div class="mt-2">
-                            <img src="<?= e(url('/' . $cu['hinh_anh'])) ?>" alt="" height="80" class="rounded">
+                            <img src="<?= e(urlAnh($cu['hinh_anh'])) ?>" alt="" height="80" class="rounded">
                             <div class="form-text">Chọn ảnh mới để thay ảnh hiện tại.</div>
                         </div>
                     <?php endif; ?>

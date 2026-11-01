@@ -85,7 +85,7 @@ require __DIR__ . '/../../includes/admin_header.php';
                 <tr>
                     <td>
                         <?php if ($san['hinh_anh']): ?>
-                            <img src="<?= e(url('/' . $san['hinh_anh'])) ?>" alt="" width="56" height="40"
+                            <img src="<?= e(urlAnh($san['hinh_anh'])) ?>" alt="" width="56" height="40"
                                  class="rounded object-fit-cover">
                         <?php else: ?>
                             <span class="text-muted"><i class="bi bi-building fs-4"></i></span>
