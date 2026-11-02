@@ -2,6 +2,7 @@
 /** Trang Khách - Danh sách đội bóng theo mùa (?mua=), lọc Miền Đông / Miền Tây (?mien=) (TV2) */
 require_once __DIR__ . '/../includes/init.php';
 require_once __DIR__ . '/../includes/ham_trang_khach.php';
+require_once __DIR__ . '/../includes/giao_dien_moi.php';   // màu đội, huy hiệu (giao diện mới)
 
 $dsMua    = tkhLayDsMua();
 $mua      = tkhChonMua($dsMua, (int) ($_GET['mua'] ?? 0));
@@ -80,22 +81,18 @@ require __DIR__ . '/../includes/header.php';
     <div class="row g-3">
         <?php foreach ($dsTrongNhom as $doi): ?>
             <div class="col-6 col-md-4 col-lg-3">
-                <a class="card h-100 shadow-sm text-decoration-none text-reset"
-                   href="<?= e($linkMua('/doi_bong/chi_tiet.php', ['id' => (int) $doi['ma_doi']])) ?>">
-                    <div class="card-body text-center">
-                        <?php if ($doi['logo']): ?>
-                            <img src="<?= e(urlAnh($doi['logo'])) ?>" alt="Logo <?= e($doi['ten_doi']) ?>"
-                                 width="72" height="72" class="object-fit-contain mb-2">
-                        <?php else: ?>
-                            <div class="rounded-circle bg-nba text-white fw-bold d-inline-flex align-items-center justify-content-center mb-2"
-                                 style="width: 72px; height: 72px"><?= e($doi['ten_viet_tat']) ?></div>
-                        <?php endif; ?>
-                        <div class="fw-semibold"><?= e($doi['ten_doi']) ?></div>
-                        <div class="small text-muted"><?= e($doi['thanh_pho']) ?></div>
+                <a class="the-doi" href="<?= e($linkMua('/doi_bong/chi_tiet.php', ['id' => (int) $doi['ma_doi']])) ?>">
+                    <span class="dai-mau" style="background: <?= e(gdMauDoi($doi['ten_viet_tat'])) ?>">
+                        <span class="vong-logo"><?= gdHuyHieu($doi['logo'], $doi['ten_viet_tat'], $doi['ten_doi'], 48) ?></span>
+                        <span class="chu-mo" aria-hidden="true" style="color: <?= e(gdMauPhu($doi['ten_viet_tat'])) ?>"><?= e($doi['ten_viet_tat']) ?></span>
+                    </span>
+                    <span class="noi-dung">
+                        <span class="phu"><?= e($doi['thanh_pho']) ?></span>
+                        <span class="ten"><?= e($doi['ten_doi']) ?></span>
                         <?php if ($doi['ten_san'] !== null): ?>
-                            <div class="small text-muted"><i class="bi bi-building"></i> <?= e($doi['ten_san']) ?></div>
+                            <span class="phu fw-normal"><i class="bi bi-building"></i> <?= e($doi['ten_san']) ?></span>
                         <?php endif; ?>
-                    </div>
+                    </span>
                 </a>
             </div>
         <?php endforeach; ?>

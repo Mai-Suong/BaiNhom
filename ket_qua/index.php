@@ -2,6 +2,7 @@
 /** Trang Khách - Kết quả các trận đã đấu kèm điểm từng hiệp; ?tran=ID xem 1 trận (TV4) */
 require_once __DIR__ . '/../includes/init.php';
 require_once __DIR__ . '/../includes/ham_trang_thi_dau.php';
+require_once __DIR__ . '/../includes/giao_dien_moi.php';   // logo đội (giao diện mới)
 
 $maTran = (int) ($_GET['tran'] ?? 0);
 $motTran = $maTran ? ttdLayMotKetQua($maTran) : null;
@@ -85,8 +86,8 @@ require __DIR__ . '/../includes/header.php';
                         <?php foreach (['khach' => $khachThang, 'nha' => !$khachThang] as $ben => $thang): ?>
                             <tr class="<?= $thang ? 'fw-bold' : '' ?>">
                                 <td class="text-start ps-3 text-nowrap">
-                                    <a class="text-reset text-decoration-none" href="<?= url('/doi_bong/chi_tiet.php?id=' . (int) $t['ma_doi_' . $ben]) ?>"
-                                       title="<?= e($t['ten_doi_' . $ben]) ?>"><?= e($motTran ? $t['ten_doi_' . $ben] : $t['vt_' . $ben]) ?></a>
+                                    <a class="text-reset text-decoration-none d-inline-flex align-items-center gap-2" href="<?= url('/doi_bong/chi_tiet.php?id=' . (int) $t['ma_doi_' . $ben]) ?>"
+                                       title="<?= e($t['ten_doi_' . $ben]) ?>"><?= gdHuyHieu($t['logo_' . $ben], $t['vt_' . $ben], $t['ten_doi_' . $ben], $motTran ? 40 : 30) ?><?= e($motTran ? $t['ten_doi_' . $ben] : $t['vt_' . $ben]) ?></a>
                                     <?php if ($ben === 'nha'): ?><span class="text-muted small fw-normal">(nhà)</span><?php endif; ?>
                                 </td>
                                 <?php for ($h = 1; $h <= $soHiep; $h++): ?>

@@ -1,8 +1,9 @@
 </main>
 
-<footer class="bg-dark text-white-50 py-3 mt-auto">
-    <div class="container text-center small">
-        Đồ án Phát triển Phần mềm Mã nguồn mở &middot; Quản lý Giải Bóng rổ Nhà nghề Mỹ (NBA)
+<footer class="chan-trang mt-auto">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <span><strong>NBA Manager</strong> &middot; Đồ án Phát triển Phần mềm Mã nguồn mở &middot; Quản lý Giải Bóng rổ Nhà nghề Mỹ (NBA)</span>
+        <span>PHP &middot; MySQL &middot; Bootstrap 5</span>
     </div>
 </footer>
 

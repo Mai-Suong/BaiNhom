@@ -2,6 +2,7 @@
 /** Trang Khách - Lịch thi đấu theo tháng, lọc theo đội (TV4) */
 require_once __DIR__ . '/../includes/init.php';
 require_once __DIR__ . '/../includes/ham_trang_thi_dau.php';
+require_once __DIR__ . '/../includes/giao_dien_moi.php';   // logo đội (giao diện mới)
 
 $dsMua = ttdLayDsMua();
 $mua   = ttdChonMua($dsMua, (int) ($_GET['mua'] ?? 0));
@@ -76,7 +77,7 @@ require __DIR__ . '/../includes/header.php';
                         <tr>
                             <td class="text-muted text-nowrap" style="width: 70px"><?= e(ttdGio($t['thoi_gian'])) ?></td>
                             <td class="text-end text-nowrap" style="width: 35%">
-                                <a class="text-reset text-decoration-none<?= $khachThang ? ' fw-bold' : '' ?>" href="<?= url('/doi_bong/chi_tiet.php?id=' . (int) $t['ma_doi_khach']) ?>"><?= e($t['ten_doi_khach']) ?></a>
+                                <a class="text-reset text-decoration-none d-inline-flex align-items-center gap-2<?= $khachThang ? ' fw-bold' : '' ?>" href="<?= url('/doi_bong/chi_tiet.php?id=' . (int) $t['ma_doi_khach']) ?>"><?= e($t['ten_doi_khach']) ?><?= gdHuyHieu($t['logo_khach'], $t['vt_khach'], $t['ten_doi_khach'], 32) ?></a>
                             </td>
                             <td class="text-center text-nowrap" style="width: 110px">
                                 <?php if ($daDau): ?>
@@ -89,7 +90,7 @@ require __DIR__ . '/../includes/header.php';
                                 <?php endif; ?>
                             </td>
                             <td class="text-nowrap" style="width: 35%">
-                                <a class="text-reset text-decoration-none<?= $daDau && !$khachThang ? ' fw-bold' : '' ?>" href="<?= url('/doi_bong/chi_tiet.php?id=' . (int) $t['ma_doi_nha']) ?>"><?= e($t['ten_doi_nha']) ?></a>
+                                <a class="text-reset text-decoration-none d-inline-flex align-items-center gap-2<?= $daDau && !$khachThang ? ' fw-bold' : '' ?>" href="<?= url('/doi_bong/chi_tiet.php?id=' . (int) $t['ma_doi_nha']) ?>"><?= gdHuyHieu($t['logo_nha'], $t['vt_nha'], $t['ten_doi_nha'], 32) ?><?= e($t['ten_doi_nha']) ?></a>
                             </td>
                             <td class="small text-muted d-none d-md-table-cell">
                                 <?= e($t['ten_san'] ?? '') ?>
