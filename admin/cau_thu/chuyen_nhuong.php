@@ -72,7 +72,7 @@ require __DIR__ . '/../../includes/admin_header.php';
     <div class="card-body d-flex flex-wrap align-items-center gap-4">
         <?= anhCauThu($ct, 64) ?>
         <div><div class="small text-muted">Cầu thủ</div><div class="fw-semibold"><?= e($ct['ho_ten']) ?></div></div>
-        <div><div class="small text-muted">Đội hiện tại</div><div><?= e($ct['ten_doi'] ?? 'Không có đội') ?></div></div>
+        <div><div class="small text-muted">Đội hiện tại</div><div><?= tenDoiCoLogo($ct['logo_doi'] ?? null, $ct['ten_viet_tat'] ?? null, $ct['ten_doi']) ?></div></div>
         <div><div class="small text-muted">Số áo</div><div><?= $ct['so_ao'] !== null ? '#' . (int) $ct['so_ao'] : '—' ?></div></div>
         <div><div class="small text-muted">Trạng thái</div><div><?= nhanTrangThai($ct['trang_thai']) ?></div></div>
     </div>
@@ -155,8 +155,8 @@ require __DIR__ . '/../../includes/admin_header.php';
                 <tr>
                     <td class="text-nowrap"><?= dinhDangNgay($ls['ngay_chuyen']) ?></td>
                     <td><?= e(LOAI_CHUYEN_NHUONG[$ls['loai']] ?? $ls['loai']) ?></td>
-                    <td><?= e($ls['ten_doi_cu'] ?? 'Tự do') ?></td>
-                    <td><?= e($ls['ten_doi_moi'] ?? 'Tự do') ?></td>
+                    <td><?= tenDoiCoLogo($ls['logo_doi_cu'], $ls['vt_doi_cu'], $ls['ten_doi_cu'], 'Tự do') ?></td>
+                    <td><?= tenDoiCoLogo($ls['logo_doi_moi'], $ls['vt_doi_moi'], $ls['ten_doi_moi'], 'Tự do') ?></td>
                     <td><?= e($ls['ghi_chu'] ?? '') ?></td>
                 </tr>
             <?php endforeach; ?>

@@ -101,7 +101,7 @@ require __DIR__ . '/../../includes/admin_header.php';
                     <td class="text-end fw-semibold"><?= $ct['so_ao'] !== null ? '#' . (int) $ct['so_ao'] : '' ?></td>
                     <td><a class="fw-semibold" href="<?= url('/cau_thu/ho_so.php?id=' . (int) $ct['ma_cau_thu']) ?>"><?= e($ct['ho_ten']) ?></a></td>
                     <td><?= e($ct['vi_tri']) ?></td>
-                    <td><?= $ct['ten_doi'] ? e($ct['ten_doi']) : '<span class="text-muted">Không có đội</span>' ?></td>
+                    <td><?= tenDoiCoLogo($ct['logo_doi'] ?? null, $ct['ten_viet_tat'] ?? null, $ct['ten_doi']) ?></td>
                     <td><?= e($ct['quoc_tich'] ?? '') ?></td>
                     <td><?= nhanTrangThai($ct['trang_thai']) ?></td>
                     <td class="text-end text-nowrap">

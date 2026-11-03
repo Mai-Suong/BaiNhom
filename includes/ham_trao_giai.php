@@ -71,7 +71,14 @@ function layKetQuaTraoGiai(int $maMuaGiai): array
         "SELECT gt.ma_giai_thuong, gt.ten_viet_tat, gt.ten_giai, gt.doi_tuong,
                 tg.ma_trao_giai, tg.ma_cau_thu, tg.ma_hlv,
                 COALESCE(ct.ho_ten, h.ho_ten) AS nguoi_nhan,
-                COALESCE(dct.ten_doi, dh.ten_doi) AS ten_doi
+                COALESCE(ct.anh, h.anh) AS anh_nguoi_nhan,
+                COALESCE(dct.ten_doi, dh.ten_doi) AS ten_doi,
+                COALESCE(dct.ten_viet_tat, dh.ten_viet_tat) AS vt_doi,
+                COALESCE(dct.logo, dh.logo) AS logo_doi,
+                -- Đội HLV dẫn dắt trong mùa nhận giải (bảng nhiem_ky_hlv của TV2), không có thì lấy đội hiện tại
+                COALESCE((SELECT nk.ma_doi FROM nhiem_ky_hlv nk
+                           WHERE nk.ma_hlv = tg.ma_hlv AND nk.ma_mua_giai = tg.ma_mua_giai
+                           ORDER BY nk.tu_ngay DESC LIMIT 1), h.ma_doi) AS ma_doi_hlv
            FROM giai_thuong gt
            LEFT JOIN trao_giai tg
                   ON tg.ma_giai_thuong = gt.ma_giai_thuong AND tg.ma_mua_giai = ?
