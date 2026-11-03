@@ -20,7 +20,7 @@
 | TV2 Duy | `san_thi_dau`, `doi_bong`, `huan_luyen_vien`, `trong_tai`, `nhiem_ky_hlv` | `02_du_lieu_doi_bong.sql`, `07_du_lieu_nhiem_ky_hlv.sql` |
 | TV3 Nguyên | `cau_thu`, `chuyen_nhuong`, `chan_thuong`, `trao_giai` | `03_du_lieu_cau_thu.sql` , `06_du_lieu_trao_giai.sql`|
 | TV4 Huy | `mua_giai`, `phan_bang`, `tran_dau`, `diem_hiep`, `phan_cong_trong_tai` | `04_du_lieu_tran_dau.sql` |
-| TV5 Đạt | `chi_so_tran_dau`, `loat_playoff` | `05_du_lieu_thong_ke.sql` | `08_du_lieu_anh.sql` |
+| TV5 Đạt | `chi_so_tran_dau`, `loat_playoff` | `05_du_lieu_thong_ke.sql` , `08_du_lieu_anh.sql` |
 
 ## Cài đặt và chạy
 
