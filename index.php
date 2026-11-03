@@ -33,8 +33,20 @@ $dsSlide = [];
 if ($topDiem) {
     $dsSlide[] = ['loai' => 'vua_ghi_diem', 'ct' => $topDiem[0]];
 }
-if ($manTrinhDien = tcManTrinhDien($maMua, 3)) {
+if ($top10 = tcTopHieuSuat($maMua, 10)) {
+    $dsSlide[] = ['loai' => 'top_10', 'ds' => $top10];
+}
+if ($manTrinhDien = tcManTrinhDien($maMua, 5)) {
     $dsSlide[] = ['loai' => 'man_trinh_dien', 'ct' => $manTrinhDien[0]];
+}
+if ($khoanhKhac = tcKhoanhKhacKichTinh($maMua)) {
+    $dsSlide[] = ['loai' => 'kich_tinh', 'td' => $khoanhKhac];
+}
+if ($sucManh = tcSucManh($maMua, 5)) {
+    $dsSlide[] = ['loai' => 'suc_manh', 'ds' => $sucManh];
+}
+if ($tinTuc = tcTinTuc(5)) {
+    $dsSlide[] = ['loai' => 'tin_tuc', 'ds' => $tinTuc];
 }
 if ($doiDauBang = tcDoiDauBang($maMua)) {
     $dsSlide[] = ['loai' => 'dau_bang', 'doi' => $doiDauBang];
@@ -46,17 +58,26 @@ if ($tamDiem = tcTranTamDiem($maMua)) {
     $dsSlide[] = ['loai' => 'tam_diem', 'td' => $tamDiem];
 }
 
-/* ---- Mục Điểm nhấn ---- */
-$tranKichTinh = tcTranDiemNhan($maMua, 'kich_tinh', 2);
-$tranThangDam = tcTranDiemNhan($maMua, 'thang_dam', 1);
-$dsTheTran = [];   // [nhãn loại, mô tả, trận]
-foreach ($tranKichTinh as $td) {
+/* ---- Mục Điểm nhấn: băng chuyền trượt ngang, xen kẽ thẻ trận đấu và thẻ màn trình diễn ---- */
+$theTran = [];   // ['tran', nhãn loại, mô tả, trận]
+foreach (tcTranDiemNhan($maMua, 'kich_tinh', 3) as $td) {
     $nhan = $td['so_hiep'] > 4 ? 'Hiệp phụ' . ($td['so_hiep'] > 5 ? ' ' . ($td['so_hiep'] - 4) : '') : 'Cách ' . (int) $td['cach_biet'] . ' điểm';
-    $dsTheTran[] = ['Trận kịch tính', $nhan, $td];
+    $theTran[] = ['tran', 'Trận kịch tính', $nhan, $td];
 }
-foreach ($tranThangDam as $td) {
-    $dsTheTran[] = ['Thắng đậm nhất', 'Cách ' . (int) $td['cach_biet'] . ' điểm', $td];
+foreach (tcTranDiemNhan($maMua, 'thang_dam', 2) as $td) {
+    $theTran[] = ['tran', 'Thắng đậm', 'Cách ' . (int) $td['cach_biet'] . ' điểm', $td];
 }
+$theMtd = array_map(fn($ct) => ['cau_thu', 'Màn trình diễn xuất sắc', '', $ct], $manTrinhDien);
+$dsTheDiemNhan = [];
+for ($i = 0; $i < max(count($theTran), count($theMtd)); $i++) {
+    foreach ([$theTran[$i] ?? null, $theMtd[$i] ?? null] as $the) {
+        if ($the) {
+            $dsTheDiemNhan[] = $the;
+        }
+    }
+}
+$loaiTin = ['chuyen_nhuong' => ['bi-arrow-left-right', 'Chuyển nhượng'], 'hlv' => ['bi-clipboard-check', 'Ban huấn luyện'],
+            'chan_thuong' => ['bi-bandaid', 'Chấn thương']];
 
 /** Link lịch thi đấu đã lọc sẵn mùa + đội (trang của TV4) */
 $linkLich = fn(int $maDoi) => url('/lich_thi_dau/index.php') . '?' . http_build_query(['mua' => $maMua, 'doi' => $maDoi]);
@@ -149,6 +170,100 @@ require __DIR__ . '/includes/header.php';
                                 <div><div class="so"><?= e($ct['bat_bong_tb']) ?></div><div class="nhan">Bắt bóng</div></div>
                             </div>
                             <a class="btn btn-nba" href="<?= url('/cau_thu/ho_so.php?id=' . (int) $ct['ma_cau_thu']) ?>">Xem hồ sơ cầu thủ</a>
+                        </div>
+                    </article>
+                <?php elseif ($sl['loai'] === 'top_10'): $ct = $sl['ds'][0]; ?>
+                    <article class="noi-bat tc-slide-ds">
+                        <div class="noi-bat-anh" style="background: <?= e(gdMauDoi($ct['ten_viet_tat'])) ?>">
+                            <span class="so-ao-mo tc-chu-nho" aria-hidden="true">TOP 10</span>
+                            <?= gdAnhCauThu($ct['anh'], $ct['ho_ten']) ?>
+                        </div>
+                        <div class="noi-bat-noi-dung">
+                            <span class="noi-bat-nhan">Top 10 cầu thủ xuất sắc · mùa <?= e($mua['ten_mua_giai']) ?></span>
+                            <h2 class="noi-bat-ten tc-ten-vua">Hiệu suất (EFF)</h2>
+                            <ol class="tc-ds-top10">
+                                <?php foreach ($sl['ds'] as $i => $c): ?>
+                                    <li><a href="<?= url('/cau_thu/ho_so.php?id=' . (int) $c['ma_cau_thu']) ?>">
+                                        <span class="hang"><?= $i + 1 ?></span>
+                                        <span class="ten"><?= e($c['ho_ten']) ?> <small><?= e($c['ten_viet_tat'] ?? 'Tự do') ?></small></span>
+                                        <span class="so"><?= e($c['eff']) ?></span>
+                                    </a></li>
+                                <?php endforeach; ?>
+                            </ol>
+                            <span class="tc-ghi-chu">EFF = điểm + bắt bóng + kiến tạo + cướp + chặn − ném trượt − mất bóng (mỗi trận)</span>
+                        </div>
+                    </article>
+                <?php elseif ($sl['loai'] === 'kich_tinh'): $td = $sl['td']; $ct = $td['nguoi_hung']; ?>
+                    <article class="noi-bat">
+                        <div class="noi-bat-anh" style="background: <?= e(gdMauDoi($td['vt_thang'])) ?>">
+                            <span class="so-ao-mo tc-chu-nho" aria-hidden="true"><?= $td['so_hiep'] > 4 ? 'OT' : '+' . (int) $td['cach_biet'] ?></span>
+                            <?php if ($ct): ?>
+                                <?= gdAnhCauThu($ct['anh'], $ct['ho_ten']) ?>
+                            <?php else: ?>
+                                <?= gdHuyHieu(null, $td['vt_thang'], $td['ten_thang'], 150) ?>
+                            <?php endif; ?>
+                        </div>
+                        <div class="noi-bat-noi-dung">
+                            <span class="noi-bat-nhan">Khoảnh khắc kịch tính · <?= $td['so_hiep'] > 4 ? 'Hiệp phụ' : 'Cách ' . (int) $td['cach_biet'] . ' điểm' ?></span>
+                            <h2 class="noi-bat-ten"><?= e($td['vt_khach']) ?> <?= (int) $td['diem_doi_khach'] ?> – <?= (int) $td['diem_doi_nha'] ?> <?= e($td['vt_nha']) ?></h2>
+                            <span class="noi-bat-phu">
+                                <?= e($td['ten_doi_khach']) ?> gặp <?= e($td['ten_doi_nha']) ?> · <?= e($ngayDu($td['thoi_gian'])) ?>
+                                <?php if ($ct): ?><br>Người hùng: <strong class="text-white"><?= e($ct['ho_ten']) ?></strong> giúp <?= e($td['ten_thang']) ?> chiến thắng<?php endif; ?>
+                            </span>
+                            <?php if ($ct): ?>
+                                <div class="noi-bat-so">
+                                    <div><div class="so"><?= (int) $ct['diem'] ?></div><div class="nhan">Điểm</div></div>
+                                    <div><div class="so"><?= (int) $ct['bat_bong'] ?></div><div class="nhan">Bắt bóng</div></div>
+                                    <div><div class="so"><?= (int) $ct['kien_tao'] ?></div><div class="nhan">Kiến tạo</div></div>
+                                </div>
+                            <?php endif; ?>
+                            <div class="d-flex flex-wrap gap-2">
+                                <a class="btn btn-nba" href="<?= e(tcLinkHighlight($td['ten_doi_khach'], $td['ten_doi_nha'], $td['thoi_gian'])) ?>" target="_blank" rel="noopener">
+                                    <i class="bi bi-play-circle-fill"></i> Xem highlight</a>
+                                <a class="btn btn-outline-light" href="<?= url('/thong_ke/box_score.php?id=' . (int) $td['ma_tran']) ?>">Box score</a>
+                            </div>
+                        </div>
+                    </article>
+                <?php elseif ($sl['loai'] === 'suc_manh'): $d1 = $sl['ds'][0]; ?>
+                    <article class="noi-bat tc-slide-ds">
+                        <div class="noi-bat-anh tc-anh-logo" style="background: <?= e(gdMauDoi($d1['ten_viet_tat'])) ?>">
+                            <span class="so-ao-mo" aria-hidden="true">#1</span>
+                            <?= gdHuyHieu($d1['logo'], $d1['ten_viet_tat'], $d1['ten_doi'], 170) ?>
+                        </div>
+                        <div class="noi-bat-noi-dung">
+                            <span class="noi-bat-nhan">Bảng xếp hạng sức mạnh · mùa <?= e($mua['ten_mua_giai']) ?></span>
+                            <h2 class="noi-bat-ten tc-ten-vua">Power Rankings</h2>
+                            <ol class="tc-ds-suc-manh">
+                                <?php foreach ($sl['ds'] as $i => $d): ?>
+                                    <li><a href="<?= url('/doi_bong/chi_tiet.php?id=' . (int) $d['ma_doi']) ?>">
+                                        <span class="hang"><?= $i + 1 ?></span>
+                                        <?= gdHuyHieu($d['logo'], $d['ten_viet_tat'], $d['ten_doi'], 30) ?>
+                                        <span class="ten"><?= e($d['ten_doi']) ?> <small><?= (int) $d['thang'] ?>-<?= (int) $d['thua'] ?> · <?= $d['hieu_so_tb'] > 0 ? '+' : '' ?><?= e($d['hieu_so_tb']) ?>/trận</small></span>
+                                        <span class="phong-do" title="5 trận gần nhất"><?php foreach (str_split($d['phong_do']) as $kq): ?><b class="<?= $kq === 'T' ? 'thang' : 'thua' ?>"><?= $kq ?></b><?php endforeach; ?></span>
+                                    </a></li>
+                                <?php endforeach; ?>
+                            </ol>
+                            <span class="tc-ghi-chu">Xếp theo tỉ lệ thắng, hiệu số trung bình và phong độ 5 trận gần nhất (T = thắng, B = bại)</span>
+                        </div>
+                    </article>
+                <?php elseif ($sl['loai'] === 'tin_tuc'): $t1 = $sl['ds'][0]; ?>
+                    <article class="noi-bat tc-slide-ds">
+                        <div class="noi-bat-anh" style="background: <?= e(gdMauDoi($t1['vt'])) ?>">
+                            <span class="so-ao-mo tc-chu-nho" aria-hidden="true">TIN</span>
+                            <?= gdAnhCauThu($t1['anh'], $t1['ten']) ?>
+                        </div>
+                        <div class="noi-bat-noi-dung">
+                            <span class="noi-bat-nhan">Tin tức mới nhất</span>
+                            <h2 class="noi-bat-ten tc-ten-tin"><a href="<?= e($t1['link']) ?>"><?= e($t1['tieu_de']) ?></a></h2>
+                            <span class="noi-bat-phu"><i class="bi <?= $loaiTin[$t1['loai']][0] ?>"></i> <?= $loaiTin[$t1['loai']][1] ?> · <?= e($ngayDu($t1['ngay'])) ?></span>
+                            <ul class="tc-ds-tin">
+                                <?php foreach (array_slice($sl['ds'], 1) as $t): ?>
+                                    <li><a href="<?= e($t['link']) ?>">
+                                        <i class="bi <?= $loaiTin[$t['loai']][0] ?>" title="<?= $loaiTin[$t['loai']][1] ?>"></i>
+                                        <span title="<?= e($t['tieu_de']) ?>"><?= e($t['tieu_de']) ?></span><small><?= e(date('d/m/Y', strtotime($t['ngay']))) ?></small>
+                                    </a></li>
+                                <?php endforeach; ?>
+                            </ul>
                         </div>
                     </article>
                 <?php elseif ($sl['loai'] === 'man_trinh_dien'): $ct = $sl['ct']; ?>
@@ -337,17 +452,21 @@ require __DIR__ . '/includes/header.php';
 </section>
 <?php endif; ?>
 
-<!-- Điểm nhấn (Highlights): trận kịch tính, màn trình diễn, thắng đậm - nút xem video trên YouTube -->
-<?php if ($dsTheTran || $manTrinhDien): ?>
+<!-- Điểm nhấn (Highlights): băng chuyền trượt ngang - trận kịch tính, thắng đậm, màn trình diễn xuất sắc -->
+<?php if ($dsTheDiemNhan): ?>
 <section class="mb-5 tc-diem-nhan">
     <div class="tieu-de-khu">
         <h2>Điểm nhấn<?= $mua ? ' mùa ' . e($mua['ten_mua_giai']) : '' ?></h2>
-        <a href="<?= url('/ket_qua/index.php') ?>">Tất cả kết quả →</a>
+        <div class="d-flex align-items-center gap-2">
+            <a href="<?= url('/ket_qua/index.php') ?>" class="me-2">Tất cả kết quả →</a>
+            <button type="button" class="tc-nut-truot" data-truot="-1" aria-label="Thẻ trước">&#8249;</button>
+            <button type="button" class="tc-nut-truot" data-truot="1" aria-label="Thẻ sau">&#8250;</button>
+        </div>
     </div>
-    <div class="row g-3">
-        <?php foreach ($dsTheTran as [$loai, $nhan, $td]): $khachThang = (int) $td['diem_doi_khach'] > (int) $td['diem_doi_nha']; ?>
-            <div class="col-md-6 col-xl-3">
-                <div class="tc-the h-100">
+    <div class="tc-bang-chuyen" tabindex="0" aria-label="Điểm nhấn mùa giải (trượt ngang)">
+        <?php foreach ($dsTheDiemNhan as [$kieu, $loai, $nhan, $x]): ?>
+            <?php if ($kieu === 'tran'): $td = $x; $khachThang = (int) $td['diem_doi_khach'] > (int) $td['diem_doi_nha']; ?>
+                <div class="tc-the">
                     <span class="tc-loai"><?= e($loai) ?></span>
                     <span class="tc-nhan"><?= e($nhan) ?> · <?= e($ngayDu($td['thoi_gian'])) ?></span>
                     <div class="tc-doi<?= $khachThang ? ' thang' : '' ?>">
@@ -364,30 +483,29 @@ require __DIR__ . '/includes/header.php';
                         <a class="btn btn-sm btn-outline-secondary" href="<?= url('/thong_ke/box_score.php?id=' . (int) $td['ma_tran']) ?>">Box score</a>
                     </div>
                 </div>
-            </div>
-        <?php endforeach; ?>
-        <?php if ($manTrinhDien): ?>
-            <div class="col-md-6 col-xl-3">
-                <div class="tc-the h-100">
-                    <span class="tc-loai">Màn trình diễn xuất sắc</span>
-                    <ol class="tc-ds-mtd">
-                        <?php foreach ($manTrinhDien as $ct): ?>
-                            <li>
-                                <a href="<?= url('/thong_ke/box_score.php?id=' . (int) $ct['ma_tran']) ?>">
-                                    <span class="anh-tron" style="background: <?= e(gdMauDoi($ct['ten_viet_tat'])) ?>"><?= gdAnhCauThu($ct['anh'], $ct['ho_ten'], '') ?></span>
-                                    <span class="ten"><strong><?= e($ct['ho_ten']) ?></strong>
-                                        <small><?= e($ct['ten_viet_tat']) ?> - <?= e($ct['vt_doi_thu']) ?> · <?= e(date('d/m', strtotime($ct['thoi_gian']))) ?></small></span>
-                                    <span class="so"><?= (int) $ct['diem'] ?><small>điểm</small></span>
-                                </a>
-                            </li>
-                        <?php endforeach; ?>
-                    </ol>
+            <?php else: $ct = $x; ?>
+                <div class="tc-the tc-the-cau-thu">
+                    <div class="tc-the-anh" style="background: <?= e(gdMauDoi($ct['ten_viet_tat'])) ?>">
+                        <span class="tc-the-diem"><?= (int) $ct['diem'] ?><small>điểm</small></span>
+                        <?= gdAnhCauThu($ct['anh'], $ct['ho_ten']) ?>
+                    </div>
+                    <span class="tc-loai"><?= e($loai) ?></span>
+                    <strong class="tc-the-ten"><?= e($ct['ho_ten']) ?></strong>
+                    <span class="tc-nhan"><?= e($ct['ten_viet_tat']) ?> gặp <?= e($ct['vt_doi_thu']) ?> · <?= e($ngayDu($ct['thoi_gian'])) ?> ·
+                        <span class="<?= $ct['thang'] ? 'text-success' : 'text-danger' ?> fw-semibold"><?= $ct['thang'] ? 'Thắng' : 'Thua' ?> <?= e($ct['ti_so']) ?></span></span>
+                    <span class="tc-nhan"><?= (int) $ct['bat_bong'] ?> bắt bóng · <?= (int) $ct['kien_tao'] ?> kiến tạo</span>
+                    <div class="tc-nut">
+                        <a class="btn btn-sm btn-nba" href="<?= e(tcLinkHighlightCauThu($ct['ho_ten'], (int) $ct['diem'], $ct['ten_doi_thu'], $ct['thoi_gian'])) ?>"
+                           target="_blank" rel="noopener"><i class="bi bi-play-circle-fill"></i> Xem highlight</a>
+                        <a class="btn btn-sm btn-outline-secondary" href="<?= url('/thong_ke/box_score.php?id=' . (int) $ct['ma_tran']) ?>">Box score</a>
+                    </div>
                 </div>
-            </div>
-        <?php endif; ?>
+            <?php endif; ?>
+        <?php endforeach; ?>
     </div>
     <p class="small text-muted mt-2 mb-0"><i class="bi bi-youtube"></i> Nút "Xem highlight" mở trang tìm video trên YouTube; web không lưu video.</p>
 </section>
 <?php endif; ?>
+<script src="<?= url('/assets/js/trang_chu.js') ?>?v=<?= (int) @filemtime(__DIR__ . '/assets/js/trang_chu.js') ?>" defer></script>
 
 <?php require __DIR__ . '/includes/footer.php'; ?>
