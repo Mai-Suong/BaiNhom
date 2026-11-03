@@ -57,7 +57,7 @@ require __DIR__ . '/../includes/header.php';
         </div>
         <div class="flex-grow-1">
             <div class="row row-cols-2 row-cols-md-4 g-3 small">
-                <div><div class="text-muted">Đội</div><?= e($ct['ten_doi'] ?? 'Không có đội') ?></div>
+                <div><div class="text-muted">Đội</div><?= tenDoiCoLogo($ct['logo_doi'] ?? null, $ct['ten_viet_tat'] ?? null, $ct['ten_doi'], 'Không có đội', 22, $ct['ma_doi'] ? (int) $ct['ma_doi'] : null) ?></div>
                 <div><div class="text-muted">Số áo</div><?= $ct['so_ao'] !== null ? '#' . (int) $ct['so_ao'] : '—' ?></div>
                 <div><div class="text-muted">Vị trí</div><?= e(VI_TRI[$ct['vi_tri']] ?? $ct['vi_tri']) ?></div>
                 <div><div class="text-muted">Trạng thái</div><?= nhanTrangThai($ct['trang_thai']) ?></div>

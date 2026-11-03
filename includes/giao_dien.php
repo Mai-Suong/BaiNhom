@@ -6,6 +6,24 @@
  *   includes/header.php + footer.php           (trang Khách / Cầu thủ)
  */
 require_once __DIR__ . '/ham_cau_thu.php';
+require_once __DIR__ . '/giao_dien_moi.php';   // gdHuyHieu(), gdMauDoi(), gdAnhCauThu() của giao diện chung
+
+/**
+ * Logo + tên đội (dùng trong bảng, danh sách). Không có đội thì hiện $khongDoi.
+ * VD: tenDoiCoLogo($ls['logo_doi_moi'], $ls['vt_doi_moi'], $ls['ten_doi_moi'], 'Tự do')
+ */
+function tenDoiCoLogo(?string $logo, ?string $vietTat, ?string $tenDoi, string $khongDoi = 'Không có đội', int $co = 22, ?int $maDoi = null): string
+{
+    if ($tenDoi === null || $tenDoi === '') {
+        return '<span class="text-muted">' . e($khongDoi) . '</span>';
+    }
+    $ten = e($tenDoi);
+    if ($maDoi !== null) {
+        $ten = '<a href="' . e(url('/doi_bong/chi_tiet.php?id=' . $maDoi)) . '">' . $ten . '</a>';
+    }
+    return '<span class="d-inline-flex align-items-center gap-2">'
+         . gdHuyHieu($logo, (string) ($vietTat ?? ''), $tenDoi, $co) . $ten . '</span>';
+}
 
 /** Ảnh đại diện cầu thủ, không có ảnh thì hiện chữ cái đầu trong vòng tròn */
 function anhCauThu(array $ct, int $co = 44): string

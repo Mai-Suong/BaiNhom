@@ -180,7 +180,7 @@ function layDanhSachCauThu(array $loc, int $trang = 1, int $soDong = 15): array
     $offset  = ($trang - 1) * $soDong;
 
     $st = $pdo->prepare(
-        "SELECT ct.*, d.ten_doi, d.ten_viet_tat
+        "SELECT ct.*, d.ten_doi, d.ten_viet_tat, d.logo AS logo_doi
            FROM cau_thu ct
            LEFT JOIN doi_bong d ON d.ma_doi = ct.ma_doi
            $where
@@ -562,7 +562,9 @@ function chuyenNhuong(
 function layLichSuChuyenNhuong(int $maCauThu): array
 {
     $st = ketNoi()->prepare(
-        'SELECT cn.*, dc.ten_doi AS ten_doi_cu, dm.ten_doi AS ten_doi_moi
+        'SELECT cn.*, dc.ten_doi AS ten_doi_cu, dm.ten_doi AS ten_doi_moi,
+                dc.logo AS logo_doi_cu, dc.ten_viet_tat AS vt_doi_cu,
+                dm.logo AS logo_doi_moi, dm.ten_viet_tat AS vt_doi_moi
            FROM chuyen_nhuong cn
            LEFT JOIN doi_bong dc ON dc.ma_doi = cn.ma_doi_cu
            LEFT JOIN doi_bong dm ON dm.ma_doi = cn.ma_doi_moi
@@ -591,12 +593,12 @@ function layDoiTheoMuaCuaCauThu(int $maCauThu): array
     }
     $pdo = ketNoi();
     $stCu = $pdo->prepare(
-        "SELECT cs.ma_doi, d.ten_doi, COUNT(*) AS so_tran
+        "SELECT cs.ma_doi, d.ten_doi, d.ten_viet_tat, d.logo, COUNT(*) AS so_tran
            FROM chi_so_tran_dau cs
            JOIN tran_dau td ON td.ma_tran = cs.ma_tran
            JOIN doi_bong d  ON d.ma_doi = cs.ma_doi
           WHERE cs.ma_cau_thu = ? AND td.ma_mua_giai = ? AND cs.trang_thai = 'thi_dau'
-          GROUP BY cs.ma_doi, d.ten_doi
+          GROUP BY cs.ma_doi, d.ten_doi, d.ten_viet_tat, d.logo
           ORDER BY MIN(td.thoi_gian)"
     );
 
@@ -605,6 +607,7 @@ function layDoiTheoMuaCuaCauThu(int $maCauThu): array
         if ((int) $mua['la_mua_hien_tai'] === 1) {
             $dsDoi = $ct['ma_doi'] === null ? [] : [[
                 'ma_doi' => (int) $ct['ma_doi'], 'ten_doi' => $ct['ten_doi'], 'so_tran' => null,
+                'ten_viet_tat' => $ct['ten_viet_tat'], 'logo' => $ct['logo_doi'],
             ]];
         } else {
             $stCu->execute([$maCauThu, (int) $mua['ma_mua_giai']]);
