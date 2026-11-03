@@ -60,7 +60,6 @@ echo tkCss();
 <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
     <div>
         <h1 class="h3 mb-1">Thống kê</h1>
-        <p class="text-muted mb-0">Top cầu thủ · chỉ số trung bình mỗi trận</p>
     </div>
     <div class="d-flex flex-wrap align-items-center gap-3">
         <?= tkChonMua($dsMua, $maMua, ['gd' => $giaiDoan, 'sx' => $sx]) ?>
@@ -74,7 +73,7 @@ echo tkCss();
 <?= tkMenu('top') ?>
 
 <?php if (!$dong): ?>
-    <div class="alert alert-info">Chưa có số liệu. Cần có box score của các trận đã đấu (bảng <code>chi_so_tran_dau</code>).</div>
+    <div class="alert alert-info">Chưa có số liệu. Cần có box score của các trận đã đấu.</div>
 <?php else: ?>
 
     <div class="row g-3 mb-4">
@@ -136,7 +135,6 @@ echo tkCss();
             </table>
         </div>
     </div>
-    <p class="small text-muted">Chỉ tính các trận đã đấu và cầu thủ có trạng thái Thi đấu. Nguồn: view <code>v_chi_so_trung_binh</code>.</p>
 <?php endif; ?>
 
 <?php require __DIR__ . '/../includes/footer.php'; ?>

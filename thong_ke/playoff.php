@@ -20,7 +20,6 @@ echo tkCss();
 <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
     <div>
         <h1 class="h3 mb-1">Thống kê</h1>
-        <p class="text-muted mb-0">Playoff <?= e($tenMua) ?> · nhánh đấu và tỉ số từng loạt</p>
     </div>
     <div class="d-flex flex-wrap align-items-center gap-3">
         <?= tkChonMua($dsMua, $maMua) ?>

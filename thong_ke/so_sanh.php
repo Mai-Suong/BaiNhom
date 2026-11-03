@@ -119,8 +119,11 @@ require __DIR__ . '/../includes/header.php';
 echo tkCss();
 ?>
 
-<h1 class="h3 mb-1">Thống kê</h1>
-<p class="text-muted">Phong độ và so sánh cầu thủ · chỉ số mùa thường, phong độ tính trên 10 trận gần nhất</p>
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+    <div>
+        <h1 class="h3 mb-1">Thống kê</h1>
+    </div>
+</div>
 <?= tkMenu('so_sanh') ?>
 
 <form method="get" class="card shadow-sm card-body mb-4">
@@ -186,17 +189,16 @@ echo tkCss();
         ?>
             <div class="so-sanh-hang">
                 <div class="ben trai">
-                    <span class="fs-6" style="font-weight:<?= $tot[0] ? 700 : 400 ?>"><?= tkSo($va) . $hauTo ?></span>
+                    <span class="fs-6"><?= tkSo($va) . $hauTo ?></span>
                     <div class="thanh-bar"><i style="width:<?= min(100, round(100 * $va / $mucTran)) ?>%; background:#c2410c"></i></div>
                 </div>
                 <div class="nhan-giua"><?= e($nhan) ?></div>
                 <div class="ben">
                     <div class="thanh-bar"><i style="width:<?= min(100, round(100 * $vb / $mucTran)) ?>%; background:#2b5fa8"></i></div>
-                    <span class="fs-6" style="font-weight:<?= $tot[1] ? 700 : 400 ?>"><?= tkSo($vb) . $hauTo ?></span>
+                    <span class="fs-6"><?= tkSo($vb) . $hauTo ?></span>
                 </div>
             </div>
         <?php endforeach; ?>
-        <p class="small text-muted mt-3 mb-0">Chỉ số đậm là bên tốt hơn (với mất bóng, thấp hơn là tốt hơn).</p>
     </div></div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
