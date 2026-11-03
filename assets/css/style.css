@@ -252,3 +252,5 @@
     .noi-bat-anh { min-height: 240px; }
     .noi-bat-anh .so-ao-mo { font-size: 9rem; }
 }
+
+html { scrollbar-gutter: stable; }
