@@ -2,6 +2,7 @@
 /** Trang Khách - Danh sách cầu thủ, lọc theo đội / vị trí / quốc tịch (TV3) */
 require_once __DIR__ . '/../includes/init.php';
 require_once __DIR__ . '/../includes/giao_dien.php';
+require_once __DIR__ . '/../includes/giao_dien_moi.php';   // màu đội, ảnh cầu thủ (giao diện mới)
 
 $loc = [
     'tu_khoa'   => trim((string) ($_GET['tu_khoa'] ?? '')),
@@ -64,20 +65,19 @@ require __DIR__ . '/../includes/header.php';
 <div class="row g-3">
     <?php foreach ($kq['ds'] as $ct): ?>
         <div class="col-6 col-md-4 col-lg-3">
-            <a class="card h-100 shadow-sm text-decoration-none text-reset"
-               href="<?= url('/cau_thu/ho_so.php?id=' . (int) $ct['ma_cau_thu']) ?>">
-                <div class="card-body text-center">
-                    <div class="mb-2"><?= anhCauThu($ct, 72) ?></div>
-                    <div class="fw-semibold"><?= e($ct['ho_ten']) ?></div>
-                    <div class="small text-muted">
-                        <?= $ct['so_ao'] !== null ? '#' . (int) $ct['so_ao'] . ' · ' : '' ?><?= e($ct['vi_tri']) ?>
-                        <?= $ct['quoc_tich'] ? ' · ' . e($ct['quoc_tich']) : '' ?>
-                    </div>
-                    <div class="small text-muted"><?= e($ct['ten_doi'] ?? 'Không có đội') ?></div>
+            <a class="the-cau-thu" href="<?= url('/cau_thu/ho_so.php?id=' . (int) $ct['ma_cau_thu']) ?>">
+                <span class="khung-anh" style="background: <?= e(gdMauDoi($ct['ten_viet_tat'] ?? null)) ?>">
+                    <?php if ($ct['so_ao'] !== null): ?><span class="so-ao-mo" aria-hidden="true"><?= (int) $ct['so_ao'] ?></span><?php endif; ?>
+                    <?= gdAnhCauThu($ct['anh'] ?? null, $ct['ho_ten']) ?>
+                </span>
+                <span class="noi-dung">
+                    <span class="phu"><?= e($ct['ten_doi'] ?? 'Không có đội') ?> · <?= e($ct['vi_tri']) ?></span>
+                    <span class="ten"><?= e($ct['ho_ten']) ?></span>
+                    <span class="phu fw-normal"><?= $ct['quoc_tich'] ? e($ct['quoc_tich']) : '&nbsp;' ?></span>
                     <?php if ($ct['trang_thai'] !== 'dang_thi_dau'): ?>
-                        <div class="mt-1"><?= nhanTrangThai($ct['trang_thai']) ?></div>
+                        <span class="mt-1"><?= nhanTrangThai($ct['trang_thai']) ?></span>
                     <?php endif; ?>
-                </div>
+                </span>
             </a>
         </div>
     <?php endforeach; ?>

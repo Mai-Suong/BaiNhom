@@ -2,6 +2,13 @@
 :root {
     --nba-xanh: #17408b;
     --nba-do: #c9082a;
+    --nba-toi: #0b1730;      /* xanh rất đậm: thanh trên, footer, tiêu đề bảng */
+    --nba-toi-2: #13213f;    /* nền dải tỉ số */
+    --nen: #f3f5f9;          /* nền trang khách */
+    --vien: #dde3ec;         /* viền thẻ, bảng */
+    --chu-phu: #5b6575;      /* chữ phụ (đạt tương phản 4.5:1 trên nền trắng) */
+    --font-tieu-de: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    --bs-body-font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
 }
 
 .bg-nba { background-color: var(--nba-xanh); }
@@ -30,3 +37,218 @@
 .sidebar-admin .nav-link { color: #212529; padding: .4rem 1rem; }
 .sidebar-admin .nav-link:hover { background: #e9ecef; }
 .sidebar-admin .nav-link.active { background: var(--nba-xanh); color: #fff; }
+
+/* =====================================================================
+ * GIAO DIỆN MỚI (kiểu nba.com) - chỉ áp dụng cho trang Khách / Cầu thủ
+ * (body có class "trang-khach", đặt trong includes/header.php).
+ * Trang quản trị chỉ đổi font, giữ nguyên bố cục.
+ * ===================================================================== */
+.trang-khach { background: var(--nen); color: var(--nba-toi); }
+.trang-khach a { color: var(--nba-xanh); }
+.trang-khach a:hover { color: var(--nba-toi); }
+
+/* ---- Tiêu đề: chữ đứng, in hoa ---- */
+.trang-khach main h1, .trang-khach main .h1,
+.trang-khach main h2, .trang-khach main .h2,
+.trang-khach main h3, .trang-khach main .h3 {
+    font-family: var(--font-tieu-de);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .01em;
+    line-height: 1.05;
+}
+.trang-khach main h1, .trang-khach main .h3 { font-size: 2.4rem; }
+.trang-khach main h2, .trang-khach main .h5 { font-family: var(--font-tieu-de); font-weight: 800; text-transform: uppercase; }
+.trang-khach main h2.h5 { font-size: 1.6rem; border-bottom: 2px solid var(--nba-toi); padding-bottom: .35rem; }
+
+/* ---- Thanh trên cùng ---- */
+.thanh-tren { background: var(--nba-toi); color: #fff; }
+.thanh-tren > .container { min-height: 60px; }
+.thuong-hieu {
+    display: inline-flex; align-items: center; gap: .6rem;
+    color: #fff !important; text-decoration: none;
+    font-family: var(--font-tieu-de); font-weight: 800; font-size: 1.65rem; letter-spacing: .02em;
+}
+.thuong-hieu-bong {
+    width: 36px; height: 36px; border-radius: 50%; background: var(--nba-do);
+    display: inline-flex; align-items: center; justify-content: center; font-size: 1.2rem;
+}
+.tai-khoan { display: flex; align-items: center; gap: .9rem; font-size: .9rem; }
+.tai-khoan a { color: #d5ddeb !important; text-decoration: none; }
+.tai-khoan a:hover { color: #fff !important; }
+.tai-khoan .nut-vien { color: #fff !important; border: 1px solid #fff; border-radius: 4px; padding: .45rem 1rem; font-weight: 600; }
+.tai-khoan .nut-vien:hover { background: #fff; color: var(--nba-toi) !important; }
+
+/* ---- Menu chính: nền trắng, gạch chân đỏ mục đang chọn ---- */
+.menu-chinh { background: #fff; border-bottom: 1px solid var(--vien); }
+.menu-chinh .container { display: flex; gap: .25rem; overflow-x: auto; scrollbar-width: thin; }
+.menu-chinh a {
+    padding: 1.05rem .85rem .85rem; white-space: nowrap; text-decoration: none;
+    font-weight: 600; font-size: .95rem; color: #4a5568 !important;
+    border-bottom: 3px solid transparent;
+}
+.menu-chinh a:hover { color: var(--nba-toi) !important; border-bottom-color: var(--vien); }
+.menu-chinh a.dang-chon { color: var(--nba-toi) !important; font-weight: 700; border-bottom-color: var(--nba-do); }
+
+/* ---- Footer ---- */
+.chan-trang { background: var(--nba-toi); color: #b8c4d9; font-size: .9rem; padding: 1.6rem 0; }
+.chan-trang strong { color: #fff; }
+
+/* ---- Thẻ (card) ---- */
+.trang-khach .card { border: 1px solid var(--vien); border-radius: 8px; box-shadow: none !important; }
+.trang-khach .card-header {
+    background: #fff; border-bottom: 2px solid var(--nba-toi);
+    font-family: var(--font-tieu-de); font-weight: 800; font-size: 1.25rem; text-transform: uppercase;
+}
+.trang-khach a.card:hover { border-color: var(--nba-xanh); transform: translateY(-2px); transition: transform .15s, border-color .15s; }
+
+/* ---- Bảng ---- */
+.trang-khach .table { --bs-table-bg: #fff; }
+.trang-khach .table > thead th {
+    background: var(--nba-toi); color: #fff; border-color: var(--nba-toi);
+    font-size: .78rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em;
+}
+.trang-khach .table > thead th a { color: #fff; }
+
+/* ---- Nút ---- */
+.trang-khach .btn { border-radius: 4px; font-weight: 600; }
+.trang-khach .btn-primary { background: var(--nba-xanh); border-color: var(--nba-xanh); }
+.trang-khach .btn-outline-primary { color: var(--nba-xanh); border-color: var(--nba-xanh); }
+.trang-khach .btn-outline-primary:hover,
+.trang-khach .btn-outline-primary.active { background: var(--nba-xanh); border-color: var(--nba-xanh); color: #fff; }
+
+/* ---- Huy hiệu đội + ảnh (includes/giao_dien_moi.php) ---- */
+.gd-huy-hieu {
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+    border-radius: 50%; color: #fff; font-weight: 800; letter-spacing: -.02em; vertical-align: middle;
+}
+.gd-huy-hieu.d-none { display: none !important; }
+.gd-logo { object-fit: contain; flex-shrink: 0; vertical-align: middle; }
+.gd-anh-chu {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; height: 100%; color: #fff; font-family: var(--font-tieu-de); font-weight: 800; font-size: 3rem;
+}
+.gd-anh-chu.d-none { display: none !important; }
+
+/* ---- Tiêu đề khu vực: chữ lớn + link "Xem tất cả" ---- */
+.tieu-de-khu {
+    display: flex; justify-content: space-between; align-items: flex-end; gap: .75rem; flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+.tieu-de-khu h2 { margin: 0; font-size: 2.1rem; }
+.tieu-de-khu a { font-weight: 600; font-size: .9rem; text-decoration: none; }
+
+/* ---- Dải tỉ số (trang chủ) ---- */
+.dai-ti-so { background: var(--nba-toi-2); border-bottom: 1px solid #22345c; }
+.dai-ti-so .container { display: flex; gap: .6rem; overflow-x: auto; padding-top: .75rem; padding-bottom: .75rem; scrollbar-width: thin; }
+.the-tran {
+    flex: 0 0 200px; background: #fff; border-radius: 6px; padding: .6rem .75rem;
+    color: var(--nba-toi) !important; text-decoration: none; display: flex; flex-direction: column; gap: .35rem;
+}
+.the-tran:hover { outline: 2px solid var(--nba-do); }
+.the-tran .trang-thai { font-size: .68rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--chu-phu); }
+.the-tran .trang-thai.sap { color: var(--nba-do); }
+.the-tran .dong-doi { display: flex; align-items: center; gap: .5rem; font-size: .9rem; color: #4a5568; }
+.the-tran .dong-doi .ten { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.the-tran .dong-doi .diem { font-family: var(--font-tieu-de); font-size: 1.3rem; font-weight: 600; }
+.the-tran .dong-doi.thang { color: var(--nba-toi); font-weight: 700; }
+.the-tran .dong-doi.thang .diem { font-weight: 800; }
+
+/* ---- Khung cầu thủ nổi bật (trang chủ) ---- */
+.noi-bat { background: var(--nba-toi); color: #fff; border-radius: 8px; overflow: hidden; display: flex; flex-wrap: wrap; height: 100%; }
+.noi-bat-anh {
+    flex: 1 1 260px; min-height: 320px; position: relative; overflow: hidden;
+    display: flex; align-items: flex-end; justify-content: center;
+}
+.noi-bat-anh .so-ao-mo {
+    position: absolute; top: -.1em; left: .1em; font-family: var(--font-tieu-de); font-weight: 800;
+    font-size: 13rem; line-height: 1; color: rgba(255, 255, 255, .15); pointer-events: none;
+}
+.noi-bat-anh .gd-anh-dung { position: relative; width: 82%; max-height: 300px; object-fit: cover; object-position: top; border-radius: 120px 120px 0 0; }
+.noi-bat-anh .gd-anh-chu { position: relative; font-size: 6rem; height: 300px; }
+.noi-bat-noi-dung { flex: 1 1 300px; padding: 2rem; display: flex; flex-direction: column; justify-content: center; gap: .8rem; }
+.noi-bat-nhan { font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #ff8a9b; }
+.trang-khach .noi-bat-ten { margin: 0; font-family: var(--font-tieu-de); font-weight: 800; font-size: 3.2rem; line-height: .95; text-transform: uppercase; color: #fff; }
+.noi-bat-phu { color: #b8c4d9; }
+.noi-bat-so { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; margin-top: .3rem; }
+.noi-bat-so > div { border-top: 2px solid #33476e; padding-top: .45rem; }
+.noi-bat-so > div:first-child { border-top-color: var(--nba-do); }
+.noi-bat-so .so { font-family: var(--font-tieu-de); font-size: 2.4rem; font-weight: 700; line-height: 1; }
+.noi-bat-so .nhan { font-size: .75rem; color: #b8c4d9; }
+.noi-bat .btn-nba { align-self: flex-start; margin-top: .4rem; }
+
+/* ---- Danh sách top (trang chủ) ---- */
+.danh-sach-top { list-style: none; margin: 0; padding: 0; }
+.danh-sach-top li a {
+    display: flex; align-items: center; gap: .75rem; padding: .7rem 0;
+    border-bottom: 1px solid #eef1f6; text-decoration: none; color: var(--nba-toi) !important;
+}
+.danh-sach-top li:last-child a { border-bottom: 0; }
+.danh-sach-top .hang { width: 1.2rem; font-family: var(--font-tieu-de); font-size: 1.3rem; font-weight: 700; color: var(--chu-phu); }
+.danh-sach-top .anh-tron { width: 44px; height: 44px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: var(--nba-xanh); }
+.danh-sach-top .anh-tron img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.danh-sach-top .anh-tron .gd-anh-chu { font-size: 1rem; font-family: inherit; }
+.danh-sach-top .ten { flex: 1; min-width: 0; }
+.danh-sach-top .ten strong { display: block; font-weight: 600; }
+.danh-sach-top .ten small { color: var(--chu-phu); }
+.danh-sach-top .so { font-family: var(--font-tieu-de); font-size: 1.6rem; font-weight: 800; }
+
+/* ---- Bảng xếp hạng thu gọn (trang chủ) ---- */
+.bxh-gon .dong {
+    display: grid; grid-template-columns: 2rem minmax(0, 1fr) 3.5rem 3.5rem; align-items: center;
+    padding: .55rem 1rem; border-bottom: 1px solid #eef1f6; font-size: .92rem;
+    text-decoration: none; color: var(--nba-toi) !important;
+}
+.bxh-gon .dong:last-child { border-bottom: 0; }
+.bxh-gon .dong.tieu-de-cot { font-size: .75rem; font-weight: 600; color: var(--chu-phu) !important; text-transform: uppercase; }
+.bxh-gon .hang { font-weight: 700; color: #1f7a4f; }
+.bxh-gon .doi { display: flex; align-items: center; gap: .6rem; min-width: 0; font-weight: 600; }
+.bxh-gon .doi span:last-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bxh-gon .so { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* ---- Thẻ cầu thủ: nền màu đội, số áo mờ, ảnh đứng ---- */
+.the-cau-thu {
+    display: flex; flex-direction: column; height: 100%; background: #fff; border: 1px solid var(--vien);
+    border-radius: 8px; overflow: hidden; text-decoration: none; color: var(--nba-toi) !important;
+    transition: transform .15s, border-color .15s;
+}
+.the-cau-thu:hover { transform: translateY(-3px); border-color: var(--nba-xanh); }
+.the-cau-thu .khung-anh { height: 190px; position: relative; overflow: hidden; display: flex; align-items: flex-end; justify-content: center; }
+.the-cau-thu .so-ao-mo {
+    position: absolute; top: -.05em; right: .15em; font-family: var(--font-tieu-de); font-weight: 800;
+    font-size: 7rem; line-height: 1; color: rgba(255, 255, 255, .2); pointer-events: none;
+}
+.the-cau-thu .gd-anh-dung { position: relative; width: 70%; height: 170px; object-fit: cover; object-position: top; border-radius: 70px 70px 0 0; }
+.the-cau-thu .gd-anh-chu { position: relative; height: 170px; }
+.the-cau-thu .noi-dung { padding: .8rem 1rem 1rem; display: flex; flex-direction: column; gap: .15rem; }
+.the-cau-thu .phu { font-size: .78rem; font-weight: 600; color: var(--chu-phu); }
+.the-cau-thu .ten { font-family: var(--font-tieu-de); font-size: 1.45rem; font-weight: 800; text-transform: uppercase; line-height: 1.05; }
+.the-cau-thu .chi-so { margin-top: .35rem; display: flex; align-items: baseline; gap: .35rem; }
+.the-cau-thu .chi-so .so { font-family: var(--font-tieu-de); font-size: 1.8rem; font-weight: 800; color: var(--nba-do); line-height: 1; }
+.the-cau-thu .chi-so small { color: var(--chu-phu); }
+
+/* ---- Thẻ đội: dải màu đội trên cùng ---- */
+.the-doi {
+    display: flex; flex-direction: column; height: 100%; background: #fff; border: 1px solid var(--vien);
+    border-radius: 8px; overflow: hidden; text-decoration: none; color: var(--nba-toi) !important;
+    transition: transform .15s, border-color .15s;
+}
+.the-doi:hover { transform: translateY(-3px); border-color: var(--nba-xanh); }
+.the-doi .dai-mau { height: 96px; display: flex; align-items: center; justify-content: space-between; padding: 0 1.1rem; overflow: hidden; }
+.the-doi .vong-logo {
+    width: 64px; height: 64px; border-radius: 50%; background: #fff; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; padding: 8px;
+}
+.the-doi .vong-logo .gd-logo { width: 100%; height: 100%; }
+.the-doi .vong-logo .gd-huy-hieu { width: 100% !important; height: 100% !important; font-size: 1rem !important; }
+.the-doi .chu-mo { font-family: var(--font-tieu-de); font-size: 4.5rem; font-weight: 800; line-height: 1; opacity: .35; }
+.the-doi .noi-dung { padding: .75rem 1rem 1rem; display: flex; flex-direction: column; gap: .1rem; }
+.the-doi .phu { font-size: .78rem; font-weight: 600; color: var(--chu-phu); }
+.the-doi .ten { font-family: var(--font-tieu-de); font-size: 1.5rem; font-weight: 800; text-transform: uppercase; line-height: 1.05; }
+
+@media (max-width: 575.98px) {
+    .trang-khach main h1, .trang-khach main .h3 { font-size: 2rem; }
+    .trang-khach .noi-bat-ten { font-size: 2.4rem; }
+    .noi-bat-anh { min-height: 240px; }
+    .noi-bat-anh .so-ao-mo { font-size: 9rem; }
+}
