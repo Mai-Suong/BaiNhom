@@ -83,8 +83,7 @@ require __DIR__ . '/../includes/header.php';
     <?php endforeach; ?>
 </div>
 
-<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-2">
-    <p class="text-muted small mt-3 mb-0">Tìm thấy <?= $kq['tong'] ?> cầu thủ.</p>
+<div class="d-flex justify-content-end align-items-center flex-wrap gap-2 mt-2">
     <?= phanTrang($kq['trang'], $kq['so_trang'], $loc) ?>
 </div>
 

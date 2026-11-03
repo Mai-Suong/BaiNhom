@@ -56,7 +56,6 @@ echo tkCss();
 <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
     <div>
         <h1 class="h3 mb-1">Bảng xếp hạng</h1>
-        <p class="text-muted mb-0">Mùa thường · chỉ tính các trận đã đấu</p>
     </div>
     <?= tkChonMua($dsMua, $maMua, ['kieu' => $kieu, 'hn' => $hn]) ?>
 </div>
@@ -115,11 +114,5 @@ echo tkCss();
         </div>
     </div>
 <?php endforeach; ?>
-
-<div class="row g-3 small text-muted">
-    <div class="col-md-4"><strong class="text-body">Tỉ lệ thắng</strong><br>Thắng ÷ (Thắng + Thua), làm tròn 3 chữ số.</div>
-    <div class="col-md-4"><strong class="text-body">Cách đầu bảng</strong><br>((Thắng đầu − Thua đầu) − (Thắng − Thua)) ÷ 2, trong cùng hội nghị.</div>
-    <div class="col-md-4"><strong class="text-body">Nguồn dữ liệu</strong><br>View <code>v_bang_xep_hang</code>, chỉ tính trận mùa thường đã đấu.</div>
-</div>
 
 <?php require __DIR__ . '/../includes/footer.php'; ?>
