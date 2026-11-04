@@ -7,6 +7,8 @@
  * Tất cả hàm đều bắt đầu bằng "tk" để không trùng tên hàm của module khác.
  */
 
+require_once __DIR__ . '/giao_dien_moi.php';   // màu đội gdMauDoi(), gdUrlAnh(), gdVietTatTen()
+
 /* ======================= Tiện ích chung ======================= */
 
 /* ---------- Ảnh: logo đội và ảnh cầu thủ ----------
@@ -47,6 +49,53 @@ function tkAnhCT(?string $anh, string $hoTen, int $co = 28): string
     $tu  = preg_split('/\s+/u', trim($hoTen), -1, PREG_SPLIT_NO_EMPTY) ?: ['?'];
     $chu = mb_strtoupper(mb_substr($tu[0], 0, 1) . (count($tu) > 1 ? mb_substr(end($tu), 0, 1) : ''));
     return tkAnhHoacChu($anh, $chu, $hoTen, $co, 'tk-anh', 'vong-tron tk-chu');
+}
+
+/* ---------- Ô chọn có ảnh (Tom Select) ----------
+ * <select data-chon-anh="tran|cau_thu"> + mỗi <option> thêm các thuộc tính data-... (tkDuLieuOpt).
+ * Gọi echo tkChonCoAnh(); một lần ở cuối trang để nạp thư viện + assets/js/tk_chon_anh.js.
+ * Thư viện không tải được thì vẫn là <select> thường. */
+
+/** Các thuộc tính data-khoa="giá trị" cho một <option> (Tom Select đọc thành dữ liệu của lựa chọn). Khóa: chữ thường, số */
+function tkDuLieuOpt(array $duLieu): string
+{
+    $h = '';
+    foreach ($duLieu as $khoa => $giaTri) {
+        $h .= ' data-' . preg_replace('/[^a-z0-9]/', '', $khoa) . '="' . e((string) $giaTri) . '"';
+    }
+    return $h;
+}
+
+/** Dữ liệu ảnh của một trận cho ô chọn trận: logo + màu 2 đội (khách trước, nhà sau) */
+function tkDuLieuTran(array $r): string
+{
+    return tkDuLieuOpt([
+        'vt1'   => $r['vt_khach'], 'logo1' => trim((string) ($r['logo_khach'] ?? '')) !== '' ? gdUrlAnh($r['logo_khach']) : '', 'mau1' => gdMauDoi($r['vt_khach']),
+        'vt2'   => $r['vt_nha'],   'logo2' => trim((string) ($r['logo_nha'] ?? '')) !== '' ? gdUrlAnh($r['logo_nha']) : '',     'mau2' => gdMauDoi($r['vt_nha']),
+        'ngay'  => date('d/m/Y H:i', strtotime($r['thoi_gian'])),
+        'ghichu' => $r['trang_thai'] === 'da_dau' ? '' : 'chưa đấu',
+    ]);
+}
+
+/** Dữ liệu ảnh của một cầu thủ cho ô chọn cầu thủ: ảnh, chữ viết tắt, logo + màu đội */
+function tkDuLieuCauThu(array $c): string
+{
+    return tkDuLieuOpt([
+        'ten'  => $c['ho_ten'],
+        'chu'  => gdVietTatTen($c['ho_ten']),
+        'anh'  => trim((string) ($c['anh'] ?? '')) !== '' ? gdUrlAnh($c['anh']) : '',
+        'vt'   => $c['ten_viet_tat'] ?? '',
+        'logo' => trim((string) ($c['logo'] ?? '')) !== '' ? gdUrlAnh($c['logo']) : '',
+        'mau'  => gdMauDoi($c['ten_viet_tat'] ?? null),
+    ]);
+}
+
+/** Nạp Tom Select + script khởi tạo ô chọn có ảnh (gọi 1 lần, sau các form) */
+function tkChonCoAnh(): string
+{
+    return '<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">'
+         . '<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>'
+         . '<script src="' . url('/assets/js/tk_chon_anh.js') . '?v=' . (int) @filemtime(__DIR__ . '/../assets/js/tk_chon_anh.js') . '"></script>';
 }
 
 /** Chạy câu SELECT có tham số (dấu ?), trả về mảng các dòng (rỗng nếu không có) */
