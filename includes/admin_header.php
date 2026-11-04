@@ -12,27 +12,27 @@ $dsMenuAdmin = [
     'Tổng quan' => [
         ['dashboard', 'Dashboard', '/admin/index.php', 'speedometer2'],
     ],
-    'Đội bóng (TV2 Duy)' => [
+    'Đội bóng' => [
         ['doi_bong',  'Đội bóng',        '/admin/doi_bong/index.php',        'shield'],
         ['san',       'Sân thi đấu',     '/admin/san_thi_dau/index.php',     'building'],
         ['hlv',       'Huấn luyện viên', '/admin/huan_luyen_vien/index.php', 'person-workspace'],
         ['trong_tai', 'Trọng tài',       '/admin/trong_tai/index.php',       'flag'],
     ],
-    'Cầu thủ (TV3 Nguyên)' => [
+    'Cầu thủ' => [
         ['cau_thu',   'Cầu thủ',   '/admin/cau_thu/index.php',   'people'],
         ['trao_giai', 'Trao giải', '/admin/trao_giai/index.php', 'trophy'],
     ],
-    'Thi đấu (TV4 Huy)' => [
+    'Thi đấu' => [
         ['mua_giai',  'Mùa giải',     '/admin/mua_giai/index.php',     'calendar3'],
         ['phan_bang', 'Phân bảng',    '/admin/phan_bang/index.php',    'diagram-3'],
         ['lich',      'Lịch thi đấu', '/admin/lich_thi_dau/index.php', 'calendar-week'],
         ['ket_qua',   'Nhập kết quả', '/admin/ket_qua/index.php',      'clipboard-check'],
     ],
-    'Thống kê (TV5 Đạt)' => [
+    'Thống kê' => [
         ['box_score', 'Box score', '/admin/box_score/index.php', 'table'],
         ['playoff',   'Playoff',   '/admin/playoff/index.php',   'diagram-2'],
     ],
-    'Hệ thống (TV1 Sương)' => [
+    'Hệ thống' => [
         ['tai_khoan', 'Tài khoản', '/admin/tai_khoan/index.php', 'person-lock'],
     ],
 ];

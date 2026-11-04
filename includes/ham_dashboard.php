@@ -38,8 +38,8 @@ function dsbSoLieuMua(int $maMua): array
 /** Phần SELECT chung: trận kèm mã 2 đội */
 const DSB_SELECT_TRAN =
     'SELECT td.ma_tran, td.thoi_gian, td.diem_doi_nha, td.diem_doi_khach, td.trang_thai,
-            dn.ten_viet_tat AS vt_nha, dn.ten_doi AS ten_doi_nha,
-            dk.ten_viet_tat AS vt_khach, dk.ten_doi AS ten_doi_khach
+            dn.ten_viet_tat AS vt_nha, dn.ten_doi AS ten_doi_nha, dn.logo AS logo_nha,
+            dk.ten_viet_tat AS vt_khach, dk.ten_doi AS ten_doi_khach, dk.logo AS logo_khach
        FROM tran_dau td
        JOIN doi_bong dn ON dn.ma_doi = td.ma_doi_nha
        JOIN doi_bong dk ON dk.ma_doi = td.ma_doi_khach';
@@ -69,7 +69,7 @@ function dsbTopDoi(int $maMua, int $so = 5): array
 {
     $st = ketNoi()->prepare(
         'SELECT v.ma_hoi_nghi, hn.ten_hoi_nghi, v.thang, v.thua, v.ti_le_thang,
-                d.ma_doi, d.ten_doi, d.ten_viet_tat
+                d.ma_doi, d.ten_doi, d.ten_viet_tat, d.logo
            FROM v_bang_xep_hang v
            JOIN doi_bong d  ON d.ma_doi = v.ma_doi
            JOIN hoi_nghi hn ON hn.ma_hoi_nghi = v.ma_hoi_nghi

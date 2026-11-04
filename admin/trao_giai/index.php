@@ -146,13 +146,13 @@ require __DIR__ . '/../../includes/admin_header.php';
                         <?php if ($kq['ma_cau_thu']): ?>
                             <span class="d-inline-flex align-items-center gap-2">
                                 <?= anhTron($kq['anh_nguoi_nhan'], $kq['nguoi_nhan'], 32) ?>
-                                <a class="fw-semibold" href="<?= url('/cau_thu/ho_so.php?id=' . (int) $kq['ma_cau_thu'] . '&tu=trao_giai&mua=' . $maMua) ?>"><?= e($kq['nguoi_nhan']) ?></a>
+                                <a class="fw-semibold link-body-emphasis link-underline-opacity-0 link-underline-opacity-75-hover" href="<?= url('/cau_thu/ho_so.php?id=' . (int) $kq['ma_cau_thu'] . '&tu=trao_giai&mua=' . $maMua) ?>"><?= e($kq['nguoi_nhan']) ?></a>
                             </span>
                         <?php elseif ($kq['ma_hlv']): ?>
                             <span class="d-inline-flex align-items-center gap-2">
                                 <?= anhTron($kq['anh_nguoi_nhan'], $kq['nguoi_nhan'], 32) ?>
                                 <?php if ($kq['ma_doi_hlv']): ?>
-                                    <a class="fw-semibold" href="<?= url('/doi_bong/chi_tiet.php?id=' . (int) $kq['ma_doi_hlv'] . '&mua=' . $maMua) ?>"
+                                    <a class="fw-semibold link-body-emphasis link-underline-opacity-0 link-underline-opacity-75-hover" href="<?= url('/doi_bong/chi_tiet.php?id=' . (int) $kq['ma_doi_hlv'] . '&mua=' . $maMua) ?>"
                                        title="Xem ban huấn luyện của đội trong mùa này"><?= e($kq['nguoi_nhan']) ?></a>
                                 <?php else: ?>
                                     <span class="fw-semibold"><?= e($kq['nguoi_nhan']) ?></span>
