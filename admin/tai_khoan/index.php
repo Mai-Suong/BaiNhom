@@ -108,8 +108,10 @@ require __DIR__ . '/../../includes/admin_header.php';
         </table>
     </div>
 </div>
-<p class="text-muted small mt-2">
-    Tổng: <?= count($dsTk) ?> tài khoản. Tài khoản quản trị không khóa được; bạn không thể tự khóa tài khoản đang đăng nhập.
+<p class="small mt-2 mb-0">
+    <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+    <strong>Lưu ý:</strong>
+    <span class="text-muted">Tài khoản quản trị không khóa được, bạn không thể tự khóa tài khoản đang đăng nhập.</span>
 </p>
 
 <?php require __DIR__ . '/../../includes/admin_footer.php'; ?>

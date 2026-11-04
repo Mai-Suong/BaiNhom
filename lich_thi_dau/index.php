@@ -55,14 +55,19 @@ require __DIR__ . '/../includes/header.php';
     <div class="card card-body text-muted">Mùa <?= e($mua['ten_mua_giai']) ?> chưa có trận đấu<?= $maDoi ? ' của đội này' : '' ?>.</div>
 <?php else: ?>
     <!-- Chuyển tháng -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <?php if ($viTri > 0): ?>
-            <a class="btn btn-outline-secondary btn-sm" href="<?= e(linkThang($maMua, $maDoi, $dsThang[$viTri - 1])) ?>"><i class="bi bi-chevron-left"></i> <?= e(ttdHienThang($dsThang[$viTri - 1])) ?></a>
-        <?php else: ?><span></span><?php endif; ?>
-        <h2 class="h5 mb-0"><?= e(ttdHienThang($thang)) ?></h2>
-        <?php if ($viTri < count($dsThang) - 1): ?>
-            <a class="btn btn-outline-secondary btn-sm" href="<?= e(linkThang($maMua, $maDoi, $dsThang[$viTri + 1])) ?>"><?= e(ttdHienThang($dsThang[$viTri + 1])) ?> <i class="bi bi-chevron-right"></i></a>
-        <?php else: ?><span></span><?php endif; ?>
+        <!-- Chuyển tháng: 3 ô bằng nhau (trái - giữa - phải) để chữ tháng luôn nằm chính giữa -->
+    <div class="d-flex align-items-center mb-3">
+        <div class="flex-fill w-100">
+            <?php if ($viTri > 0): ?>
+                <a class="btn btn-outline-secondary btn-sm" href="<?= e(linkThang($maMua, $maDoi, $dsThang[$viTri - 1])) ?>"><i class="bi bi-chevron-left"></i> <?= e(ttdHienThang($dsThang[$viTri - 1])) ?></a>
+            <?php endif; ?>
+        </div>
+        <h2 class="h5 mb-0 text-center text-nowrap"><?= e(ttdHienThang($thang)) ?></h2>
+        <div class="flex-fill w-100 text-end">
+            <?php if ($viTri < count($dsThang) - 1): ?>
+                <a class="btn btn-outline-secondary btn-sm" href="<?= e(linkThang($maMua, $maDoi, $dsThang[$viTri + 1])) ?>"><?= e(ttdHienThang($dsThang[$viTri + 1])) ?> <i class="bi bi-chevron-right"></i></a>
+            <?php endif; ?>
+        </div>
     </div>
 
     <?php foreach ($theoNgay as $ngay => $dsTran): ?>
@@ -70,6 +75,15 @@ require __DIR__ . '/../includes/header.php';
             <div class="card-header fw-semibold"><?= e(ttdHienNgay($ngay)) ?> <span class="text-muted fw-normal">· <?= count($dsTran) ?> trận</span></div>
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="text-end">Đội khách</th>
+                            <th style="width: 160px"></th>
+                            <th>Đội nhà</th>
+                            <th class="d-none d-md-table-cell">Sân</th>
+                        </tr>
+                    </thead>
                     <tbody>
                     <?php foreach ($dsTran as $t): ?>
                         <?php $daDau = $t['trang_thai'] === 'da_dau';
@@ -105,7 +119,6 @@ require __DIR__ . '/../includes/header.php';
             </div>
         </div>
     <?php endforeach; ?>
-    <p class="text-muted small">Đội khách bên trái, đội nhà bên phải. Bấm vào tỉ số để xem điểm từng hiệp.</p>
 <?php endif; ?>
 
 <?php require __DIR__ . '/../includes/footer.php'; ?>

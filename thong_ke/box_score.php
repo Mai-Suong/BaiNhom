@@ -25,8 +25,11 @@ if ($id === 0) {
     require __DIR__ . '/../includes/header.php';
     echo tkCss();
     ?>
-    <h1 class="h3 mb-1">Thống kê</h1>
-    <p class="text-muted">Box score · chọn một trận đã đấu để xem chi tiết</p>
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+        <div>
+            <h1 class="h3 mb-1">Thống kê</h1>
+        </div>
+    </div>
     <?= tkMenu('box_score') ?>
     <?php if (!$ds): ?>
         <div class="alert alert-info">Chưa có trận nào đã đấu. Cần nhập kết quả trận trước.</div>
@@ -181,7 +184,6 @@ echo tkCss();
     </div>
     <?= tkBangDoi($t['ten_nha'], $t['vt_nha'], $dongNha, $t['logo_nha']) ?>
     <?= tkBangDoi($t['ten_khach'], $t['vt_khach'], $dongKhach, $t['logo_khach']) ?>
-    <p class="small text-muted">BBTC: bắt bóng tấn công · BBPT: bắt bóng phòng thủ · KT: kiến tạo. Tỉ lệ ném và tổng bóng bắt tính khi hiển thị, không lưu trong database.</p>
 <?php else: ?>
     <div class="alert alert-info">
         <?= $daDau ? 'Trận này chưa có box score.' : 'Trận này chưa đấu nên chưa có box score.' ?>

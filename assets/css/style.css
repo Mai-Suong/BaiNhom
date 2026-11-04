@@ -252,3 +252,8 @@
     .noi-bat-anh { min-height: 240px; }
     .noi-bat-anh .so-ao-mo { font-size: 9rem; }
 }
+
+html { scrollbar-gutter: stable; }
+/* Xem highlight */
+.menu-chinh .menu-ghi-chu { margin-left: auto; align-self: center; padding-left: 1rem; font-size: .8rem; color: #6c757d; white-space: nowrap; }
+.menu-chinh .menu-ghi-chu .bi-youtube { color: #ff0000; }

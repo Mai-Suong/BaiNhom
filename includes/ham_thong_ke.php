@@ -472,7 +472,5 @@ function tkSoDoNhanh(array $loat): string
         . '<span><i style="background:#0f1b2d"></i>Thắng loạt</span>'
         . '<span><i style="background:#fff1e8; border:1px solid #c2410c"></i>Đang dẫn khi loạt chưa kết thúc</span>'
         . '<span><i style="background:#e9ecef"></i>Thua hoặc hòa tỉ số</span></div>';
-    $h .= '<p class="small text-muted">Số trận thắng của mỗi đội đếm từ các trận trong bảng <code>tran_dau</code> theo mã loạt, '
-        . 'không lưu trong <code>loat_playoff</code>. Số nhỏ bên trái là hạt giống.</p>';
     return $h;
 }

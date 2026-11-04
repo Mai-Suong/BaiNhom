@@ -126,6 +126,8 @@ if ($ketQua || $tranSapToi) {
 
 $tieuDe = 'Trang chủ';
 $menu   = 'trang_chu';
+$ghiChuMenu = 'Nút "Xem highlight" mở trang tìm video trên YouTube';
+
 require __DIR__ . '/includes/header.php';
 ?>
 
@@ -190,7 +192,6 @@ require __DIR__ . '/includes/header.php';
                                     </a></li>
                                 <?php endforeach; ?>
                             </ol>
-                            <span class="tc-ghi-chu">EFF = điểm + bắt bóng + kiến tạo + cướp + chặn − ném trượt − mất bóng (mỗi trận)</span>
                         </div>
                     </article>
                 <?php elseif ($sl['loai'] === 'kich_tinh'): $td = $sl['td']; $ct = $td['nguoi_hung']; ?>
@@ -243,7 +244,6 @@ require __DIR__ . '/includes/header.php';
                                     </a></li>
                                 <?php endforeach; ?>
                             </ol>
-                            <span class="tc-ghi-chu">Xếp theo tỉ lệ thắng, hiệu số trung bình và phong độ 5 trận gần nhất (T = thắng, B = bại)</span>
                         </div>
                     </article>
                 <?php elseif ($sl['loai'] === 'tin_tuc'): $t1 = $sl['ds'][0]; ?>
@@ -387,7 +387,6 @@ require __DIR__ . '/includes/header.php';
                             </li>
                         <?php endforeach; ?>
                     </ol>
-                    <p class="small text-muted mb-2">Chỉ xếp hạng cầu thủ đá từ <?= $soTranMin ?> trận trở lên.</p>
                 <?php endif; ?>
             </div>
             <div class="card-footer bg-white border-0 pt-0"><a href="<?= url('/thong_ke/index.php') ?>" class="fw-semibold text-decoration-none">Xem thống kê đầy đủ →</a></div>
@@ -503,7 +502,6 @@ require __DIR__ . '/includes/header.php';
             <?php endif; ?>
         <?php endforeach; ?>
     </div>
-    <p class="small text-muted mt-2 mb-0"><i class="bi bi-youtube"></i> Nút "Xem highlight" mở trang tìm video trên YouTube; web không lưu video.</p>
 </section>
 <?php endif; ?>
 <script src="<?= url('/assets/js/trang_chu.js') ?>?v=<?= (int) @filemtime(__DIR__ . '/assets/js/trang_chu.js') ?>" defer></script>

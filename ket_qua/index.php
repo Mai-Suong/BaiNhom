@@ -84,11 +84,10 @@ require __DIR__ . '/../includes/header.php';
                         </thead>
                         <tbody>
                         <?php foreach (['khach' => $khachThang, 'nha' => !$khachThang] as $ben => $thang): ?>
-                            <tr class="<?= $thang ? 'fw-bold' : '' ?>">
+                            <tr>
                                 <td class="text-start ps-3 text-nowrap">
                                     <a class="text-reset text-decoration-none d-inline-flex align-items-center gap-2" href="<?= url('/doi_bong/chi_tiet.php?id=' . (int) $t['ma_doi_' . $ben]) ?>"
                                        title="<?= e($t['ten_doi_' . $ben]) ?>"><?= gdHuyHieu($t['logo_' . $ben], $t['vt_' . $ben], $t['ten_doi_' . $ben], $motTran ? 40 : 30) ?><?= e($motTran ? $t['ten_doi_' . $ben] : $t['vt_' . $ben]) ?></a>
-                                    <?php if ($ben === 'nha'): ?><span class="text-muted small fw-normal">(nhà)</span><?php endif; ?>
                                 </td>
                                 <?php for ($h = 1; $h <= $soHiep; $h++): ?>
                                     <td class="fw-normal"><?= isset($t['hiep'][$h][$ben]) ? (int) $t['hiep'][$h][$ben] : '' ?></td>
@@ -129,7 +128,6 @@ require __DIR__ . '/../includes/header.php';
     </nav>
 <?php endif; ?>
 <?php if (!$motTran && $tong): ?>
-    <p class="text-muted small text-center">Tổng: <?= $tong ?> trận. Đội thắng in đậm.</p>
 <?php endif; ?>
 
 <?php require __DIR__ . '/../includes/footer.php'; ?>

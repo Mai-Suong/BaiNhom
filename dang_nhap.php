@@ -71,7 +71,6 @@ require __DIR__ . '/includes/header.php';
                 </form>
             </div>
         </div>
-        <p class="text-center text-muted small mt-3">Khách không cần đăng nhập vẫn xem được thông tin giải đấu.</p>
     </div>
 </div>
 

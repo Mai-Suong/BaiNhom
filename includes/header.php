@@ -7,6 +7,7 @@
 $tieuDe  = $tieuDe ?? 'Trang chủ';
 $menu    = $menu ?? '';
 $daiTiSo = $daiTiSo ?? '';
+$ghiChuMenu = $ghiChuMenu ?? '';
 
 // Menu chính: [mã, tên, đường dẫn]. Mỗi người tạo đúng file này là link chạy.
 $dsMenu = [
@@ -67,6 +68,9 @@ $thongBao = layThongBao();
         <?php foreach ($dsMenu as [$ma, $ten, $link]): ?>
             <a class="<?= $menu === $ma ? 'dang-chon' : '' ?>" href="<?= url($link) ?>"<?= $menu === $ma ? ' aria-current="page"' : '' ?>><?= e($ten) ?></a>
         <?php endforeach; ?>
+                <?php if ($ghiChuMenu !== ''): ?>
+            <span class="menu-ghi-chu d-none d-lg-inline"><i class="bi bi-youtube"></i> <?= e($ghiChuMenu) ?></span>
+        <?php endif; ?>
     </div>
 </nav>
 
