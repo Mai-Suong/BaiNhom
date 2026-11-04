@@ -212,7 +212,11 @@ echo tkCss();
 ?>
 
 <h1 class="h3 mb-1">Nhập box score</h1>
-<p class="text-muted">Chọn trận đã đấu, nhập chỉ số từng cầu thủ của hai đội. Điểm cá nhân tự tính.</p>
+<p class="small mb-3">
+    <i class="bi bi-info-circle-fill text-primary"></i>
+    <strong>Hướng dẫn:</strong>
+    <span class="text-muted">Chọn trận đã đấu, nhập chỉ số từng cầu thủ của hai đội. Điểm cá nhân tự tính.</span>
+</p>
 
 <form method="get" class="card shadow-sm card-body mb-4">
     <div class="d-flex flex-wrap align-items-center gap-2">
