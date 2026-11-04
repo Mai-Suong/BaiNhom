@@ -51,17 +51,23 @@ $thongBao = layThongBao();
 </head>
 <body class="trang-quan-tri">
 
-<nav class="navbar navbar-dark thanh-quan-tri sticky-top">
-    <div class="container-fluid">
-        <button class="btn btn-outline-light btn-sm d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarAdmin">
-            <i class="bi bi-list"></i>
-        </button>
-        <a class="navbar-brand fw-bold" href="<?= url('/admin/index.php') ?>"><i class="bi bi-dribbble"></i> Quản trị</a>
-        <div class="d-flex align-items-center gap-3">
-            <a class="text-white-50 small text-decoration-none d-none d-sm-inline" href="<?= url('/index.php') ?>"><i class="bi bi-box-arrow-up-right"></i> Xem trang web</a>
-            <a class="text-white small text-decoration-none" href="<?= url('/doi_mat_khau.php') ?>" title="Đổi mật khẩu"><i class="bi bi-person-circle"></i> <?= e(tenDangNhap()) ?> <i class="bi bi-key"></i></a>
-            <a class="btn btn-outline-light btn-sm" href="<?= url('/dang_xuat.php') ?>">Đăng xuất</a>
+<?php // Logo + tài khoản dùng chung class với trang chủ (thuong-hieu, tai-khoan trong style.css) cho giống nhau ?>
+<nav class="navbar navbar-dark thanh-quan-tri sticky-top py-0">
+    <div class="container-fluid px-3 px-lg-4" style="min-height: 60px">
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-outline-light btn-sm d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarAdmin">
+                <i class="bi bi-list"></i>
+            </button>
+            <a class="thuong-hieu" href="<?= url('/admin/index.php') ?>">
+                <span class="thuong-hieu-bong"><i class="bi bi-dribbble"></i></span>
+                <span>QUẢN TRỊ</span>
+            </a>
         </div>
+        <nav class="tai-khoan" aria-label="Tài khoản">
+            <a class="d-none d-sm-inline" href="<?= url('/index.php') ?>"><i class="bi bi-box-arrow-up-right"></i> Xem trang web</a>
+            <a href="<?= url('/doi_mat_khau.php') ?>" title="Đổi mật khẩu"><i class="bi bi-person-circle"></i> <span class="d-none d-sm-inline"><?= e(tenDangNhap()) ?></span></a>
+            <a class="nut-vien" href="<?= url('/dang_xuat.php') ?>">Đăng xuất</a>
+        </nav>
     </div>
 </nav>
 

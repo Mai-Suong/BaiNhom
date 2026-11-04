@@ -126,7 +126,6 @@ if ($ketQua || $tranSapToi) {
 
 $tieuDe = 'Trang chủ';
 $menu   = 'trang_chu';
-$ghiChuMenu = 'Nút "Xem highlight" mở trang tìm video trên YouTube';
 
 require __DIR__ . '/includes/header.php';
 ?>
