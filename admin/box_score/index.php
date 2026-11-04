@@ -66,7 +66,8 @@ function tkLuuDongBoxScore(PDO $pdo, array $b): void
 $id = (int) ($_GET['id'] ?? $_POST['ma_tran'] ?? 0);
 
 $dsTran = tkTruyVan($pdo,
-    'SELECT t.ma_tran, t.thoi_gian, t.trang_thai, n.ten_viet_tat vt_nha, k.ten_viet_tat vt_khach
+    'SELECT t.ma_tran, t.thoi_gian, t.trang_thai, n.ten_viet_tat vt_nha, k.ten_viet_tat vt_khach,
+            n.logo logo_nha, k.logo logo_khach
      FROM tran_dau t
      JOIN doi_bong n ON n.ma_doi = t.ma_doi_nha
      JOIN doi_bong k ON k.ma_doi = t.ma_doi_khach
@@ -221,10 +222,10 @@ echo tkCss();
 <form method="get" class="card shadow-sm card-body mb-4">
     <div class="d-flex flex-wrap align-items-center gap-2">
         <label for="id" class="fw-semibold mb-0">Trận đấu</label>
-        <select id="id" name="id" class="form-select w-auto" style="min-width:320px" onchange="this.form.submit()">
+        <select id="id" name="id" class="form-select w-auto tk-chon" style="min-width:320px" onchange="this.form.submit()" data-chon-anh="tran">
             <option value="0">— Chọn trận —</option>
             <?php foreach ($dsTran as $r): ?>
-                <option value="<?= (int) $r['ma_tran'] ?>"<?= (int) $r['ma_tran'] === $id ? ' selected' : '' ?>>
+                <option value="<?= (int) $r['ma_tran'] ?>"<?= (int) $r['ma_tran'] === $id ? ' selected' : '' ?><?= tkDuLieuTran($r) ?>>
                     <?= e(date('d/m/Y H:i', strtotime($r['thoi_gian']))) ?> · <?= e($r['vt_khach']) ?> @ <?= e($r['vt_nha']) ?><?= $r['trang_thai'] === 'da_dau' ? '' : ' (chưa đấu)' ?>
                 </option>
             <?php endforeach; ?>
@@ -234,6 +235,7 @@ echo tkCss();
         <?php endif; ?>
     </div>
 </form>
+<?= tkChonCoAnh() ?>
 
 <?php if (!$dsTran): ?>
     <div class="alert alert-info">Chưa có trận đấu nào. Cần lập lịch và nhập kết quả trận trước (phần của TV4).</div>

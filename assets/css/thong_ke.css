@@ -103,3 +103,15 @@ tr.playin .nhom-nhan { color: #2b5fa8; font-weight: 600; }
 .bang-diem .tk-logo, .bang-diem .vong-tron { margin-right: 0; }
 .bang-diem .tk-logo { background: #fff; border-radius: 50%; padding: 6px; }
 .o-dan-dau .tk-anh, .o-dan-dau .vong-tron { margin: 0 0 .5rem; }
+
+/* ---- Ô chọn có ảnh (Tom Select): chọn trận, chọn cầu thủ ---- */
+.ts-wrapper.tk-chon { min-width: 340px; }
+.ts-wrapper.tk-chon .ts-control { min-height: 44px; display: flex; align-items: center; }
+.ts-dropdown .ts-dropdown-content { max-height: 420px; }
+.tk-chon-dong { display: flex; align-items: center; gap: .45rem; min-width: 0; }
+.tk-chon-logo { object-fit: contain; flex-shrink: 0; }
+.tk-chon-anh { border-radius: 50%; object-fit: cover; object-position: top; background: #e9ecef; flex-shrink: 0; }
+.tk-chon-chu { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; border-radius: 50%; color: #fff; font-weight: 700; }
+.tk-chon-chu.d-none { display: none !important; }
+.tk-chon-ten { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tk-chon-phu { display: inline-flex; align-items: center; gap: .3rem; margin-left: auto; padding-left: .5rem; color: #5b6575; font-size: .85em; white-space: nowrap; }

@@ -21,7 +21,7 @@ $cs = isset($chiSo[$_GET['cs'] ?? '']) ? $_GET['cs'] : 'diem';
 
 // Danh sách cầu thủ đã có số liệu trong mùa
 $dsCauThu = tkTruyVan($pdo,
-    "SELECT DISTINCT c.ma_cau_thu, c.ho_ten, d.ten_viet_tat
+    "SELECT DISTINCT c.ma_cau_thu, c.ho_ten, c.anh, d.ten_viet_tat, d.logo
      FROM v_chi_so_trung_binh v
      JOIN cau_thu c ON c.ma_cau_thu = v.ma_cau_thu
      LEFT JOIN doi_bong d ON d.ma_doi = c.ma_doi
@@ -105,9 +105,9 @@ $dongSoSanh = [
 function tkChonCauThu(string $ten, string $nhan, array $ds, int $dang): string
 {
     $h = '<label for="' . $ten . '" class="form-label fw-semibold ' . ($ten === 'a' ? 'mau-a' : 'mau-b') . '">' . e($nhan) . '</label>';
-    $h .= '<select id="' . $ten . '" name="' . $ten . '" class="form-select"><option value="0">— Chọn cầu thủ —</option>';
+    $h .= '<select id="' . $ten . '" name="' . $ten . '" class="form-select tk-chon" data-chon-anh="cau_thu"><option value="0">— Chọn cầu thủ —</option>';
     foreach ($ds as $c) {
-        $h .= '<option value="' . (int) $c['ma_cau_thu'] . '"' . ((int) $c['ma_cau_thu'] === $dang ? ' selected' : '') . '>'
+        $h .= '<option value="' . (int) $c['ma_cau_thu'] . '"' . ((int) $c['ma_cau_thu'] === $dang ? ' selected' : '') . tkDuLieuCauThu($c) . '>'
             . e($c['ho_ten'] . ($c['ten_viet_tat'] ? ' · ' . $c['ten_viet_tat'] : '')) . '</option>';
     }
     return $h . '</select>';
@@ -142,6 +142,7 @@ echo tkCss();
         <div class="col-md-2 d-grid"><button class="btn btn-nba" type="submit">So sánh</button></div>
     </div>
 </form>
+<?= tkChonCoAnh() ?>
 
 <?php if (!$dsCauThu): ?>
     <div class="alert alert-info">Chưa có số liệu cầu thủ trong mùa này. Cần có box score của các trận đã đấu.</div>
