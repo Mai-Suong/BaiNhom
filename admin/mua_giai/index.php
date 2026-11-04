@@ -24,8 +24,8 @@ require __DIR__ . '/../../includes/admin_header.php';
                 <th>Mùa giải</th>
                 <th>Bắt đầu</th>
                 <th>Kết thúc</th>
-                <th class="text-end">Đội đã phân bảng</th>
-                <th class="text-end">Trận (đã đấu / tổng)</th>
+                <th class="text-center">Đội đã phân bảng</th>
+                <th class="text-center">Trận (đã đấu / tổng)</th>
                 <th class="text-end" style="width: 300px"></th>
             </tr>
             </thead>
@@ -42,8 +42,8 @@ require __DIR__ . '/../../includes/admin_header.php';
                     </td>
                     <td><?= e(mgHienNgay($mua['ngay_bat_dau'])) ?></td>
                     <td><?= e(mgHienNgay($mua['ngay_ket_thuc'])) ?></td>
-                    <td class="text-end"><?= (int) $mua['so_doi'] ?></td>
-                    <td class="text-end"><?= (int) $mua['so_tran_da_dau'] ?> / <?= (int) $mua['so_tran'] ?></td>
+                    <td class="text-center"><?= (int) $mua['so_doi'] ?></td>
+                    <td class="text-center"><?= (int) $mua['so_tran_da_dau'] ?> / <?= (int) $mua['so_tran'] ?></td>
                     <td class="text-end text-nowrap">
                         <?php if (!$laHienTai): ?>
                             <form class="d-inline" method="post" action="<?= url('/admin/mua_giai/hien_tai.php') ?>">

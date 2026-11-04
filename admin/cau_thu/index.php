@@ -80,12 +80,12 @@ require __DIR__ . '/../../includes/admin_header.php';
             <thead class="table-light">
             <tr>
                 <th style="width: 56px"></th>
-                <th class="text-end" style="width: 60px">Số áo</th>
+                <th class="text-center" style="width: 60px">Số áo</th>
                 <th>Họ tên</th>
-                <th>Vị trí</th>
-                <th>Đội</th>
-                <th>Quốc tịch</th>
-                <th>Trạng thái</th>
+                <th class="text-center">Vị trí</th>
+                <th class="text-center">Đội</th>
+                <th class="text-center">Quốc tịch</th>
+                <th class="text-center">Trạng thái</th>
                 <th class="text-end" style="width: 300px"></th>
             </tr>
             </thead>
@@ -98,12 +98,12 @@ require __DIR__ . '/../../includes/admin_header.php';
             <?php foreach ($kq['ds'] as $ct): ?>
                 <tr>
                     <td><?= anhCauThu($ct, 38) ?></td>
-                    <td class="text-end fw-semibold"><?= $ct['so_ao'] !== null ? '#' . (int) $ct['so_ao'] : '' ?></td>
+                    <td class="text-center fw-semibold"><?= $ct['so_ao'] !== null ? '#' . (int) $ct['so_ao'] : '' ?></td>
                     <td><a class="fw-semibold link-body-emphasis link-underline-opacity-0 link-underline-opacity-75-hover" href="<?= url('/cau_thu/ho_so.php?id=' . (int) $ct['ma_cau_thu']) ?>"><?= e($ct['ho_ten']) ?></a></td>
-                    <td><?= e($ct['vi_tri']) ?></td>
-                    <td><?= tenDoiCoLogo($ct['logo_doi'] ?? null, $ct['ten_viet_tat'] ?? null, $ct['ten_doi']) ?></td>
-                    <td><?= e($ct['quoc_tich'] ?? '') ?></td>
-                    <td><?= nhanTrangThai($ct['trang_thai']) ?></td>
+                    <td class="text-center"><?= e($ct['vi_tri']) ?></td>
+                    <td class="text-center"><?= tenDoiCoLogo($ct['logo_doi'] ?? null, $ct['ten_viet_tat'] ?? null, $ct['ten_doi']) ?></td>
+                    <td class="text-center"><?= e($ct['quoc_tich'] ?? '') ?></td>
+                    <td class="text-center"><?= nhanTrangThai($ct['trang_thai']) ?></td>
                     <td class="text-end text-nowrap">
                         <a class="btn btn-sm btn-outline-primary" href="<?= url('/admin/cau_thu/form.php?id=' . (int) $ct['ma_cau_thu']) ?>">Sửa</a>
                         <a class="btn btn-sm btn-outline-secondary" href="<?= url('/admin/cau_thu/chuyen_nhuong.php?id=' . (int) $ct['ma_cau_thu']) ?>">Chuyển nhượng</a>

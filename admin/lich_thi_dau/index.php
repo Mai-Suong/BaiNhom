@@ -103,7 +103,7 @@ require __DIR__ . '/../../includes/admin_header.php';
                 <th>Trận (khách @ nhà)</th>
                 <th>Sân</th>
                 <th>Giai đoạn</th>
-                <th>Trạng thái</th>
+                <th class="text-center">Trạng thái</th>
                 <th class="text-center">Tỉ số</th>
                 <th class="text-center">Trọng tài</th>
                 <th class="text-end" style="width: 130px"></th>
@@ -126,7 +126,7 @@ require __DIR__ . '/../../includes/admin_header.php';
                         <?= e(LTD_GIAI_DOAN[$t['giai_doan']] ?? $t['giai_doan']) ?>
                         <?php if ($t['tran_so_trong_loat']): ?><span class="text-muted small">· Trận <?= (int) $t['tran_so_trong_loat'] ?></span><?php endif; ?>
                     </td>
-                    <td><span class="badge text-bg-<?= ltdMauTrangThai($t['trang_thai']) ?>"><?= e(LTD_TRANG_THAI[$t['trang_thai']] ?? $t['trang_thai']) ?></span></td>
+                    <td class="text-center"><span class="badge text-bg-<?= ltdMauTrangThai($t['trang_thai']) ?>"><?= e(LTD_TRANG_THAI[$t['trang_thai']] ?? $t['trang_thai']) ?></span></td>
                     <td class="text-center text-nowrap">
                         <?= $t['trang_thai'] === 'da_dau' ? (int) $t['diem_doi_khach'] . ' - ' . (int) $t['diem_doi_nha'] : '' ?>
                     </td>

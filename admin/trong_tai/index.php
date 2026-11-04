@@ -65,12 +65,12 @@ require __DIR__ . '/../../includes/admin_header.php';
             <tr>
                 <th style="width: 90px">Số áo</th>
                 <th>Họ tên</th>
-                <th class="text-end">Bắt đầu ở NBA</th>
+                <th class="text-center">Bắt đầu ở NBA</th>
                 <?php if ($mua): ?>
-                    <th class="text-end">Kinh nghiệm mùa <?= e($mua['ten_mua_giai']) ?></th>
-                    <th class="text-end">Trận mùa <?= e($mua['ten_mua_giai']) ?></th>
+                    <th class="text-center">Kinh nghiệm mùa <?= e($mua['ten_mua_giai']) ?></th>
+                    <th class="text-center">Trận mùa <?= e($mua['ten_mua_giai']) ?></th>
                 <?php endif; ?>
-                <th class="text-end">Tổng trận phân công</th>
+                <th class="text-center">Tổng trận phân công</th>
                 <th class="text-end" style="width: 150px"></th>
             </tr>
             </thead>
@@ -84,12 +84,12 @@ require __DIR__ . '/../../includes/admin_header.php';
                 <tr>
                     <td><?= $tt['so_ao'] !== null ? '<span class="badge text-bg-dark fs-6">#' . (int) $tt['so_ao'] . '</span>' : '' ?></td>
                     <td class="fw-semibold"><?= e($tt['ho_ten']) ?></td>
-                    <td class="text-end"><?= e($tt['nam_bat_dau']) ?></td>
+                    <td class="text-center"><?= e($tt['nam_bat_dau']) ?></td>
                     <?php if ($mua): ?>
-                        <td class="text-end"><?= e($kinhNghiem($tt['nam_bat_dau'] !== null ? (string) $tt['nam_bat_dau'] : null)) ?></td>
-                        <td class="text-end"><?= (int) $tt['so_tran_mua'] ?></td>
+                        <td class="text-center"><?= e($kinhNghiem($tt['nam_bat_dau'] !== null ? (string) $tt['nam_bat_dau'] : null)) ?></td>
+                        <td class="text-center"><?= (int) $tt['so_tran_mua'] ?></td>
                     <?php endif; ?>
-                    <td class="text-end"><?= (int) $tt['so_tran'] ?></td>
+                    <td class="text-center"><?= (int) $tt['so_tran'] ?></td>
                     <td class="text-end text-nowrap">
                         <a class="btn btn-sm btn-outline-primary"
                            href="<?= url('/admin/trong_tai/form.php?id=' . (int) $tt['ma_trong_tai']) ?>">Sửa</a>

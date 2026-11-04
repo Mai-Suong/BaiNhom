@@ -71,13 +71,13 @@ require __DIR__ . '/../../includes/admin_header.php';
             <tr>
                 <th style="width: 64px">Logo</th>
                 <th>Tên đội</th>
-                <th>Viết tắt</th>
+                <th class="text-center text-nowrap">Viết tắt</th>
                 <th>Thành phố</th>
                 <th>Sân nhà</th>
                 <th>HLV trưởng</th>
-                <th class="text-end" title="<?= $laHienTai ? 'Cầu thủ đang thuộc đội' : 'Cầu thủ đã ra sân cho đội trong mùa' ?>">Cầu thủ</th>
-                <th class="text-end" title="Thắng - thua mùa thường">Thành tích</th>
-                <th class="text-end">Thành lập</th>
+                <th class="text-center text-nowrap" title="<?= $laHienTai ? 'Cầu thủ đang thuộc đội' : 'Cầu thủ đã ra sân cho đội trong mùa' ?>">Cầu thủ</th>
+                <th class="text-center text-nowrap" title="Thắng - thua mùa thường">Thành tích</th>
+                <th class="text-center text-nowrap">Thành lập</th>
                 <th class="text-end" style="width: 150px"></th>
             </tr>
             </thead>
@@ -97,13 +97,13 @@ require __DIR__ . '/../../includes/admin_header.php';
                         <?php endif; ?>
                     </td>
                     <td class="fw-semibold"><?= e($doi['ten_doi']) ?></td>
-                    <td><?= e($doi['ten_viet_tat']) ?></td>
+                    <td class="text-center"><?= e($doi['ten_viet_tat']) ?></td>
                     <td><?= e($doi['thanh_pho']) ?></td>
                     <td><?= $doi['san_mua'] !== null ? e($doi['san_mua']) : '<span class="text-muted">Chưa có</span>' ?></td>
                     <td><?= $doi['hlv_mua'] !== null ? e($doi['hlv_mua']) : '<span class="text-muted">Chưa có</span>' ?></td>
-                    <td class="text-end"><?= $laHienTai || $doi['so_cau_thu'] > 0 ? (int) $doi['so_cau_thu'] : '<span class="text-muted">-</span>' ?></td>
-                    <td class="text-end text-nowrap"><?= $doi['thanh_tich'] ? (int) $doi['thanh_tich']['thang'] . '-' . (int) $doi['thanh_tich']['thua'] : '<span class="text-muted">-</span>' ?></td>
-                    <td class="text-end"><?= e($doi['nam_thanh_lap']) ?></td>
+                    <td class="text-center"><?= $laHienTai || $doi['so_cau_thu'] > 0 ? (int) $doi['so_cau_thu'] : '<span class="text-muted">-</span>' ?></td>
+                    <td class="text-center text-nowrap"><?= $doi['thanh_tich'] ? (int) $doi['thanh_tich']['thang'] . '-' . (int) $doi['thanh_tich']['thua'] : '<span class="text-muted">-</span>' ?></td>
+                    <td class="text-center"><?= e($doi['nam_thanh_lap']) ?></td>
                     <td class="text-end text-nowrap">
                         <a class="btn btn-sm btn-outline-primary"
                            href="<?= url('/admin/doi_bong/form.php?id=' . (int) $doi['ma_doi']) ?>">Sửa</a>
