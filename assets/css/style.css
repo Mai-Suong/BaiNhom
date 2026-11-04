@@ -257,3 +257,9 @@ html { scrollbar-gutter: stable; }
 /* Xem highlight */
 .menu-chinh .menu-ghi-chu { margin-left: auto; align-self: center; padding-left: 1rem; font-size: .8rem; color: #6c757d; white-space: nowrap; }
 .menu-chinh .menu-ghi-chu .bi-youtube { color: #ff0000; }
+
+/* trang quản trị*/
+.trang-quan-tri { background: var(--nen); }                                    /* nền trang xám xanh nhạt */
+.thanh-quan-tri { background: var(--nba-toi); }                                /* thanh trên xanh đen */
+.trang-quan-tri .sidebar-admin .nav-link.active { background: var(--nba-toi); } /* mục menu đang chọn */
+.trang-quan-tri .table > thead th { background: var(--nba-toi); color: #fff; } /* đầu bảng xanh đen, chữ trắng */

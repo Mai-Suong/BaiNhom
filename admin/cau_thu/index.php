@@ -122,8 +122,10 @@ require __DIR__ . '/../../includes/admin_header.php';
 </div>
 
 <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-    <p class="text-muted small mt-3 mb-0">
-        Tổng: <?= $kq['tong'] ?> cầu thủ. Cầu thủ đã có thống kê trận đấu hoặc giải thưởng sẽ không xóa được.
+    <p class="small mb-0">
+        <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+        <strong>Lưu ý:</strong>
+        <span class="text-muted">Cầu thủ đã có thống kê trận đấu hoặc giải thưởng sẽ không xóa được.</span>
     </p>
     <?= phanTrang($kq['trang'], $kq['so_trang'], $loc) ?>
 </div>

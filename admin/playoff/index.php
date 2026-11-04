@@ -54,7 +54,6 @@ echo tkCss();
 <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
     <div>
         <h1 class="h3 mb-1">Playoff <?= e($tenMua) ?></h1>
-        <p class="text-muted mb-0">Nhánh đấu và tỉ số từng loạt</p>
     </div>
     <div class="d-flex flex-wrap align-items-center gap-3">
         <?= tkChonMua($dsMua, $maMua) ?>
@@ -68,7 +67,11 @@ echo tkCss();
     <div class="row g-3 align-items-end">
         <div class="col-lg-6">
             <h2 class="h6 mb-1">Dành cho quản trị viên</h2>
-            <p class="small text-muted mb-0">Tạo loạt từ bảng xếp hạng (hạt giống 1–8, 4–5, 3–6, 2–7 mỗi miền), rồi tạo các vòng kế tiếp khi vòng trước đã có đội thắng.</p>
+            <p class="small mb-0">
+                <i class="bi bi-info-circle-fill text-primary"></i>
+                <strong>Hướng dẫn:</strong>
+                <span class="text-muted">Tạo loạt từ bảng xếp hạng (hạt giống 1–8, 4–5, 3–6, 2–7 mỗi miền), rồi tạo các vòng kế tiếp khi vòng trước đã có đội thắng.</span>
+            </p>
         </div>
         <div class="col-lg-4">
             <label for="hd" class="form-label small fw-semibold">Thao tác</label>
