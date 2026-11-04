@@ -96,7 +96,7 @@ require __DIR__ . '/../includes/admin_header.php';
                     <?php endif; ?>
                     <?php foreach ($choKetQua as $t): ?>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>
+                            <span class="d-flex align-items-center flex-wrap gap-1">
                                 <span class="text-muted small me-2"><?= e(dsbThoiGian($t['thoi_gian'])) ?></span>
                                 <span class="d-inline-flex align-items-center gap-1"><?= gdHuyHieu($t['logo_khach'], $t['vt_khach'], $t['ten_doi_khach'], 22) ?><?= e($t['vt_khach']) ?></span>
                                 <span class="text-muted mx-1">@</span>
@@ -124,7 +124,7 @@ require __DIR__ . '/../includes/admin_header.php';
                         <?php $khachThang = (int) $t['diem_doi_khach'] > (int) $t['diem_doi_nha']; ?>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <span class="text-muted small"><?= e(dsbThoiGian($t['thoi_gian'])) ?></span>
-                            <span class="text-nowrap">
+                            <span class="d-flex align-items-center gap-1 text-nowrap">
                                 <span class="d-inline-flex align-items-center gap-1 <?= $khachThang ? 'fw-bold' : '' ?>"><?= gdHuyHieu($t['logo_khach'], $t['vt_khach'], $t['ten_doi_khach'], 22) ?><?= e($t['vt_khach']) ?> <?= (int) $t['diem_doi_khach'] ?></span>
                                 <span class="text-muted mx-1">-</span>
                                 <span class="d-inline-flex align-items-center gap-1 <?= $khachThang ? '' : 'fw-bold' ?>"><?= (int) $t['diem_doi_nha'] ?> <?= e($t['vt_nha']) ?><?= gdHuyHieu($t['logo_nha'], $t['vt_nha'], $t['ten_doi_nha'], 22) ?></span>
@@ -150,7 +150,7 @@ require __DIR__ . '/../includes/admin_header.php';
                         <?php foreach ($dsDoi as $i => $d): ?>
                             <tr>
                                 <td class="ps-3 text-muted"><?= $i + 1 ?></td>
-                                <td><span class="d-inline-flex align-items-center gap-2"><?= gdHuyHieu($d['logo'], $d['ten_viet_tat'], $d['ten_doi'], 22) ?><?= e($d['ten_doi']) ?></span></td>
+                                <td><span class="d-inline-flex align-items-center gap-2 align-middle"><?= gdHuyHieu($d['logo'], $d['ten_viet_tat'], $d['ten_doi'], 22) ?><?= e($d['ten_doi']) ?></span></td>
                                 <td class="text-end"><?= (int) $d['thang'] ?></td>
                                 <td class="text-end"><?= (int) $d['thua'] ?></td>
                                 <td class="text-end pe-3"><?= $d['ti_le_thang'] !== null ? e(number_format((float) $d['ti_le_thang'], 3)) : '-' ?></td>
