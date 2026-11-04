@@ -4,6 +4,7 @@ require_once __DIR__ . '/../../includes/init.php';
 yeuCauAdmin();
 require_once __DIR__ . '/../../includes/ham_san_thi_dau.php';
 require_once __DIR__ . '/../../includes/ham_trang_khach.php'; // hàm theo mùa (tkh...)
+require_once __DIR__ . '/../../includes/giao_dien_moi.php'; // gdHuyHieu(): logo đội (giao diện chung)
 
 $tuKhoa = trim((string) ($_GET['q'] ?? ''));
 $dsSan  = sanLayDanhSach($tuKhoa);
@@ -17,7 +18,7 @@ $doiChuNha = [];
 foreach (tkhLayDanhSachDoi($maMua) as $doi) {
     $sanNha = tkhLaySanNhaMua($doi, $mua);
     if ($sanNha) {
-        $doiChuNha[(int) $sanNha['ma_san']][] = $doi['ten_viet_tat'];
+        $doiChuNha[(int) $sanNha['ma_san']][] = $doi;
     }
 }
 $soTranMua = $maMua !== null ? sanDemTranTheoMua($maMua) : [];
@@ -102,7 +103,12 @@ require __DIR__ . '/../../includes/admin_header.php';
                     <td><?= e($san['tieu_bang']) ?></td>
                     <td class="text-end"><?= $san['suc_chua'] !== null ? number_format((int) $san['suc_chua'], 0, ',', '.') : '' ?></td>
                     <td class="text-end"><?= e($san['nam_khanh_thanh']) ?></td>
-                    <td><?= isset($doiChuNha[(int) $san['ma_san']]) ? e(implode(', ', $doiChuNha[(int) $san['ma_san']])) : '<span class="text-muted">-</span>' ?></td>
+                    <td>
+                        <?php foreach ($doiChuNha[(int) $san['ma_san']] ?? [] as $doi): ?>
+                            <span class="d-inline-flex align-items-center gap-1 me-2" title="<?= e($doi['ten_doi']) ?>"><?= gdHuyHieu($doi['logo'], $doi['ten_viet_tat'], $doi['ten_doi'], 22) ?><?= e($doi['ten_viet_tat']) ?></span>
+                        <?php endforeach; ?>
+                        <?php if (!isset($doiChuNha[(int) $san['ma_san']])): ?><span class="text-muted">-</span><?php endif; ?>
+                    </td>
                     <td class="text-end"><?= (int) ($soTranMua[(int) $san['ma_san']] ?? 0) ?></td>
                     <td class="text-end text-nowrap">
                         <a class="btn btn-sm btn-outline-primary"

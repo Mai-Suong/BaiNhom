@@ -256,7 +256,8 @@ function tkhLayLichMua(int $maDoi, int $maMuaGiai, int $soTran = 5): array
 {
     $soTran = max(1, $soTran);
     $st = ketNoi()->prepare(
-        "SELECT td.*, dn.ten_doi AS ten_doi_nha, dk.ten_doi AS ten_doi_khach, s.ten_san
+        "SELECT td.*, dn.ten_doi AS ten_doi_nha, dk.ten_doi AS ten_doi_khach, s.ten_san,
+                dn.ten_viet_tat AS vt_nha, dn.logo AS logo_nha, dk.ten_viet_tat AS vt_khach, dk.logo AS logo_khach
            FROM tran_dau td
            JOIN doi_bong dn ON dn.ma_doi = td.ma_doi_nha
            JOIN doi_bong dk ON dk.ma_doi = td.ma_doi_khach
@@ -275,7 +276,8 @@ function tkhLayKetQuaMua(int $maDoi, int $maMuaGiai, int $soTran = 5): array
 {
     $soTran = max(1, $soTran);
     $st = ketNoi()->prepare(
-        "SELECT td.*, dn.ten_doi AS ten_doi_nha, dk.ten_doi AS ten_doi_khach
+        "SELECT td.*, dn.ten_doi AS ten_doi_nha, dk.ten_doi AS ten_doi_khach,
+                dn.ten_viet_tat AS vt_nha, dn.logo AS logo_nha, dk.ten_viet_tat AS vt_khach, dk.logo AS logo_khach
            FROM tran_dau td
            JOIN doi_bong dn ON dn.ma_doi = td.ma_doi_nha
            JOIN doi_bong dk ON dk.ma_doi = td.ma_doi_khach

@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../../includes/init.php';
 yeuCauAdmin();
 require_once __DIR__ . '/../../includes/ham_phan_bang.php';
+require_once __DIR__ . '/../../includes/giao_dien_moi.php'; // gdHuyHieu(): logo đội (giao diện chung)
 
 $dsMua = pbLayDsMua();
 $mua   = pbChonMua($dsMua, (int) ($_GET['mua'] ?? 0));
@@ -102,7 +103,7 @@ require __DIR__ . '/../../includes/admin_header.php';
                                     <span class="text-muted">(<?= count($doiKv) ?>/<?= PB_TOI_DA_MOI_KHU_VUC ?>)</span>
                                 </div>
                                 <?php foreach ($doiKv as $doi): ?>
-                                    <span class="badge text-bg-light border me-1 mb-1" title="<?= e($doi['ten_doi']) ?>"><?= e($doi['ten_viet_tat']) ?></span>
+                                    <span class="badge text-bg-light border me-1 mb-1 d-inline-flex align-items-center gap-1" title="<?= e($doi['ten_doi']) ?>"><?= gdHuyHieu($doi['logo'], $doi['ten_viet_tat'], $doi['ten_doi'], 18) ?><?= e($doi['ten_viet_tat']) ?></span>
                                 <?php endforeach; ?>
                                 <?php if (!$doiKv): ?><span class="text-muted small">Chưa có đội</span><?php endif; ?>
                             </div>
@@ -162,7 +163,7 @@ require __DIR__ . '/../../includes/admin_header.php';
                 <?php endif; ?>
                 <?php foreach ($dsDoi as $doi): ?>
                     <tr>
-                        <td class="fw-semibold"><?= e($doi['ten_doi']) ?></td>
+                        <td class="fw-semibold"><span class="d-inline-flex align-items-center gap-2"><?= gdHuyHieu($doi['logo'], $doi['ten_viet_tat'], $doi['ten_doi'], 26) ?><?= e($doi['ten_doi']) ?></span></td>
                         <td><?= e($doi['ten_viet_tat']) ?></td>
                         <td class="text-end"><?= (int) $doi['so_tran'] ?></td>
                         <td>

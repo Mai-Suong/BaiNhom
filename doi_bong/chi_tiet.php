@@ -6,6 +6,7 @@
 require_once __DIR__ . '/../includes/init.php';
 require_once __DIR__ . '/../includes/ham_trang_khach.php';
 require_once __DIR__ . '/../includes/ham_trao_giai.php'; // (TV3) layDanhHieuHLV, TRANG_THAI_CT
+require_once __DIR__ . '/../includes/giao_dien_moi.php';  // gdHuyHieu(): logo đội (giao diện chung)
 
 $dsMua = tkhLayDsMua();
 $mua   = tkhChonMua($dsMua, (int) ($_GET['mua'] ?? 0));
@@ -176,7 +177,7 @@ require __DIR__ . '/../includes/header.php';
                     <?php foreach ($doiHinh as $ct): ?>
                         <tr>
                             <?php if ($laHienTai || !$mua): ?><td class="fw-semibold"><?= $ct['so_ao'] !== null ? '#' . (int) $ct['so_ao'] : '' ?></td><?php endif; ?>
-                            <td><a href="<?= url('/cau_thu/ho_so.php?id=' . (int) $ct['ma_cau_thu']) ?>"><?= e($ct['ho_ten']) ?></a></td>
+                            <td><span class="d-inline-flex align-items-center gap-2"><?= anhTron($ct['anh'], $ct['ho_ten'], 32) ?><a href="<?= url('/cau_thu/ho_so.php?id=' . (int) $ct['ma_cau_thu']) ?>"><?= e($ct['ho_ten']) ?></a></span></td>
                             <td><?= e($ct['vi_tri']) ?></td>
                             <td class="text-end"><?= $ct['chieu_cao_cm'] ? e($ct['chieu_cao_cm']) . ' cm' : '' ?></td>
                             <td class="text-end"><?= $ct['can_nang_kg'] ? e($ct['can_nang_kg']) . ' kg' : '' ?></td>
@@ -206,7 +207,11 @@ require __DIR__ . '/../includes/header.php';
                 <?php if (!$lich): ?><li class="list-group-item text-muted">Không còn trận chưa đấu trong mùa này.</li><?php endif; ?>
                 <?php foreach ($lich as $td): ?>
                     <li class="list-group-item">
-                        <div class="fw-semibold"><?= e($td['ten_doi_khach']) ?> <span class="text-muted">@</span> <?= e($td['ten_doi_nha']) ?></div>
+                        <div class="fw-semibold d-flex flex-wrap align-items-center gap-1">
+                            <?= gdHuyHieu($td['logo_khach'], $td['vt_khach'], $td['ten_doi_khach'], 22) ?><?= e($td['ten_doi_khach']) ?>
+                            <span class="text-muted mx-1">@</span>
+                            <?= gdHuyHieu($td['logo_nha'], $td['vt_nha'], $td['ten_doi_nha'], 22) ?><?= e($td['ten_doi_nha']) ?>
+                        </div>
                         <div class="small text-muted"><?= e($fmtNgay($td['thoi_gian'])) ?><?= $td['ten_san'] ? ' · ' . e($td['ten_san']) : '' ?>
                             <?= $td['trang_thai'] === 'hoan' ? ' · <span class="text-danger">Hoãn</span>' : '' ?></div>
                     </li>
@@ -229,8 +234,10 @@ require __DIR__ . '/../includes/header.php';
                     $thang = $laNha ? $td['diem_doi_nha'] > $td['diem_doi_khach'] : $td['diem_doi_khach'] > $td['diem_doi_nha']; ?>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div>
-                            <div><?= e($td['ten_doi_khach']) ?> <strong><?= (int) $td['diem_doi_khach'] ?></strong>
-                                 – <strong><?= (int) $td['diem_doi_nha'] ?></strong> <?= e($td['ten_doi_nha']) ?></div>
+                            <div class="d-flex flex-wrap align-items-center gap-1">
+                                <?= gdHuyHieu($td['logo_khach'], $td['vt_khach'], $td['ten_doi_khach'], 22) ?><?= e($td['ten_doi_khach']) ?> <strong><?= (int) $td['diem_doi_khach'] ?></strong>
+                                – <strong><?= (int) $td['diem_doi_nha'] ?></strong> <?= e($td['ten_doi_nha']) ?><?= gdHuyHieu($td['logo_nha'], $td['vt_nha'], $td['ten_doi_nha'], 22) ?>
+                            </div>
                             <div class="small text-muted"><?= e($fmtNgay($td['thoi_gian'])) ?></div>
                         </div>
                         <span class="badge <?= $thang ? 'text-bg-success' : 'text-bg-danger' ?>"><?= $thang ? 'Thắng' : 'Thua' ?></span>

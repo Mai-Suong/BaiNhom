@@ -22,7 +22,7 @@ const THU_MUC_ANH_HLV = 'hlv';
  */
 function hlvLayDanhSach(string $tuKhoa = '', string $locDoi = ''): array
 {
-    $sql = 'SELECT h.*, d.ten_doi, d.ten_viet_tat,
+    $sql = 'SELECT h.*, d.ten_doi, d.ten_viet_tat, d.logo,
                    (SELECT COUNT(*) FROM nhiem_ky_hlv nk WHERE nk.ma_hlv = h.ma_hlv) AS so_nhiem_ky
               FROM huan_luyen_vien h
               LEFT JOIN doi_bong d ON d.ma_doi = h.ma_doi
@@ -51,7 +51,7 @@ function hlvLayDanhSach(string $tuKhoa = '', string $locDoi = ''): array
 function hlvLayDanhSachTheoMua(string $tuKhoa, string $locDoi, int $maMuaGiai): array
 {
     $sql = 'SELECT h.*, nk.ma_doi AS nk_ma_doi, nk.vai_tro AS nk_vai_tro, nk.tam_quyen, nk.tu_ngay, nk.den_ngay,
-                   d.ten_doi AS nk_ten_doi,
+                   d.ten_doi AS nk_ten_doi, d.ten_viet_tat AS nk_vt, d.logo AS nk_logo,
                    (SELECT COUNT(*) FROM nhiem_ky_hlv x WHERE x.ma_hlv = h.ma_hlv) AS so_nhiem_ky
               FROM huan_luyen_vien h
               LEFT JOIN nhiem_ky_hlv nk ON nk.ma_hlv = h.ma_hlv AND nk.ma_mua_giai = ?
@@ -71,6 +71,7 @@ function hlvLayDanhSachTheoMua(string $tuKhoa, string $locDoi, int $maMuaGiai): 
         if ($r['nk_ma_doi'] !== null) {
             $ds[$ma]['ds_nhiem_ky'][] = [
                 'ma_doi' => (int) $r['nk_ma_doi'], 'ten_doi' => $r['nk_ten_doi'], 'vai_tro' => $r['nk_vai_tro'],
+                'ten_viet_tat' => $r['nk_vt'], 'logo' => $r['nk_logo'],
                 'tam_quyen' => (int) $r['tam_quyen'], 'tu_ngay' => $r['tu_ngay'], 'den_ngay' => $r['den_ngay'],
             ];
         }
@@ -257,7 +258,7 @@ function nkLayDsMua(): array
 function nkLayCuaHlv(int $maHlv): array
 {
     $st = ketNoi()->prepare(
-        'SELECT nk.*, mg.ten_mua_giai, mg.ngay_ket_thuc AS het_mua, d.ten_doi, d.ten_viet_tat
+        'SELECT nk.*, mg.ten_mua_giai, mg.ngay_ket_thuc AS het_mua, d.ten_doi, d.ten_viet_tat, d.logo
            FROM nhiem_ky_hlv nk
            JOIN mua_giai mg ON mg.ma_mua_giai = nk.ma_mua_giai
            JOIN doi_bong d  ON d.ma_doi = nk.ma_doi

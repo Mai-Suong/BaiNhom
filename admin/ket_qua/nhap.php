@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../../includes/init.php';
 yeuCauAdmin();
 require_once __DIR__ . '/../../includes/ham_ket_qua.php';
+require_once __DIR__ . '/../../includes/giao_dien_moi.php'; // gdHuyHieu(): logo đội (giao diện chung)
 
 $id   = (int) ($_GET['id'] ?? 0);
 $tran = $id ? kqLayTran($id) : null;
@@ -56,7 +57,11 @@ require __DIR__ . '/../../includes/admin_header.php';
 ?>
 
 <nav class="mb-2"><a href="<?= e($urlDs) ?>"><i class="bi bi-arrow-left"></i> Danh sách trận</a></nav>
-<h1 class="h3 mb-1"><?= e($tran['ten_doi_khach']) ?> <span class="text-muted">@</span> <?= e($tran['ten_doi_nha']) ?></h1>
+<h1 class="h3 mb-1 d-flex flex-wrap align-items-center gap-2">
+    <?= gdHuyHieu($tran['logo_khach'], $tran['vt_khach'], $tran['ten_doi_khach'], 40) ?><?= e($tran['ten_doi_khach']) ?>
+    <span class="text-muted">@</span>
+    <?= gdHuyHieu($tran['logo_nha'], $tran['vt_nha'], $tran['ten_doi_nha'], 40) ?><?= e($tran['ten_doi_nha']) ?>
+</h1>
 <p class="text-muted mb-3">
     <?= e(kqHienThoiGian($tran['thoi_gian'])) ?> · <?= e($tran['ten_san'] ?? 'Chưa có sân') ?> · Mùa <?= e($tran['ten_mua_giai']) ?>
     <?php if ($daCo): ?><span class="badge text-bg-success ms-1">Đã có kết quả</span><?php endif; ?>
@@ -95,7 +100,7 @@ require __DIR__ . '/../../includes/admin_header.php';
                     <?php foreach (['khach' => $tran['ten_doi_khach'], 'nha' => $tran['ten_doi_nha']] as $ben => $tenDoi): ?>
                         <tr>
                             <td class="text-start fw-semibold text-nowrap">
-                                <?= e($tenDoi) ?> <span class="text-muted small">(<?= $ben === 'nha' ? 'nhà' : 'khách' ?>)</span>
+                                <?= gdHuyHieu($tran['logo_' . $ben], $tran['vt_' . $ben], $tenDoi, 24) ?> <?= e($tenDoi) ?> <span class="text-muted small">(<?= $ben === 'nha' ? 'nhà' : 'khách' ?>)</span>
                             </td>
                             <?php for ($h = 1; $h <= $soHiep; $h++): ?>
                                 <td style="width: 72px">

@@ -48,7 +48,7 @@ require __DIR__ . '/../../includes/admin_header.php';
 
 <nav class="mb-2"><a href="<?= url('/admin/cau_thu/index.php') ?>"><i class="bi bi-arrow-left"></i> Danh sách cầu thủ</a></nav>
 <h1 class="h3 mb-3 d-flex align-items-center gap-2 flex-wrap">
-    Chấn thương: <?= e($ct['ho_ten']) ?> <?= nhanTrangThai($ct['trang_thai']) ?>
+    <?= anhCauThu($ct, 44) ?> Chấn thương: <?= e($ct['ho_ten']) ?> <?= nhanTrangThai($ct['trang_thai']) ?>
 </h1>
 
 <?php if ($loi !== ''): ?><div class="alert alert-danger"><?= e($loi) ?></div><?php endif; ?>
