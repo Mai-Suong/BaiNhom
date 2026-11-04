@@ -4,6 +4,7 @@ require_once __DIR__ . '/../../includes/init.php';
 yeuCauAdmin();
 require_once __DIR__ . '/../../includes/ham_huan_luyen_vien.php';
 require_once __DIR__ . '/../../includes/ham_trang_khach.php'; // chọn mùa (tkh...)
+require_once __DIR__ . '/../../includes/giao_dien_moi.php';   // gdHuyHieu(): logo đội (giống trang Cầu thủ)
 
 $tuKhoa = trim((string) ($_GET['q'] ?? ''));
 $locDoi = (string) ($_GET['doi'] ?? '');
@@ -27,6 +28,12 @@ if ($laHienTai) {
     $dsHlv = hlvLayDanhSachTheoMua($tuKhoa, $locDoi, $maMua);
 }
 $ngay = fn(?string $s) => $s ? date('d/m/Y', strtotime($s)) : '';
+
+// Logo + tên viết tắt của đội, tra theo tên đội (dùng cho cột "Đội")
+$doiTheoTen = [];
+foreach (ketNoi()->query('SELECT ten_doi, ten_viet_tat, logo FROM doi_bong')->fetchAll() as $d) {
+    $doiTheoTen[$d['ten_doi']] = $d;
+}
 
 $tieuDe = 'Quản lý huấn luyện viên';
 $menu   = 'hlv';
@@ -103,7 +110,13 @@ require __DIR__ . '/../../includes/admin_header.php';
                         <?php if (!$hlv['ds_nhiem_ky']): ?>
                             <span class="badge text-bg-light border"><?= $laHienTai ? 'Tự do' : 'Không dẫn dắt' ?></span>
                         <?php endif; ?>
-                        <?php foreach ($hlv['ds_nhiem_ky'] as $nk): ?><div><?= e($nk['ten_doi']) ?></div><?php endforeach; ?>
+                        <?php foreach ($hlv['ds_nhiem_ky'] as $nk): ?>
+                            <?php $dl = $doiTheoTen[$nk['ten_doi']] ?? null; ?>
+                            <div class="d-flex align-items-center gap-2">
+                                <?= gdHuyHieu($dl['logo'] ?? null, (string) ($dl['ten_viet_tat'] ?? ''), (string) $nk['ten_doi'], 22) ?>
+                                <?= e($nk['ten_doi']) ?>
+                            </div>
+                        <?php endforeach; ?>
                     </td>
                     <td>
                         <?php foreach ($hlv['ds_nhiem_ky'] ?: ($laHienTai ? [['vai_tro' => $hlv['vai_tro'], 'tam_quyen' => 0]] : []) as $nk): ?>
