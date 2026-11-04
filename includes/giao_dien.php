@@ -21,7 +21,7 @@ function tenDoiCoLogo(?string $logo, ?string $vietTat, ?string $tenDoi, string $
     if ($maDoi !== null) {
         $ten = '<a href="' . e(url('/doi_bong/chi_tiet.php?id=' . $maDoi)) . '">' . $ten . '</a>';
     }
-    return '<span class="d-inline-flex align-items-center gap-2">'
+    return '<span class="d-inline-flex align-items-center gap-2 align-middle">'
          . gdHuyHieu($logo, (string) ($vietTat ?? ''), $tenDoi, $co) . $ten . '</span>';
 }
 

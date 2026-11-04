@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../includes/init.php';
 yeuCauAdmin(); // BẮT BUỘC ở đầu mọi trang admin
 require_once __DIR__ . '/../includes/ham_dashboard.php'; // Dashboard (TV4): SQL nằm trong file này
+require_once __DIR__ . '/../includes/giao_dien_moi.php'; // gdHuyHieu(): logo đội (giao diện chung)
 
 // Số liệu nhanh toàn hệ thống (giữ nguyên 4 ô của TV1)
 $soLieu = [
@@ -95,9 +96,11 @@ require __DIR__ . '/../includes/admin_header.php';
                     <?php endif; ?>
                     <?php foreach ($choKetQua as $t): ?>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>
+                            <span class="d-flex align-items-center flex-wrap gap-1">
                                 <span class="text-muted small me-2"><?= e(dsbThoiGian($t['thoi_gian'])) ?></span>
-                                <?= e($t['vt_khach']) ?> <span class="text-muted">@</span> <span class="fw-semibold"><?= e($t['vt_nha']) ?></span>
+                                <span class="d-inline-flex align-items-center gap-1"><?= gdHuyHieu($t['logo_khach'], $t['vt_khach'], $t['ten_doi_khach'], 22) ?><?= e($t['vt_khach']) ?></span>
+                                <span class="text-muted mx-1">@</span>
+                                <span class="d-inline-flex align-items-center gap-1 fw-semibold"><?= gdHuyHieu($t['logo_nha'], $t['vt_nha'], $t['ten_doi_nha'], 22) ?><?= e($t['vt_nha']) ?></span>
                             </span>
                             <a class="btn btn-sm btn-primary" href="<?= url('/admin/ket_qua/nhap.php?id=' . (int) $t['ma_tran']) ?>">Nhập</a>
                         </li>
@@ -121,10 +124,10 @@ require __DIR__ . '/../includes/admin_header.php';
                         <?php $khachThang = (int) $t['diem_doi_khach'] > (int) $t['diem_doi_nha']; ?>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <span class="text-muted small"><?= e(dsbThoiGian($t['thoi_gian'])) ?></span>
-                            <span class="text-nowrap">
-                                <span class="<?= $khachThang ? 'fw-bold' : '' ?>"><?= e($t['vt_khach']) ?> <?= (int) $t['diem_doi_khach'] ?></span>
-                                <span class="text-muted">-</span>
-                                <span class="<?= $khachThang ? '' : 'fw-bold' ?>"><?= (int) $t['diem_doi_nha'] ?> <?= e($t['vt_nha']) ?></span>
+                            <span class="d-flex align-items-center gap-1 text-nowrap">
+                                <span class="d-inline-flex align-items-center gap-1 <?= $khachThang ? 'fw-bold' : '' ?>"><?= gdHuyHieu($t['logo_khach'], $t['vt_khach'], $t['ten_doi_khach'], 22) ?><?= e($t['vt_khach']) ?> <?= (int) $t['diem_doi_khach'] ?></span>
+                                <span class="text-muted mx-1">-</span>
+                                <span class="d-inline-flex align-items-center gap-1 <?= $khachThang ? '' : 'fw-bold' ?>"><?= (int) $t['diem_doi_nha'] ?> <?= e($t['vt_nha']) ?><?= gdHuyHieu($t['logo_nha'], $t['vt_nha'], $t['ten_doi_nha'], 22) ?></span>
                             </span>
                             <a class="small" href="<?= url('/ket_qua/index.php?tran=' . (int) $t['ma_tran']) ?>">Chi tiết</a>
                         </li>
@@ -147,7 +150,7 @@ require __DIR__ . '/../includes/admin_header.php';
                         <?php foreach ($dsDoi as $i => $d): ?>
                             <tr>
                                 <td class="ps-3 text-muted"><?= $i + 1 ?></td>
-                                <td><?= e($d['ten_doi']) ?></td>
+                                <td><span class="d-inline-flex align-items-center gap-2 align-middle"><?= gdHuyHieu($d['logo'], $d['ten_viet_tat'], $d['ten_doi'], 22) ?><?= e($d['ten_doi']) ?></span></td>
                                 <td class="text-end"><?= (int) $d['thang'] ?></td>
                                 <td class="text-end"><?= (int) $d['thua'] ?></td>
                                 <td class="text-end pe-3"><?= $d['ti_le_thang'] !== null ? e(number_format((float) $d['ti_le_thang'], 3)) : '-' ?></td>

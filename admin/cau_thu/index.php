@@ -99,7 +99,7 @@ require __DIR__ . '/../../includes/admin_header.php';
                 <tr>
                     <td><?= anhCauThu($ct, 38) ?></td>
                     <td class="text-end fw-semibold"><?= $ct['so_ao'] !== null ? '#' . (int) $ct['so_ao'] : '' ?></td>
-                    <td><a class="fw-semibold" href="<?= url('/cau_thu/ho_so.php?id=' . (int) $ct['ma_cau_thu']) ?>"><?= e($ct['ho_ten']) ?></a></td>
+                    <td><a class="fw-semibold link-body-emphasis link-underline-opacity-0 link-underline-opacity-75-hover" href="<?= url('/cau_thu/ho_so.php?id=' . (int) $ct['ma_cau_thu']) ?>"><?= e($ct['ho_ten']) ?></a></td>
                     <td><?= e($ct['vi_tri']) ?></td>
                     <td><?= tenDoiCoLogo($ct['logo_doi'] ?? null, $ct['ten_viet_tat'] ?? null, $ct['ten_doi']) ?></td>
                     <td><?= e($ct['quoc_tich'] ?? '') ?></td>
