@@ -163,7 +163,7 @@ require __DIR__ . '/../../includes/admin_header.php';
                 <?php endif; ?>
                 <?php foreach ($dsDoi as $doi): ?>
                     <tr>
-                        <td class="fw-semibold"><span class="d-inline-flex align-items-center gap-2"><?= gdHuyHieu($doi['logo'], $doi['ten_viet_tat'], $doi['ten_doi'], 26) ?><?= e($doi['ten_doi']) ?></span></td>
+                        <td class="fw-semibold"><span class="d-inline-flex align-items-center align-middle gap-2"><?= gdHuyHieu($doi['logo'], $doi['ten_viet_tat'], $doi['ten_doi'], 26) ?><?= e($doi['ten_doi']) ?></span></td>
                         <td><?= e($doi['ten_viet_tat']) ?></td>
                         <td class="text-end"><?= (int) $doi['so_tran'] ?></td>
                         <td>

@@ -88,11 +88,11 @@ require __DIR__ . '/../../includes/admin_header.php';
                 <?php $daCo = $t['trang_thai'] === 'da_dau'; ?>
                 <tr>
                     <td class="text-nowrap"><?= e(kqHienThoiGian($t['thoi_gian'])) ?></td>
-                    <td class="text-nowrap">
+                    <td class="text-nowrap"><div class="d-flex align-items-center gap-1">
                         <span class="d-inline-flex align-items-center gap-1" title="<?= e($t['ten_doi_khach']) ?>"><?= gdHuyHieu($t['logo_khach'], $t['vt_khach'], $t['ten_doi_khach'], 22) ?><?= e($t['vt_khach']) ?></span>
                         <span class="text-muted mx-1">@</span>
                         <span class="d-inline-flex align-items-center gap-1 fw-semibold" title="<?= e($t['ten_doi_nha']) ?>"><?= gdHuyHieu($t['logo_nha'], $t['vt_nha'], $t['ten_doi_nha'], 22) ?><?= e($t['vt_nha']) ?></span>
-                    </td>
+                    </div></td>
                     <td class="text-center text-nowrap fw-semibold">
                         <?= $daCo ? (int) $t['diem_doi_khach'] . ' - ' . (int) $t['diem_doi_nha'] : '' ?>
                     </td>

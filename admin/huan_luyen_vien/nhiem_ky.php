@@ -98,7 +98,7 @@ require __DIR__ . '/../../includes/admin_header.php';
             <?php foreach ($dsNhiemKy as $nk): ?>
                 <tr<?= (int) $nk['ma_nhiem_ky'] === $maSua ? ' class="table-warning"' : '' ?>>
                     <td class="fw-semibold"><?= e($nk['ten_mua_giai']) ?></td>
-                    <td><span class="d-inline-flex align-items-center gap-2"><?= gdHuyHieu($nk['logo'], $nk['ten_viet_tat'], $nk['ten_doi'], 22) ?><?= e($nk['ten_doi']) ?></span></td>
+                    <td><span class="d-inline-flex align-items-center align-middle gap-2"><?= gdHuyHieu($nk['logo'], $nk['ten_viet_tat'], $nk['ten_doi'], 22) ?><?= e($nk['ten_doi']) ?></span></td>
                     <td>
                         <span class="badge <?= $nk['vai_tro'] === 'truong' ? 'text-bg-primary' : 'text-bg-secondary' ?>">
                             <?= e(VAI_TRO_HLV[$nk['vai_tro']] ?? $nk['vai_tro']) ?></span>

@@ -105,7 +105,7 @@ require __DIR__ . '/../../includes/admin_header.php';
                     <td class="text-end"><?= e($san['nam_khanh_thanh']) ?></td>
                     <td>
                         <?php foreach ($doiChuNha[(int) $san['ma_san']] ?? [] as $doi): ?>
-                            <span class="d-inline-flex align-items-center gap-1 me-2" title="<?= e($doi['ten_doi']) ?>"><?= gdHuyHieu($doi['logo'], $doi['ten_viet_tat'], $doi['ten_doi'], 22) ?><?= e($doi['ten_viet_tat']) ?></span>
+                            <span class="d-inline-flex align-items-center align-middle gap-1 me-2" title="<?= e($doi['ten_doi']) ?>"><?= gdHuyHieu($doi['logo'], $doi['ten_viet_tat'], $doi['ten_doi'], 22) ?><?= e($doi['ten_viet_tat']) ?></span>
                         <?php endforeach; ?>
                         <?php if (!isset($doiChuNha[(int) $san['ma_san']])): ?><span class="text-muted">-</span><?php endif; ?>
                     </td>

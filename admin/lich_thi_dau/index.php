@@ -116,11 +116,11 @@ require __DIR__ . '/../../includes/admin_header.php';
             <?php foreach ($dsTran as $t): ?>
                 <tr>
                     <td class="text-nowrap"><?= e(ltdHienThoiGian($t['thoi_gian'])) ?></td>
-                    <td class="text-nowrap">
+                    <td class="text-nowrap"><div class="d-flex align-items-center gap-1">
                         <span class="d-inline-flex align-items-center gap-1" title="<?= e($t['ten_doi_khach']) ?>"><?= gdHuyHieu($t['logo_khach'], $t['vt_khach'], $t['ten_doi_khach'], 22) ?><?= e($t['vt_khach']) ?></span>
                         <span class="text-muted mx-1">@</span>
                         <span class="d-inline-flex align-items-center gap-1 fw-semibold" title="<?= e($t['ten_doi_nha']) ?>"><?= gdHuyHieu($t['logo_nha'], $t['vt_nha'], $t['ten_doi_nha'], 22) ?><?= e($t['vt_nha']) ?></span>
-                    </td>
+                    </div></td>
                     <td><?= e($t['ten_san'] ?? '') ?></td>
                     <td>
                         <?= e(LTD_GIAI_DOAN[$t['giai_doan']] ?? $t['giai_doan']) ?>

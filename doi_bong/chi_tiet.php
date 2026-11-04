@@ -177,7 +177,7 @@ require __DIR__ . '/../includes/header.php';
                     <?php foreach ($doiHinh as $ct): ?>
                         <tr>
                             <?php if ($laHienTai || !$mua): ?><td class="fw-semibold"><?= $ct['so_ao'] !== null ? '#' . (int) $ct['so_ao'] : '' ?></td><?php endif; ?>
-                            <td><span class="d-inline-flex align-items-center gap-2"><?= anhTron($ct['anh'], $ct['ho_ten'], 32) ?><a href="<?= url('/cau_thu/ho_so.php?id=' . (int) $ct['ma_cau_thu']) ?>"><?= e($ct['ho_ten']) ?></a></span></td>
+                            <td><span class="d-inline-flex align-items-center align-middle gap-2"><?= anhTron($ct['anh'], $ct['ho_ten'], 32) ?><a href="<?= url('/cau_thu/ho_so.php?id=' . (int) $ct['ma_cau_thu']) ?>"><?= e($ct['ho_ten']) ?></a></span></td>
                             <td><?= e($ct['vi_tri']) ?></td>
                             <td class="text-end"><?= $ct['chieu_cao_cm'] ? e($ct['chieu_cao_cm']) . ' cm' : '' ?></td>
                             <td class="text-end"><?= $ct['can_nang_kg'] ? e($ct['can_nang_kg']) . ' kg' : '' ?></td>

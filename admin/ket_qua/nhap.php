@@ -100,7 +100,7 @@ require __DIR__ . '/../../includes/admin_header.php';
                     <?php foreach (['khach' => $tran['ten_doi_khach'], 'nha' => $tran['ten_doi_nha']] as $ben => $tenDoi): ?>
                         <tr>
                             <td class="text-start fw-semibold text-nowrap">
-                                <?= gdHuyHieu($tran['logo_' . $ben], $tran['vt_' . $ben], $tenDoi, 24) ?> <?= e($tenDoi) ?> <span class="text-muted small">(<?= $ben === 'nha' ? 'nhà' : 'khách' ?>)</span>
+                                <span class="d-inline-flex align-items-center gap-2 align-middle"><?= gdHuyHieu($tran['logo_' . $ben], $tran['vt_' . $ben], $tenDoi, 24) ?><?= e($tenDoi) ?></span> <span class="text-muted small">(<?= $ben === 'nha' ? 'nhà' : 'khách' ?>)</span>
                             </td>
                             <?php for ($h = 1; $h <= $soHiep; $h++): ?>
                                 <td style="width: 72px">
