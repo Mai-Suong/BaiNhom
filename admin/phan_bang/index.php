@@ -153,7 +153,7 @@ require __DIR__ . '/../../includes/admin_header.php';
                 <tr>
                     <th>Đội</th>
                     <th style="width: 90px">Mã</th>
-                    <th class="text-end" style="width: 130px">Trận mùa thường</th>
+                    <th class="text-center text-nowrap px-4" style="width: 190px">Trận mùa thường</th>
                     <th style="width: 320px">Khu vực mùa <?= e($mua['ten_mua_giai']) ?></th>
                 </tr>
                 </thead>
@@ -165,7 +165,7 @@ require __DIR__ . '/../../includes/admin_header.php';
                     <tr>
                         <td class="fw-semibold"><span class="d-inline-flex align-items-center align-middle gap-2"><?= gdHuyHieu($doi['logo'], $doi['ten_viet_tat'], $doi['ten_doi'], 26) ?><?= e($doi['ten_doi']) ?></span></td>
                         <td><?= e($doi['ten_viet_tat']) ?></td>
-                        <td class="text-end"><?= (int) $doi['so_tran'] ?></td>
+                        <td class="text-center"><?= (int) $doi['so_tran'] ?></td>
                         <td>
                             <select class="form-select form-select-sm" name="khu_vuc[<?= (int) $doi['ma_doi'] ?>]">
                                 <option value="">Chưa phân bảng</option>

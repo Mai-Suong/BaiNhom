@@ -83,9 +83,9 @@ require __DIR__ . '/../../includes/admin_header.php';
             <tr>
                 <th style="width: 56px">Ảnh</th>
                 <th>Họ tên</th>
-                <th>Đội</th>
-                <th>Vai trò</th>
-                <th>Quốc tịch</th>
+                <th class="text-center">Đội</th>
+                <th class="text-center">Vai trò</th>
+                <th class="text-center">Quốc tịch</th>
                 <th>Ngày sinh</th>
                 <th><?= $laHienTai ? 'Dẫn dắt từ' : 'Thời gian trong mùa' ?></th>
                 <th class="text-end" style="width: 250px"></th>
@@ -101,15 +101,15 @@ require __DIR__ . '/../../includes/admin_header.php';
                         <?= anhTron($hlv['anh'], $hlv['ho_ten'], 40) ?>
                     </td>
                     <td class="fw-semibold"><?= e($hlv['ho_ten']) ?></td>
-                    <td>
+                    <td class="text-center">
                         <?php if (!$hlv['ds_nhiem_ky']): ?>
                             <span class="badge text-bg-light border"><?= $laHienTai ? 'Tự do' : 'Không dẫn dắt' ?></span>
                         <?php endif; ?>
                         <?php foreach ($hlv['ds_nhiem_ky'] as $nk): ?>
-                            <div class="d-flex align-items-center gap-2"><?= gdHuyHieu($nk['logo'], $nk['ten_viet_tat'], $nk['ten_doi'], 22) ?><?= e($nk['ten_doi']) ?></div>
+                            <div class="d-flex align-items-center justify-content-center gap-2"><?= gdHuyHieu($nk['logo'], $nk['ten_viet_tat'], $nk['ten_doi'], 22) ?><?= e($nk['ten_doi']) ?></div>
                         <?php endforeach; ?>
                     </td>
-                    <td>
+                    <td class="text-center">
                         <?php foreach ($hlv['ds_nhiem_ky'] ?: ($laHienTai ? [['vai_tro' => $hlv['vai_tro'], 'tam_quyen' => 0]] : []) as $nk): ?>
                             <div>
                                 <span class="badge <?= $nk['vai_tro'] === 'truong' ? 'text-bg-primary' : 'text-bg-secondary' ?>">
@@ -119,7 +119,7 @@ require __DIR__ . '/../../includes/admin_header.php';
                             </div>
                         <?php endforeach; ?>
                     </td>
-                    <td><?= e($hlv['quoc_tich']) ?></td>
+                    <td class="text-center"><?= e($hlv['quoc_tich']) ?></td>
                     <td><?= e($ngay($hlv['ngay_sinh'])) ?></td>
                     <td class="text-nowrap">
                         <?php foreach ($hlv['ds_nhiem_ky'] as $nk): ?>

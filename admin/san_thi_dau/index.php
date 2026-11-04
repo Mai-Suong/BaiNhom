@@ -69,10 +69,10 @@ require __DIR__ . '/../../includes/admin_header.php';
                 <th>Tên sân</th>
                 <th>Thành phố</th>
                 <th>Bang / tỉnh</th>
-                <th class="text-end">Sức chứa</th>
-                <th class="text-end">Khánh thành</th>
-                <th>Đội chủ nhà</th>
-                <th class="text-end" title="Số trận tổ chức ở sân trong mùa">Số trận</th>
+                <th class="text-center">Sức chứa</th>
+                <th class="text-center">Khánh thành</th>
+                <th class="text-center">Đội chủ nhà</th>
+                <th class="text-center" title="Số trận tổ chức ở sân trong mùa">Số trận</th>
                 <th class="text-end" style="width: 150px"></th>
             </tr>
             </thead>
@@ -101,15 +101,15 @@ require __DIR__ . '/../../includes/admin_header.php';
                     </td>
                     <td><?= e($san['thanh_pho']) ?></td>
                     <td><?= e($san['tieu_bang']) ?></td>
-                    <td class="text-end"><?= $san['suc_chua'] !== null ? number_format((int) $san['suc_chua'], 0, ',', '.') : '' ?></td>
-                    <td class="text-end"><?= e($san['nam_khanh_thanh']) ?></td>
-                    <td>
+                    <td class="text-center"><?= $san['suc_chua'] !== null ? number_format((int) $san['suc_chua'], 0, ',', '.') : '' ?></td>
+                    <td class="text-center"><?= e($san['nam_khanh_thanh']) ?></td>
+                    <td class="text-center text-nowrap">
                         <?php foreach ($doiChuNha[(int) $san['ma_san']] ?? [] as $doi): ?>
-                            <span class="d-inline-flex align-items-center align-middle gap-1 me-2" title="<?= e($doi['ten_doi']) ?>"><?= gdHuyHieu($doi['logo'], $doi['ten_viet_tat'], $doi['ten_doi'], 22) ?><?= e($doi['ten_viet_tat']) ?></span>
+                            <span class="d-inline-flex align-items-center align-middle gap-1 mx-1" title="<?= e($doi['ten_doi']) ?>"><?= gdHuyHieu($doi['logo'], $doi['ten_viet_tat'], $doi['ten_doi'], 22) ?><?= e($doi['ten_viet_tat']) ?></span>
                         <?php endforeach; ?>
                         <?php if (!isset($doiChuNha[(int) $san['ma_san']])): ?><span class="text-muted">-</span><?php endif; ?>
                     </td>
-                    <td class="text-end"><?= (int) ($soTranMua[(int) $san['ma_san']] ?? 0) ?></td>
+                    <td class="text-center"><?= (int) ($soTranMua[(int) $san['ma_san']] ?? 0) ?></td>
                     <td class="text-end text-nowrap">
                         <a class="btn btn-sm btn-outline-primary"
                            href="<?= url('/admin/san_thi_dau/form.php?id=' . (int) $san['ma_san']) ?>">Sửa</a>

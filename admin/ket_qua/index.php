@@ -71,11 +71,11 @@ require __DIR__ . '/../../includes/admin_header.php';
         <table class="table table-hover align-middle mb-0">
             <thead class="table-light">
             <tr>
-                <th>Thời gian</th>
-                <th>Trận (khách @ nhà)</th>
-                <th class="text-center">Tỉ số</th>
-                <th>Ghi chú</th>
-                <th class="text-end" style="width: 150px"></th>
+                <th style="width: 16%">Thời gian</th>
+                <th class="text-center" style="width: 22%">Trận (khách @ nhà)</th>
+                <th class="text-center" style="width: 22%">Tỉ số</th>
+                <th class="text-center" style="width: 22%">Ghi chú</th>
+                <th class="text-end"></th>
             </tr>
             </thead>
             <tbody>
@@ -88,7 +88,7 @@ require __DIR__ . '/../../includes/admin_header.php';
                 <?php $daCo = $t['trang_thai'] === 'da_dau'; ?>
                 <tr>
                     <td class="text-nowrap"><?= e(kqHienThoiGian($t['thoi_gian'])) ?></td>
-                    <td class="text-nowrap"><div class="d-flex align-items-center gap-1">
+                    <td class="text-nowrap"><div class="d-flex align-items-center justify-content-center gap-1">
                         <span class="d-inline-flex align-items-center gap-1" title="<?= e($t['ten_doi_khach']) ?>"><?= gdHuyHieu($t['logo_khach'], $t['vt_khach'], $t['ten_doi_khach'], 22) ?><?= e($t['vt_khach']) ?></span>
                         <span class="text-muted mx-1">@</span>
                         <span class="d-inline-flex align-items-center gap-1 fw-semibold" title="<?= e($t['ten_doi_nha']) ?>"><?= gdHuyHieu($t['logo_nha'], $t['vt_nha'], $t['ten_doi_nha'], 22) ?><?= e($t['vt_nha']) ?></span>
@@ -96,7 +96,7 @@ require __DIR__ . '/../../includes/admin_header.php';
                     <td class="text-center text-nowrap fw-semibold">
                         <?= $daCo ? (int) $t['diem_doi_khach'] . ' - ' . (int) $t['diem_doi_nha'] : '' ?>
                     </td>
-                    <td class="small text-muted">
+                    <td class="small text-muted text-center">
                         <?php if ($daCo && (int) $t['so_hiep'] > KQ_SO_HIEP_CHINH): ?><?= e(kqTenHiep((int) $t['so_hiep'])) ?><?php endif; ?>
                         <?php if ($t['trang_thai'] === 'hoan'): ?><span class="badge text-bg-warning">Hoãn</span><?php endif; ?>
                         <?php if ($t['trang_thai'] === 'chua_dau' && strtotime($t['thoi_gian']) > time()): ?>Chưa tới giờ đấu<?php endif; ?>
