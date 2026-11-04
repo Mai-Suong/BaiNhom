@@ -126,7 +126,11 @@ require __DIR__ . '/../../includes/admin_header.php';
             </div>
             <div class="mt-4 d-flex align-items-center flex-wrap gap-3">
                 <button class="btn btn-primary" type="submit"><i class="bi bi-award"></i> Trao giải</button>
-                <span class="text-muted small">Giải đã trao trong mùa này sẽ được thay người nhận.</span>
+                <p class="small mb-0">
+                    <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+                    <strong>Lưu ý:</strong>
+                    <span class="text-muted">Giải đã trao trong mùa này sẽ được thay người nhận.</span>
+                </p>
             </div>
         </form>
     </div>

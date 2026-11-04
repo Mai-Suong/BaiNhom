@@ -151,7 +151,11 @@ require __DIR__ . '/../../includes/admin_header.php';
 </div>
 
 <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-2">
-    <p class="text-muted small mb-0">Tổng: <?= $tongTran ?> trận. Tỉ số ghi theo thứ tự khách - nhà. Trận đã đấu không xóa được.</p>
+    <p class="small mb-0">
+        <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+        <strong>Lưu ý:</strong>
+        <span class="text-muted">Tỉ số ghi theo thứ tự khách - nhà. Trận đã đấu không xóa được.</span>
+    </p>
     <?php if ($soTrang > 1): ?>
         <nav>
             <ul class="pagination pagination-sm mb-0">

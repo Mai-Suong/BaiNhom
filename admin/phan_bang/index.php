@@ -194,9 +194,11 @@ require __DIR__ . '/../../includes/admin_header.php';
         </div>
     <?php endif; ?>
 </form>
-<p class="text-muted small mt-2">
-    Mỗi khu vực tối đa <?= PB_TOI_DA_MOI_KHU_VUC ?> đội. Đội đã có trận mùa thường trong mùa thì không bỏ khỏi phân bảng được
-    (bảng xếp hạng chỉ tính đội có phân bảng).
+<p class="small mb-0">
+        <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+        <strong>Lưu ý:</strong>
+        <span class="text-muted">Mỗi khu vực tối đa <?= PB_TOI_DA_MOI_KHU_VUC ?> đội. Đội đã có trận mùa thường trong mùa thì không bỏ khỏi phân bảng được
+    (bảng xếp hạng chỉ tính đội có phân bảng).</span>
 </p>
 
 <?php require __DIR__ . '/../../includes/admin_footer.php'; ?>

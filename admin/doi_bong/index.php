@@ -119,6 +119,10 @@ require __DIR__ . '/../../includes/admin_header.php';
         </table>
     </div>
 </div>
-<p class="text-muted small mt-2">Tổng: <?= count($dsDoi) ?> đội. Đội còn cầu thủ hoặc đã có trận đấu sẽ không xóa được.</p>
+<p class="small mb-0">
+    <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+    <strong>Lưu ý:</strong>
+    <span class="text-muted">Đội còn cầu thủ hoặc đã có trận đấu sẽ không xóa được.</span>
+</p>
 
 <?php require __DIR__ . '/../../includes/admin_footer.php'; ?>
