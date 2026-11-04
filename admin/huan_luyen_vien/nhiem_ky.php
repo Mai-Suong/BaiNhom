@@ -8,6 +8,7 @@
 require_once __DIR__ . '/../../includes/init.php';
 yeuCauAdmin();
 require_once __DIR__ . '/../../includes/ham_huan_luyen_vien.php';
+require_once __DIR__ . '/../../includes/giao_dien_moi.php'; // gdHuyHieu(): logo đội (giao diện chung)
 
 $maHlv = (int) ($_GET['hlv'] ?? 0);
 $hlv   = $maHlv ? hlvLay($maHlv) : null;
@@ -71,7 +72,7 @@ require __DIR__ . '/../../includes/admin_header.php';
 
 <nav class="mb-2"><a href="<?= url('/admin/huan_luyen_vien/index.php') ?>"><i class="bi bi-arrow-left"></i> Danh sách HLV</a></nav>
 <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
-    <h1 class="h3 mb-0">Lịch sử dẫn dắt: <?= e($hlv['ho_ten']) ?></h1>
+    <h1 class="h3 mb-0 d-flex align-items-center gap-2"><?= anhTron($hlv['anh'], $hlv['ho_ten'], 44) ?>Lịch sử dẫn dắt: <?= e($hlv['ho_ten']) ?></h1>
     <a class="btn btn-outline-secondary btn-sm" href="<?= url('/admin/huan_luyen_vien/form.php?id=' . $maHlv) ?>">
         <i class="bi bi-pencil"></i> Sửa thông tin HLV</a>
 </div>
@@ -97,7 +98,7 @@ require __DIR__ . '/../../includes/admin_header.php';
             <?php foreach ($dsNhiemKy as $nk): ?>
                 <tr<?= (int) $nk['ma_nhiem_ky'] === $maSua ? ' class="table-warning"' : '' ?>>
                     <td class="fw-semibold"><?= e($nk['ten_mua_giai']) ?></td>
-                    <td><?= e($nk['ten_doi']) ?></td>
+                    <td><span class="d-inline-flex align-items-center align-middle gap-2"><?= gdHuyHieu($nk['logo'], $nk['ten_viet_tat'], $nk['ten_doi'], 22) ?><?= e($nk['ten_doi']) ?></span></td>
                     <td>
                         <span class="badge <?= $nk['vai_tro'] === 'truong' ? 'text-bg-primary' : 'text-bg-secondary' ?>">
                             <?= e(VAI_TRO_HLV[$nk['vai_tro']] ?? $nk['vai_tro']) ?></span>

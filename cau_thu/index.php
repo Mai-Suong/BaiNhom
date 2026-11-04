@@ -71,7 +71,10 @@ require __DIR__ . '/../includes/header.php';
                     <?= gdAnhCauThu($ct['anh'] ?? null, $ct['ho_ten']) ?>
                 </span>
                 <span class="noi-dung">
-                    <span class="phu"><?= e($ct['ten_doi'] ?? 'Không có đội') ?> · <?= e($ct['vi_tri']) ?></span>
+                    <span class="phu d-flex align-items-center gap-1">
+                        <?php if (!empty($ct['ten_doi'])): ?><?= gdHuyHieu($ct['logo_doi'] ?? null, (string) ($ct['ten_viet_tat'] ?? ''), $ct['ten_doi'], 18) ?><?php endif; ?>
+                        <?= e($ct['ten_doi'] ?? 'Không có đội') ?> · <?= e($ct['vi_tri']) ?>
+                    </span>
                     <span class="ten"><?= e($ct['ho_ten']) ?></span>
                     <span class="phu fw-normal"><?= $ct['quoc_tich'] ? e($ct['quoc_tich']) : '&nbsp;' ?></span>
                     <?php if ($ct['trang_thai'] !== 'dang_thi_dau'): ?>

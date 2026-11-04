@@ -62,7 +62,7 @@ function pbLayDsKhuVuc(): array
 function pbLayDsDoi(int $maMua): array
 {
     $st = ketNoi()->prepare(
-        "SELECT d.ma_doi, d.ten_doi, d.ten_viet_tat, pb.ma_khu_vuc,
+        "SELECT d.ma_doi, d.ten_doi, d.ten_viet_tat, d.logo, pb.ma_khu_vuc,
                 (SELECT COUNT(*) FROM tran_dau td
                   WHERE td.ma_mua_giai = ? AND td.giai_doan = 'thuong'
                     AND (td.ma_doi_nha = d.ma_doi OR td.ma_doi_khach = d.ma_doi)) AS so_tran

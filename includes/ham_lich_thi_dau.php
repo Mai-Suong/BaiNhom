@@ -155,8 +155,8 @@ function ltdLayDsTran(array $loc, int $trang): array
     [$where, $ts] = ltdDieuKienLoc($loc);
     $boQua = max(0, ($trang - 1) * LTD_MOI_TRANG);
     $st = ketNoi()->prepare(
-        'SELECT td.*, dn.ten_doi AS ten_doi_nha, dn.ten_viet_tat AS vt_nha,
-                dk.ten_doi AS ten_doi_khach, dk.ten_viet_tat AS vt_khach, s.ten_san,
+        'SELECT td.*, dn.ten_doi AS ten_doi_nha, dn.ten_viet_tat AS vt_nha, dn.logo AS logo_nha,
+                dk.ten_doi AS ten_doi_khach, dk.ten_viet_tat AS vt_khach, dk.logo AS logo_khach, s.ten_san,
                 (SELECT COUNT(*) FROM phan_cong_trong_tai pc WHERE pc.ma_tran = td.ma_tran) AS so_trong_tai
            FROM tran_dau td
            JOIN doi_bong dn ON dn.ma_doi = td.ma_doi_nha

@@ -4,6 +4,7 @@ require_once __DIR__ . '/../../includes/init.php';
 yeuCauAdmin();
 require_once __DIR__ . '/../../includes/ham_huan_luyen_vien.php';
 require_once __DIR__ . '/../../includes/ham_trang_khach.php'; // chọn mùa (tkh...)
+require_once __DIR__ . '/../../includes/giao_dien_moi.php'; // gdHuyHieu(): logo đội (giao diện chung)
 
 $tuKhoa = trim((string) ($_GET['q'] ?? ''));
 $locDoi = (string) ($_GET['doi'] ?? '');
@@ -18,7 +19,8 @@ if ($laHienTai) {
     $dsHlv = hlvLayDanhSach($tuKhoa, $locDoi);
     foreach ($dsHlv as &$hlv) {
         $hlv['ds_nhiem_ky'] = $hlv['ma_doi'] === null ? [] : [[
-            'ten_doi' => $hlv['ten_doi'], 'vai_tro' => $hlv['vai_tro'], 'tam_quyen' => 0,
+            'ten_doi' => $hlv['ten_doi'], 'ten_viet_tat' => $hlv['ten_viet_tat'], 'logo' => $hlv['logo'],
+            'vai_tro' => $hlv['vai_tro'], 'tam_quyen' => 0,
             'tu_ngay' => $hlv['ngay_bat_dau'], 'den_ngay' => null,
         ]];
     }
@@ -103,7 +105,9 @@ require __DIR__ . '/../../includes/admin_header.php';
                         <?php if (!$hlv['ds_nhiem_ky']): ?>
                             <span class="badge text-bg-light border"><?= $laHienTai ? 'Tự do' : 'Không dẫn dắt' ?></span>
                         <?php endif; ?>
-                        <?php foreach ($hlv['ds_nhiem_ky'] as $nk): ?><div><?= e($nk['ten_doi']) ?></div><?php endforeach; ?>
+                        <?php foreach ($hlv['ds_nhiem_ky'] as $nk): ?>
+                            <div class="d-flex align-items-center gap-2"><?= gdHuyHieu($nk['logo'], $nk['ten_viet_tat'], $nk['ten_doi'], 22) ?><?= e($nk['ten_doi']) ?></div>
+                        <?php endforeach; ?>
                     </td>
                     <td>
                         <?php foreach ($hlv['ds_nhiem_ky'] ?: ($laHienTai ? [['vai_tro' => $hlv['vai_tro'], 'tam_quyen' => 0]] : []) as $nk): ?>
