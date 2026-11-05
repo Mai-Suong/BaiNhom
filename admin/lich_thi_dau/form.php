@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../../includes/init.php';
 yeuCauAdmin();
 require_once __DIR__ . '/../../includes/ham_lich_thi_dau.php';
+require_once __DIR__ . '/../../includes/ham_thong_ke.php';   // ô chọn đội có logo (tkDuLieuOpt, tkChonCoAnh)
 
 $id = (int) ($_GET['id'] ?? 0);
 $cu = $id ? ltdLay($id) : null;
@@ -54,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 /** Ô chọn có nhãn + lỗi. $ds = [giá trị => chữ hiện]. */
 function oChonTran(string $ten, string $nhan, array $ds, $giaTri, array $loi, string $lop = 'col-md-6',
-                   bool $khoa = false, string $trong = '', string $them = ''): void
+                   bool $khoa = false, string $trong = '', string $them = '', array $duLieu = []): void
 {
     ?>
     <div class="<?= e($lop) ?>">
@@ -63,7 +64,7 @@ function oChonTran(string $ten, string $nhan, array $ds, $giaTri, array $loi, st
             <?= $khoa ? 'disabled' : '' ?> <?= $them ?>>
             <?php if ($trong !== ''): ?><option value=""><?= e($trong) ?></option><?php endif; ?>
             <?php foreach ($ds as $v => $chu): ?>
-                <option value="<?= e($v) ?>" <?= (string) $giaTri === (string) $v ? 'selected' : '' ?>><?= e($chu) ?></option>
+                <option value="<?= e($v) ?>" <?= (string) $giaTri === (string) $v ? 'selected' : '' ?><?= $duLieu[$v] ?? '' ?>><?= e($chu) ?></option>
             <?php endforeach; ?>
         </select>
         <?php if (isset($loi[$ten])): ?><div class="invalid-feedback"><?= e($loi[$ten]) ?></div><?php endif; ?>
@@ -76,9 +77,25 @@ foreach ($dsMua as $m) {
     $chonMua[$m['ma_mua_giai']] = $m['ten_mua_giai'] . ((int) $m['la_mua_hien_tai'] === 1 ? ' (hiện tại)' : '');
 }
 $chonDoi = array_column($dsDoi, 'ten_doi', 'ma_doi');
+// Logo + màu từng đội cho ô chọn có ảnh (assets/js/tk_chon_anh.js, kiểu "doi")
+$duLieuDoi = [];
+foreach ($dsDoi as $dd) {
+    $duLieuDoi[$dd['ma_doi']] = tkDuLieuOpt([
+        'ten'  => $dd['ten_doi'],
+        'vt'   => $dd['ten_viet_tat'],
+        'logo' => trim((string) ($dd['logo'] ?? '')) !== '' ? gdUrlAnh($dd['logo']) : '',
+        'mau'  => gdMauDoi($dd['ten_viet_tat']),
+    ]);
+}
 $chonSan = [];
+$duLieuSan = [];   // ảnh sân cho ô chọn có ảnh (kiểu "san")
 foreach ($dsSan as $s) {
     $chonSan[$s['ma_san']] = $s['ten_san'] . ' (' . $s['thanh_pho'] . ')';
+    $duLieuSan[$s['ma_san']] = tkDuLieuOpt([
+        'ten' => $s['ten_san'],
+        'tp'  => $s['thanh_pho'],
+        'anh' => trim((string) ($s['hinh_anh'] ?? '')) !== '' ? gdUrlAnh($s['hinh_anh']) : '',
+    ]);
 }
 $chonTt = [];
 foreach ($dsTrongTai as $t) {
@@ -128,8 +145,8 @@ require __DIR__ . '/../../includes/admin_header.php';
                 <?php oChonTran('giai_doan', 'Giai đoạn *', LTD_GIAI_DOAN, $d['giai_doan'], $loi, 'col-md-4', $khoa); ?>
                 <?php oChonTran('trang_thai', 'Trạng thái', $chonTrangThai, $d['trang_thai'], $loi, 'col-md-4', $khoa); ?>
 
-                <?php oChonTran('ma_doi_khach', 'Đội khách *', $chonDoi, $d['ma_doi_khach'], $loi, 'col-md-6', $khoa, '-- Chọn đội khách --'); ?>
-                <?php oChonTran('ma_doi_nha', 'Đội nhà *', $chonDoi, $d['ma_doi_nha'], $loi, 'col-md-6', $khoa, '-- Chọn đội nhà --'); ?>
+                <?php oChonTran('ma_doi_khach', 'Đội khách *', $chonDoi, $d['ma_doi_khach'], $loi, 'col-md-6', $khoa, '-- Chọn đội khách --', 'data-chon-anh="doi"', $duLieuDoi); ?>
+                <?php oChonTran('ma_doi_nha', 'Đội nhà *', $chonDoi, $d['ma_doi_nha'], $loi, 'col-md-6', $khoa, '-- Chọn đội nhà --', 'data-chon-anh="doi"', $duLieuDoi); ?>
 
                 <div class="col-md-6">
                     <label class="form-label fw-semibold" for="thoi_gian">Ngày giờ thi đấu *</label>
@@ -137,7 +154,7 @@ require __DIR__ . '/../../includes/admin_header.php';
                            id="thoi_gian" name="thoi_gian" value="<?= e(ltdGiaTriO($d['thoi_gian']) ?: $d['thoi_gian']) ?>" required>
                     <?php if (isset($loi['thoi_gian'])): ?><div class="invalid-feedback"><?= e($loi['thoi_gian']) ?></div><?php endif; ?>
                 </div>
-                <?php oChonTran('ma_san', 'Sân thi đấu', $chonSan, $d['ma_san'], $loi, 'col-md-6', false, '-- Chưa chọn sân --'); ?>
+                <?php oChonTran('ma_san', 'Sân thi đấu', $chonSan, $d['ma_san'], $loi, 'col-md-6', false, '-- Chưa chọn sân --', 'data-chon-anh="san"', $duLieuSan); ?>
 
                 <div class="col-12" id="khung_playoff">
                     <div class="row g-3">
@@ -189,10 +206,17 @@ require __DIR__ . '/../../includes/admin_header.php';
     function sanCuaDoi() { var m = sanNhaMua[mua.value] || {}; return m[doiNha.value]; }
     var sanTuDong = san.value === '' || String(sanCuaDoi()) === san.value;
     san.addEventListener('change', function () { sanTuDong = false; });
-    function tuChonSan() { if (sanTuDong && sanCuaDoi()) { san.value = String(sanCuaDoi()); } }
+    function tuChonSan() {
+        if (sanTuDong && sanCuaDoi()) {
+            // Ô sân đã thành ô chọn có ảnh (Tom Select) thì đổi qua nó để giao diện cập nhật; true = không phát sự kiện change
+            if (san.tomselect) { san.tomselect.setValue(String(sanCuaDoi()), true); } else { san.value = String(sanCuaDoi()); }
+        }
+    }
     doiNha.addEventListener('change', tuChonSan);
     mua.addEventListener('change', tuChonSan);
 })();
 </script>
+<?= tkCss() ?>
+<?= tkChonCoAnh() ?>
 
 <?php require __DIR__ . '/../../includes/admin_footer.php'; ?>

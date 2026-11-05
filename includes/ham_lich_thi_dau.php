@@ -55,12 +55,12 @@ function ltdChonMua(array $dsMua, int $maMua): ?array
 
 function ltdLayDsDoi(): array
 {
-    return ketNoi()->query('SELECT ma_doi, ten_doi, ten_viet_tat, ma_san FROM doi_bong ORDER BY ten_doi')->fetchAll();
+    return ketNoi()->query('SELECT ma_doi, ten_doi, ten_viet_tat, ma_san, logo FROM doi_bong ORDER BY ten_doi')->fetchAll();
 }
 
 function ltdLayDsSan(): array
 {
-    return ketNoi()->query('SELECT ma_san, ten_san, thanh_pho FROM san_thi_dau ORDER BY ten_san')->fetchAll();
+    return ketNoi()->query('SELECT ma_san, ten_san, thanh_pho, hinh_anh FROM san_thi_dau ORDER BY ten_san')->fetchAll();
 }
 
 /**
