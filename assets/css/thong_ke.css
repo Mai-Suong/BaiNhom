@@ -115,3 +115,6 @@ tr.playin .nhom-nhan { color: #2b5fa8; font-weight: 600; }
 .tk-chon-chu.d-none { display: none !important; }
 .tk-chon-ten { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tk-chon-phu { display: inline-flex; align-items: center; gap: .3rem; margin-left: auto; padding-left: .5rem; color: #5b6575; font-size: .85em; white-space: nowrap; }
+.tk-chon-san { width: 56px; height: 36px; object-fit: cover; border-radius: 4px; flex-shrink: 0; background: #e9ecef; }
+.tk-chon-san-o { width: 56px; height: 36px; border-radius: 4px; flex-shrink: 0; background: #e9ecef; color: #5b6575; display: inline-flex; align-items: center; justify-content: center; }
+.tk-chon-san-o.d-none { display: none !important; }
