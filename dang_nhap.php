@@ -65,7 +65,13 @@ require __DIR__ . '/includes/header.php';
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="mat_khau">Mật khẩu</label>
-                        <input class="form-control" type="password" id="mat_khau" name="mat_khau" required>
+                        <div class="position-relative">
+                            <input class="form-control pe-5" type="password" id="mat_khau" name="mat_khau" required>
+                            <button class="btn btn-link position-absolute top-50 end-0 translate-middle-y text-secondary border-0 shadow-none px-3"
+                                    type="button" id="nut-xem-mat-khau" title="Hiện mật khẩu" aria-label="Hiện mật khẩu">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
                     </div>
                     <button class="btn btn-nba w-100" type="submit">Đăng nhập</button>
                 </form>
@@ -73,5 +79,21 @@ require __DIR__ . '/includes/header.php';
         </div>
     </div>
 </div>
+
+<script>
+    // Bấm con mắt: hiện / ẩn mật khẩu đang nhập
+    (function () {
+        const o = document.getElementById('mat_khau');
+        const nut = document.getElementById('nut-xem-mat-khau');
+        nut.addEventListener('click', function () {
+            const dangAn = o.type === 'password';
+            o.type = dangAn ? 'text' : 'password';
+            nut.querySelector('i').className = dangAn ? 'bi bi-eye-slash' : 'bi bi-eye';
+            nut.title = dangAn ? 'Ẩn mật khẩu' : 'Hiện mật khẩu';
+            nut.setAttribute('aria-label', nut.title);
+            o.focus();
+        });
+    })();
+</script>
 
 <?php require __DIR__ . '/includes/footer.php'; ?>
